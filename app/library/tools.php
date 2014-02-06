@@ -21,35 +21,6 @@ class tools {
 	);
 
 	public static $db = null;
-	public static $states = array (
-			'AC' => 'Acre',
-			'AL' => 'Alagoas',
-			'AP' => 'Amapa',
-			'AM' => 'Amazonas',
-			'BA' => 'Bahia',
-			'CE' => 'Ceara',
-			'DF' => 'Distrito Federal',
-			'ES' => 'Espirito Santo',
-			'GO' => 'Goias',
-			'MA' => 'Maranhao',
-			'MT' => 'Mato Grosso',
-			'MS' => 'Mato Grosso do Sul',
-			'MG' => 'Minas Gerais',
-			'PA' => 'Para',
-			'PB' => 'Paraiba',
-			'PR' => 'Parana',
-			'PE' => 'Pernambuco',
-			'PI' => 'Piaui',
-			'RJ' => 'Rio de Janeiro',
-			'RN' => 'Rio Grande do Norte',
-			'RS' => 'Rio Grande do Sul',
-			'RO' => 'Rondonia',
-			'RR' => 'Roraima',
-			'SC' => 'Santa Catarina',
-			'SP' => 'Sao Paulo',
-			'SE' => 'Sergipe',
-			'TO' => 'Tocantins' 
-	);
 	
 	/**
 	 * To Send email
@@ -145,19 +116,6 @@ class tools {
 			$newPrice = $newPrice [0];
 		}
 		return $newPrice;
-	}
-	
-	/**
-	 * Format price to Plan Style
-	 *
-	 * @param $price string        	
-	 * @return string
-	 */
-	public static function formatPlanPrice($price) {
-		$old = self::formatPrice ( $price );
-		$find = '/(R\$) ([0-9]{2,3})([,])([0-9]{2})/i';
-		$replace = '<span class="plan_price_currency">R$</span><span class="plan_price_major">$2</span><span class="plan_price_comma">,</span><span class="plan_price_minor">$4</span>';
-		return preg_replace ( $find, $replace, $old );
 	}
 	
 	/**
@@ -499,85 +457,7 @@ class tools {
 		header ( 'Location: ' . $url, true );
 		exit ();
 	}
-	
-	/**
-	 * To Send SMS
-	 *
-	 * @param $to string        	
-	 * @param $msg string        	
-	 */
-	public static function sendSms($to, $msg) {
-		$result = false;
-		// No Send SMS Messages when website are on depuration mode (Limit
-		// Resources)
-		if (! DEBUG) {
-			$msg = urlencode ( utf8_decode ( $msg ) );
-			$url = "https://system.human.com.br/GatewayIntegration/msgSms.do?dispatch=send";
-			$url .= "&account=" . self::$sms_configs ['account'];
-			$url .= "&code=" . self::$sms_configs ['code'];
-			$url .= "&from=" . self::$sms_configs ['from'];
-			$url .= "&to=" . $to;
-			$url .= "&msg=" . $msg;
-			
-			$result = file_get_contents ( $url );
-		} else {
-			// Say to developer (Hey Buddy, you can't send a real message now,
-			// Your are Developing it Yeat!)
-			$result = "999 - Application on depuration mode, message not really sent";
-		}
-		return $result;
-	}
-	
-	/**
-	 * Check if needs Login
-	 */
-	public static function authCheck() {
-		if (find ( 'panel', CONTROLLER ) && CONTROLLER != 'panel/login' && CONTROLLER != 'panel/logout' && CONTROLLER != 'panel/forgot_password' && CONTROLLER != 'panel/forgot_password_change' && CONTROLLER != 'panel/unlock_account' && CONTROLLER != 'panel/resend_authorization' && CONTROLLER != 'panel/saveBookmark') {
-			if (! self::userIsLogged ()) {
-				$_SESSION ['SYSTEM'] ['REDIR'] = $_SERVER ['REQUEST_URI'];
-				self::redir ( BASE_DIR . '/panel/login' );
-			}
-		}
-	}
-	public static function logout() {
-		if (self::userIsLogged ()) {
-			unset ( $_SESSION ['SYSTEM'] ['RESTRICT'], $_SESSION ['USER'] );
-		}
-	}
-	
-	/**
-	 * To Auth User
-	 *
-	 * @param $id integer        	
-	 */
-	public static function auth($id) {
-		$account = self::$db->find ( 'vw_accounts', array (), array ( 'id' => $id ) );
-		$account = $account [0];
 		
-		$plan = self::$db->find ( 'plans', array (), array ( 'id' => $account ['plan_id'] ) );
-		$plan = $plan [0];
-		
-		unset ( $_SESSION ['SYSTEM'] ['RESTRICT'] ['LOGGED'], $_SESSION ['USER'] );
-		
-		$_SESSION ['SYSTEM'] ['RESTRICT'] ['LOGGED'] = true;
-		$_SESSION ['USER'] = $account;
-		$_SESSION ['USER'] ['PLAN'] = $plan;
-		return self::$db->save ( array ( 'id' => $id, 'login_attemps' => 0, 'accesses' => ($account ['accesses'] + 1), 'last_access' => date ( "Y-m-d H:i:s" ) ), 'accounts', array ('id' => $id) );
-	}
-	
-	/**
-	 * To get all owner resources (Plan)
-	 *
-	 * @param $id integer        	
-	 */
-	public static function getOwnerResources($id) {
-		$data = self::$db->find ( 'accounts', array (), array (	'id' => $id ) );
-		$data = $data [0];
-		$plan = self::$db->find ( 'plans', array (), array ( 'id' => $data ['plan_id'] ) );
-		$plan = $plan [0];
-		return $plan;
-	}
-	
 	/**
 	 * Test if a file exists and if are not empty
 	 *
@@ -760,7 +640,7 @@ class tools {
 	 * and converting and reconverting): With that you protect the text and
 	 * leaving the text 470% larger than the original
 	 *
-	 * @author Júlio César <julio@juliocesar.me>
+	 * @author Júlio César <talk@juliocesar.me>
 	 * @param $str string        	
 	 * @param $key string        	
 	 * @return string
@@ -796,7 +676,7 @@ class tools {
 	 * unprotect the text and leaving the text 470% smaller than the "original"
 	 * (Encrypted text) but EXACLY THE SAME as the ORIGINAL TEXT
 	 *
-	 * @author Júlio César <julio@juliocesar.me>
+	 * @author Júlio César <talk@juliocesar.me>
 	 * @param $str string        	
 	 * @param $key string        	
 	 * @return string
@@ -992,43 +872,6 @@ class tools {
 		}
 		
 		return false;
-	}
-	
-	/**
-	 * Register or Log in the Visitor
-	 * 
-	 * @return integer
-	 */
-	public static function visitorRegister() {
-		// Set Failsafe ID
-		$id = 0;
-		
-		// Check if user is Registring
-		if (!empty ( $_POST ['email'] )) {
-			// Get E-mail
-			$email = $_POST['email'];
-			// Reset Visitor Account
-			$_SESSION ['TEMP'] ['ACCOUNT'] = array ();
-			
-			// Check if Visitor is Already Registred
-			$check = self::$db->find ( 'visitor_accounts', array (), array ( 'email' => $email ) );
-			
-			// Check if Visitor is New
-			if ( empty ( $check )) {
-				if (self::$db->save ( $_POST, 'visitor_accounts' )) {
-					$data = self::$db->find ( 'visitor_accounts', array (), array ( 'email' => $email	) );
-					if (! empty ( $data )) {
-						$_SESSION ['TEMP'] ['ACCOUNT'] = $data[0];
-					}
-				}
-			} else {
-				$_SESSION ['TEMP'] ['ACCOUNT'] = $check [0];
-			}			
-		}
-		
-		$id = $_SESSION ['TEMP'] ['ACCOUNT'] ['id'];
-		
-		return $id;
 	}
 }
 ?>

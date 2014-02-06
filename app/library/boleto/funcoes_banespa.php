@@ -43,7 +43,7 @@ $codigocliente = formata_numero($dadosboleto["codigo_cedente"],11,0,"valor");
 $nossonumero   = substr("0000000", strlen($dadosboleto['nosso_numero'])).$dadosboleto['nosso_numero'];
 
 // Calcula vencimento juliano
-$vencjuliano = dataJuliano($vencimento);
+$vencjuliano = dataJuliano($data_venc);
 
 // Calcula Campo Livre
 $campoLivre = calculaCampoLivre($codigocliente.$nossonumero."00".$codigobanco);
