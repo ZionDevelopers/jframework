@@ -1,0 +1,35 @@
+@charset "utf-8";
+/* CSS Document */
+
+body, td, th {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000;
+}
+body {
+	background-color: #FFF;
+	margin: 0px;
+}
+form {
+	margin:0px;
+	padding:0px
+}
+img {
+	border:0 none;
+}
+a:link {
+	color: #09F;
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+	color: #06F;
+}
+a:hover {
+	text-decoration: underline;
+	color: #06F;
+}
+a:active {
+	text-decoration: none;
+	color: #06F;
+}
