@@ -1,4 +1,11 @@
 <?php 
+/**
+ * jFramework
+ * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
+ * @author Júlio César de Oliveira <talk@juliocesar.me>
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
+ */
+
 $flashMessage = view::getFlash();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

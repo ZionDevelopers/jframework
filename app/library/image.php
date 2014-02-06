@@ -1,12 +1,14 @@
 <?php
 /**
  * Class to Manage images: Resize, AddText and add Water mark
- * @!created 2010-07-30 08:50 AM
- * @!updated 2010-08-04 13:46 PM
+ * 
+ * Created 2010-07-30 08:50 AM
+ * Updated 2010-08-04 13:46 PM
+ * 
  * @version 1.8.9
- * @copyright Copyright (c) 2010, Júlio César
- * @author Júlio César
- * @package JSF
+ * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
+ * @author Júlio César de Oliveira <talk@juliocesar.me>
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 //Remove limits
 set_time_limit ( 0 );

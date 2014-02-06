@@ -1,13 +1,12 @@
 <?php
 /**
  * To manage Views
- * @!created 2010-08-24 12:50 PM
- * @!updated 2010-08-04 13:40 PM
+ * Created 2010-08-24 12:50 PM
+ * Updated 2010-08-04 13:40 PM
  * @version 1.1.0
- * @copyright Copyright (c) 2010, Júlio César
- * @author Júlio César
- * @package JSF
- *
+ * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
+ * @author Júlio César de Oliveira <talk@juliocesar.me>
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 class view {
 	/**

@@ -1,13 +1,14 @@
 <?php
 /**
  * Session Cleaner for PHP
- * @!created 2013-07-29 11:00 AM
- * @!updated 2013-07-29 11:06 AM
- * @author Júlio César <talk@juliocesar.me>
+ * Created 2013-07-29 11:00 AM
+ * Updated 2013-07-29 11:06 AM
  * @version 1.0
- * @package jFramework
- * @copyright Copyright (c) 2013, Júlio César
+ * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
+ * @author Júlio César de Oliveira <talk@juliocesar.me>
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
+
 class jSessCleaner {
 	/**
 	 * __construct

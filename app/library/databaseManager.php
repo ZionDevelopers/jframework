@@ -1,12 +1,14 @@
 <?php
 /**
  * Class to manage MySQL database data
- * @!created 2010-07-26 07:58 PM
- * @!updated 2012-07-02 10:24 AM
+ * 
+ * Created 2010-07-26 07:58 PM
+ * Updated 2012-07-02 10:24 AM
+ * 
  * @version 2.2.0
- * @copyright Copyright (c) 2012, Júlio César
- * @author Júlio César <julio@juliocesar.me>
- *
+ * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
+ * @author Júlio César de Oliveira <talk@juliocesar.me>
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 class databaseManager extends mysqli {
 	

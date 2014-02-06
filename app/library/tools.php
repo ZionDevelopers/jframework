@@ -4,9 +4,9 @@
  * @!created 2010-07-24 10:25 AM
  * @!updated 2011-02-03 10:42 AM
  * @version 1.1.1
- * @copyright Copyright (c) 2010, Júlio César
- * @author Júlio César
- * @package JSF
+ * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
+ * @author Júlio César de Oliveira <talk@juliocesar.me>
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 class tools {
 	public static $mail_configs = array (

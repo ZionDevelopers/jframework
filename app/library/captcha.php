@@ -4,9 +4,9 @@
  * @!created 2013-09-17 01:58 PM
  * @!updated 2013-09-18 01:23 PM
  * @version 1.0.1
- * @copyright Copyright (c) 2013, Júlio César
- * @author Júlio César <julio@juliocesar.me>
- *
+ * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
+ * @author Júlio César de Oliveira <talk@juliocesar.me>
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
 class captcha {
