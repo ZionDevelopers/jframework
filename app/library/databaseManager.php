@@ -3,9 +3,9 @@
  * Class to manage MySQL database data
  * 
  * Created 2010-07-26 07:58 PM
- * Updated 2012-07-02 10:24 AM
+ * Updated 2014-04-05 04:07 AM
  * 
- * @version 2.2.0
+ * @version 2.2.1
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
@@ -25,7 +25,7 @@ class databaseManager extends mysqli {
 	/**
 	 * Set Settings
 	 *
-	 * @param $data array       	
+	 * @param $data array        	
 	 */
 	public function setSettings(array $data) {
 		$this->settings = array_merge ( $this->settings, $data );
@@ -37,9 +37,12 @@ class databaseManager extends mysqli {
 	 * @return void
 	 */
 	public function connect($host = 'localhost', $username = 'root', $passwd = '', $dbname = 'test', $port = 3306, $socket = '') {
+		// Talk back to the Parent
 		parent::__construct ( $this->settings ['host'], $this->settings ['user'], $this->settings ['password'], $this->settings ['base'] );
 		
+		// Test Connecton
 		if (! $this->testCon ()) {
+			// Throw Connection error
 			$this->error ( $this->connect_error );
 		}
 		
@@ -79,6 +82,18 @@ class databaseManager extends mysqli {
 	 * Refresh Session Table Cache to var inside object
 	 */
 	protected function cacheRefresh() {
+		
+		// Check if cache folder not exits
+		if (! file_exists ( CACHE_DIR )) {
+			// Create folders
+			mkdir ( CACHE_DIR, 0755, true );
+		}
+		
+		// Check if cache folder is not writeable
+		if (! is_writable ( CACHE_DIR )) {
+			chmod ( $this->cacheFile, 0755 );
+		}
+		
 		// Check if Cache file not exists
 		if (! file_exists ( $this->cacheFile )) {
 			// Create an empty cache file
@@ -87,12 +102,22 @@ class databaseManager extends mysqli {
 		
 		// Set Initial Cache Table
 		$this->cacheTable = unserialize ( file_get_contents ( $this->cacheFile ) );
+		
+		// Check
+		if (! isset ( $_SESSION ['SQL_HISTORY'] )) {
+			// Reset Arrays
+			$_SESSION ['SQL_HISTORY'] = array ();
+			$_SESSION ['SQL_LASTCONTROLLER'] = CONTROLLER;
+			
+			$this->sqlHistory = array ();
+			$this->sqlHistory [CONTROLLER] = array ();
+		}
 	}
 	
 	/**
 	 * To list all the table colums
 	 *
-	 * @param $table string       	
+	 * @param $table string        	
 	 */
 	protected function cache($table) {
 		// Check if has table fields cache
@@ -100,7 +125,7 @@ class databaseManager extends mysqli {
 			$result = $this->query ( "SHOW COLUMNS FROM " . $table );
 			if ($result) {
 				foreach ( $this->fetch ( $result ) as $column ) {
-					$this->cacheTable [$table] [$column ["Field"]] = $column ["Field"];
+					$this->cacheTable [$table] [$column ["Field"]] = $column ["Type"];
 				}
 			}
 		}
@@ -111,17 +136,17 @@ class databaseManager extends mysqli {
 	/**
 	 * Report error
 	 *
-	 * @param $text string       	
+	 * @param $text string        	
 	 */
 	public function error($text) {
-		trigger_error ( $text . "\r\nDetails: " . $this->error, E_USER_WARNING );
+		throw new Exception ( 'Database Manager Exception: ' . $text . "\r\nDetails: " . $this->error );
 	}
 	
 	/**
 	 * Proccess sql query in server
 	 *
-	 * @param $sql string       	
-	 * @param $autoFetch boolean       	
+	 * @param $sql string        	
+	 * @param $autoFetch boolean        	
 	 * @return array resource boolean
 	 */
 	public function query($sql, $autoFetch = true) {
@@ -157,7 +182,7 @@ class databaseManager extends mysqli {
 	/**
 	 * Fetch query result
 	 *
-	 * @param $res mysqli_result       	
+	 * @param $res mysqli_result        	
 	 * @return array
 	 */
 	public function fetch(mysqli_result $res) {
@@ -188,7 +213,7 @@ class databaseManager extends mysqli {
 	/**
 	 * Escape string for query
 	 *
-	 * @param $string string       	
+	 * @param $string string        	
 	 * @return string
 	 */
 	public function escape($string) {
@@ -214,13 +239,13 @@ class databaseManager extends mysqli {
 	/**
 	 * Find data in database
 	 *
-	 * @param $table string       	
-	 * @param $fields array       	
-	 * @param $where array       	
-	 * @param $order array       	
-	 * @param $limit array       	
-	 * @param $group array       	
-	 * @param $autoFetch boolean       	
+	 * @param $table string        	
+	 * @param $fields array        	
+	 * @param $where array        	
+	 * @param $order array        	
+	 * @param $limit array        	
+	 * @param $group array        	
+	 * @param $autoFetch boolean        	
 	 * @return array
 	 */
 	public function find($table, array $fields = array(), array $where = array(), array $order = array(), array $limit = array(), array $group = array(), $autoFetch = true) {
@@ -244,8 +269,8 @@ class databaseManager extends mysqli {
 	/**
 	 * insert data in database
 	 *
-	 * @param $data array       	
-	 * @param $table string       	
+	 * @param $data array        	
+	 * @param $table string        	
 	 * @return boolean resource
 	 */
 	public function insert(array $data, $table) {
@@ -293,8 +318,8 @@ class databaseManager extends mysqli {
 	/**
 	 * insert data in database
 	 *
-	 * @param $data array       	
-	 * @param $table string       	
+	 * @param $data array        	
+	 * @param $table string        	
 	 * @return boolean resource
 	 */
 	public function update(array $data, $table, array $where) {
@@ -332,9 +357,9 @@ class databaseManager extends mysqli {
 	/**
 	 * To save data into database
 	 *
-	 * @param $data array       	
-	 * @param $table string       	
-	 * @param $where array       	
+	 * @param $data array        	
+	 * @param $table string        	
+	 * @param $where array        	
 	 */
 	public function save(array $data, $table, array $where = array()) {
 		// If WHERE is empty so...
@@ -352,8 +377,8 @@ class databaseManager extends mysqli {
 	/**
 	 * To delete records from table
 	 *
-	 * @param $table string       	
-	 * @param $where array       	
+	 * @param $table string        	
+	 * @param $where array        	
 	 */
 	public function delete($table, array $where = array()) {
 		// To Cache
@@ -370,8 +395,8 @@ class databaseManager extends mysqli {
 	/**
 	 * To lock tables
 	 *
-	 * @param $table string       	
-	 * @param $mod string       	
+	 * @param $table string        	
+	 * @param $mod string        	
 	 * @return boolean
 	 */
 	public function lockTable($table, $mod = "WRITE") {
@@ -390,7 +415,7 @@ class databaseManager extends mysqli {
 	/**
 	 * Return number of
 	 *
-	 * @param $res resource       	
+	 * @param $res resource        	
 	 * @return integer
 	 */
 	public function numRows(mysqli_result $res) {
@@ -407,7 +432,7 @@ class databaseManager extends mysqli {
 	 * To Normalize New Lines from Windows, Mac and Linux Plataforms to Uniform
 	 * New Lines
 	 *
-	 * @param $string string       	
+	 * @param $string string        	
 	 */
 	public function normalizeNewLines($string) {
 		$string = str_replace ( array ( "\\r\\n", "\\r", "\\n" ), "\n", $string );
@@ -418,10 +443,10 @@ class databaseManager extends mysqli {
 	/**
 	 * Make all pagination process
 	 *
-	 * @param $table string       	
-	 * @param $where array       	
-	 * @param $nRecords integer       	
-	 * @param $order array       	
+	 * @param $table string        	
+	 * @param $where array        	
+	 * @param $nRecords integer        	
+	 * @param $order array        	
 	 * @return resource
 	 */
 	public function Paginator($table, array $where = array(), $nRecords = 20, array $order = array()) {
@@ -437,10 +462,10 @@ class databaseManager extends mysqli {
 	/**
 	 * To Count all records from one table
 	 *
-	 * @param $table string       	
-	 * @param $where array       	
+	 * @param $table string        	
+	 * @param $where array        	
 	 * @param
-	 *       	 integer
+	 *        	integer
 	 */
 	public function count($table, array $where = array()) {
 		$data = $this->find ( $table, array ( 'COUNT(*) AS N' ), $where );
@@ -450,10 +475,10 @@ class databaseManager extends mysqli {
 	/**
 	 * Generete Where SQL
 	 *
-	 * @param $table string       	
-	 * @param $where array       	
-	 * @param $sql string       	
-	 * @param $recursive boolean       	
+	 * @param $table string        	
+	 * @param $where array        	
+	 * @param $sql string        	
+	 * @param $recursive boolean        	
 	 */
 	protected function where($table, array $where, &$sql, $recursive = false) {
 		// To Cache
@@ -541,7 +566,6 @@ class databaseManager extends mysqli {
 						$mathStart = '';
 						$mathEnd = '';
 						$math = '';
-					
 					}
 					
 					unset ( $matches );
@@ -595,12 +619,14 @@ class databaseManager extends mysqli {
 								} elseif ($k == 0 && $val [$k] != end ( $val )) { // If
 								                                                  // This
 								                                                  // Key
-								                                                  // is first
+								                                                  // is
+								                                                  // first
 									$field = '(' . $field;
 								} elseif ($val [$k] == end ( $val ) && $k != 0) { // If
 								                                                  // this
 								                                                  // key
-								                                                  // is last
+								                                                  // is
+								                                                  // last
 									$field = ')' . $field;
 								}
 							} else {
@@ -640,8 +666,8 @@ class databaseManager extends mysqli {
 	/**
 	 * Generate LIMIT SQL
 	 *
-	 * @param $limit array       	
-	 * @param $sql string       	
+	 * @param $limit array        	
+	 * @param $sql string        	
 	 */
 	protected function limit(array $limit, &$sql) {
 		if (! empty ( $limit )) {
@@ -652,9 +678,9 @@ class databaseManager extends mysqli {
 	/**
 	 * Generete Order SQL
 	 *
-	 * @param $table string       	
-	 * @param $order array       	
-	 * @param $sql string       	
+	 * @param $table string        	
+	 * @param $order array        	
+	 * @param $sql string        	
 	 */
 	protected function order($table, array $order, &$sql) {
 		// To Cache
@@ -681,9 +707,9 @@ class databaseManager extends mysqli {
 	/**
 	 * Generete Group By SQL
 	 *
-	 * @param $table string       	
-	 * @param $order array       	
-	 * @param $sql string       	
+	 * @param $table string        	
+	 * @param $order array        	
+	 * @param $sql string        	
 	 */
 	protected function group($table, array $group, &$sql) {
 		// To Cache
@@ -706,10 +732,9 @@ class databaseManager extends mysqli {
 	/**
 	 * Show Pagination
 	 *
-	 * @param $tipo string       	
+	 * @param $tipo string        	
 	 */
 	public function showPagination($type = "select", $ajaxFunc = "") {
-		
 		$prev = ($this->currentPage - 1);
 		$next = ($this->currentPage + 1);
 		$result = "";
@@ -770,7 +795,6 @@ class databaseManager extends mysqli {
 			$result .= "</select>&nbsp;&nbsp;";
 			$result .= (($this->currentPage < $this->nPages) ? "&nbsp;<a href=\"#\" onclick=\"" . $ajaxFunc . "(" . $next . ");return false;\">Próxima &gt;&gt;</a>&nbsp;" : "<label disabled=\"disabled\">Próxima &gt;&gt;</label>");
 			$result .= "</center>";
-		
 		} elseif ($type == "text") {
 			$result = "<br><br><br><center>";
 			$result .= (($this->currentPage > 1) ? "&nbsp;<a href=\"" . $url . $prev . "\">&lt;&lt; Anterior</a>&nbsp;" : "<label disabled=\"disabled\">&lt;&lt; Anterior</label>");

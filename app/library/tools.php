@@ -2,8 +2,8 @@
 /**
  * Tools to do almost all things
  * @!created 2010-07-24 10:25 AM
- * @!updated 2011-02-03 10:42 AM
- * @version 1.1.1
+ * @!updated 2014-04-05 05:02 AM
+ * @version 1.1.2
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
@@ -872,6 +872,35 @@ class tools {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Trace Exception GetTraceArray
+	 *
+	 * @param Exception $exception        	
+	 * @return string
+	 */
+	public static function traceException(Exception $exception) {
+		// Default String
+		$result = "";
+		
+		// Loop exception trace
+		foreach ( $exception->getTrace () as $i => $t ) {
+			// Check if have class and args
+			if (isset ( $t ['class'], $t ['args'] )) {
+				// Concatanate the full trace line with class and args
+				$result .= '#' . $i . ' ' . $t ['file'] . '(' . $t ['line'] . '): ' . $t ['class'] . $t ['type'] . $t ['function'] . "('" . @implode ( "', '", $t ['args'] ) . "')\r\n";
+			} elseif (isset ( $t ['function'] ) && ! isset ( $t ['class'] )) {
+				// Concatanate the full trace line without class
+				$result .= '#' . $i . ' ' . $t ['file'] . '(' . $t ['line'] . '): ' . $t ['function'] . "('" . implode ( ',', $t ['args'] ) . "')\r\n";
+			}
+		}
+		
+		// Concatanate the last line "MAIN"
+		$result .= "#" . ($i + 1) . " {main} \r\n";
+		
+		// Return result
+		return $result;
 	}
 }
 ?>

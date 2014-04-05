@@ -27,8 +27,8 @@ define ( 'SITE_NAME', 'jFramework' );
 define ( 'SITE_EMAIL_COPIES', 'talk@juliocesar.me' );
 define ( 'SITE_EMAIL', 'talk@juliocesar.me' );
 define ( 'DEBUG', true);
-define ( 'DEBUG_HTTP_PORT', 88 );
-define ( 'DEBUG_HTTPS_PORT', 4443 );
+define ( 'DEBUG_HTTP_PORT', 2052 );
+define ( 'DEBUG_HTTPS_PORT', 2352 );
 define ( 'PRODUCTION_HTTP_PORT', 80 );
 define ( 'PRODUCTION_HTTPS_PORT', 443 );
 define ( 'CHARSET', 'utf-8' );
@@ -61,8 +61,9 @@ if (DEBUG === true) {
 /**
  * **** INI SET ADAPTATIONS: START *****
  */
-// Limite de memoria de 64 megabytes
+// Set Memory Limit to 10MB
 ini_set ( 'memory_limit', '10M' );
+
 /**
  * **** INIT SET ADAPTATIONS: END *****
  */

@@ -23,7 +23,7 @@ $flashMessage = view::getFlash();
     </head>
     <body>
     	<div id="mainContainer">
-			<div id="contents" class="<?php echo (!$useSearch ? 'full' : '');?>">
+			<div id="contents">
 				<?php if (!empty($flashMessage)){echo '<div id="flashMessage">', $flashMessage , '</div>'; }?>
 				<?php echo view::$contents; ?>
 			</div>
@@ -32,6 +32,17 @@ $flashMessage = view::getFlash();
         if (!empty($flashMessage)){ 
 			view::delFlash();
         }
-        ?>    
+        ?> 
+      <?php if (!empty($sqlArchive[CONTROLLER])){?>
+      <br /><div id="sqlHistory">
+      <b>SQL History:</b><br>
+      <?php       
+      	foreach ($sqlArchive[CONTROLLER] as $n => $sql) {
+      		echo $sql . "<br />\r\n";
+      	}     
+      ?>
+      </div> 
+      <?php  } ?> 
+     <br /><div align="center"><i>Page generated in</i> <b><?php echo round(microtime(true)-$_SERVER['REQUEST_TIME_FLOAT'],3);?></b> <i>seconds.</i></div>
     </body>
 </html>
