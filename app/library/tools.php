@@ -84,7 +84,7 @@ class tools {
 	 * @param $error integer        	
 	 */
 	public static function error($error = 404) {
-		self::redir ( BASE_DIR . '/errors/' . $error . '?referer=' . @$_SERVER ['REQUEST_URI'] );
+		self::redir ( BASE_DIR . '/errors/' . $error . '?referer=' . CONTROLLER );
 	}
 	
 	/**
