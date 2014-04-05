@@ -101,7 +101,7 @@ try {
 		echo $tidy;
 	}
 	
-	// Exception Catcher
+// Exception Catcher
 } catch ( Exception $e ) {
 	// Debug
 	tools::debug ( $e->getMessage () . '<br />' . tools::traceException ( $e ) );

@@ -27,15 +27,9 @@ define ( 'SITE_NAME', 'jFramework' );
 define ( 'SITE_EMAIL_COPIES', 'talk@juliocesar.me' );
 define ( 'SITE_EMAIL', 'talk@juliocesar.me' );
 define ( 'DEBUG', false);
-define ( 'DEBUG_HTTP_PORT', 88 );
-define ( 'DEBUG_HTTPS_PORT', 4443 );
-define ( 'PRODUCTION_HTTP_PORT', 80 );
-define ( 'PRODUCTION_HTTPS_PORT', 443 );
+
 define ( 'CHARSET', 'utf-8' );
 define ( "BASE_DIR", ($BASE_DIR == '/' ? '' : $BASE_DIR) );
-define ( 'BASE_URL_SECURE', 'https://' . $_SERVER ['SERVER_NAME'] . (DEBUG ? ':' . DEBUG_HTTPS_PORT : '') . '/' . BASE_DIR );
-define ( 'BASE_URL_NON_SECURE', 'http://' . $_SERVER ['SERVER_NAME'] . (DEBUG ? ':' . DEBUG_HTTP_PORT : '') . '/' . BASE_DIR );
-define ( 'BASE_URL', 'http' . (isSSL () ? 's' : '') . '://' . $_SERVER ['SERVER_NAME'] . (DEBUG ? ':' . $_SERVER ['SERVER_PORT'] : '') . BASE_DIR );
 define ( 'LAYOUT_DEFAULT', 'default' );
 
 static $CONFIGS = array ();
