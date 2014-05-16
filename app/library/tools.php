@@ -19,7 +19,6 @@ class tools {
 					'test@test.com' 
 			) 
 	);
-
 	public static $db = null;
 	
 	/**
@@ -33,36 +32,27 @@ class tools {
 	public static function mail($email, $subject, $body) {
 		require_once (LIBRARY_DIR . "/mailer/class.phpmailer.php");
 		
-		$Sent = false;
-		
 		$mail = new PHPMailer ( true );
 		$mail->PluginDir = LIBRARY_DIR . '/mailer/';
 		$mail->IsSMTP (); // telling the class to use SMTP
 		
-		try {
-			$mail->CharSet = CHARSET;
-			$mail->SMTPAuth = true; // enable SMTP authentication
-			$mail->Host = self::$mail_configs ['host']; // sets the SMTP server
-			$mail->Username = self::$mail_configs ['user']; // SMTP account username
-			$mail->Password = self::$mail_configs ['pass']; // SMTP account password
-			$mail->SetFrom ( self::$mail_configs ['from_email'], self::$mail_configs ['from_name'] );
-			$mail->Subject = $subject;
-			$mail->AltBody = "Para ver esta mensagem, favor usar um leitor de e-mail compativel com HTML!";
-			
-			$mail->MsgHTML ( $body );
-			$mail->AddAddress ( $email );
-			
-			foreach ( self::$mail_configs ['copy'] as $copy ) {
-				$mail->AddBCC ( $copy );
-			}
-			
-			$Sent = $mail->Send ();
-		} catch ( Exception $e ) {
-			$Sent = false;
-			trigger_error ( $e->getMessage () . ': ' . $e->getTraceAsString (), E_USER_WARNING );
+		$mail->CharSet = CHARSET;
+		$mail->SMTPAuth = true; // enable SMTP authentication
+		$mail->Host = self::$mail_configs ['host']; // sets the SMTP server
+		$mail->Username = self::$mail_configs ['user']; // SMTP account username
+		$mail->Password = self::$mail_configs ['pass']; // SMTP account password
+		$mail->SetFrom ( self::$mail_configs ['from_email'], self::$mail_configs ['from_name'] );
+		$mail->Subject = $subject;
+		$mail->AltBody = "Para ver esta mensagem, favor usar um leitor de e-mail compativel com HTML!";
+		
+		$mail->MsgHTML ( $body );
+		$mail->AddAddress ( $email );
+		
+		foreach ( self::$mail_configs ['copy'] as $copy ) {
+			$mail->AddBCC ( $copy );
 		}
 		
-		return $Sent;
+		return $mail->Send ();
 	}
 	
 	/**
@@ -72,16 +62,18 @@ class tools {
 	 */
 	public static function debug() {
 		if (DEBUG) {
+			echo '<pre>';
 			foreach ( func_get_args () as $arg ) {
-				echo '<pre>' . print_r ( $arg, true ) . '</pre>';
+				print_r ( $arg );
 			}
+			echo '</pre>';
 		}
 	}
 	
 	/**
 	 * To report error
 	 *
-	 * @param $error integer        	
+	 * @param int $error        	
 	 */
 	public static function error($error = 404) {
 		self::redir ( BASE_DIR . '/errors/' . $error . '?referer=' . CONTROLLER );
@@ -121,8 +113,7 @@ class tools {
 	/**
 	 * To clean a formated Price into Float
 	 *
-	 * @param
-	 *        	$value
+	 * @param string $value
 	 */
 	public static function price2Float($value) {
 		$string = ( string ) $value;
@@ -152,8 +143,7 @@ class tools {
 	/**
 	 * To get a file extension
 	 *
-	 * @param
-	 *        	$file
+	 * @param string $file
 	 * @return string
 	 */
 	public static function fileType($file) {
@@ -248,6 +238,7 @@ class tools {
 			return $xml;
 		}
 	}
+	
 	/**
 	 * To validate an brazillian CPF (Document)
 	 *
@@ -328,7 +319,8 @@ class tools {
 	 * To validate an document (CPF or CNPJ)
 	 *
 	 * @param $doc string        	
-	 * @param boolean
+	 * @param
+	 *        	boolean
 	 */
 	public static function validateDoc($doc) {
 		$doc = preg_replace ( "/([^0-9])/", "", $doc );
@@ -457,7 +449,7 @@ class tools {
 		header ( 'Location: ' . $url, true );
 		exit ();
 	}
-		
+	
 	/**
 	 * Test if a file exists and if are not empty
 	 *
@@ -531,6 +523,13 @@ class tools {
 			rmdir ( $dir );
 		}
 	}
+	
+	/**
+	 * Check if folder exists and if is writable
+	 * 
+	 * @param string $path        	
+	 * @return string
+	 */
 	public static function folder($path) {
 		if (! file_exists ( $path )) {
 			if (! is_dir ( $path )) {
@@ -602,21 +601,6 @@ class tools {
 	}
 	
 	/**
-	 * To generate an sms message
-	 *
-	 * @param $file string        	
-	 * @param $vars array        	
-	 * @return string
-	 */
-	public static function getSmsMsg($file, array $vars = array()) {
-		$txt = file_get_contents ( VIEWS_DIR . '/sms/' . $file . '.txt' );
-		foreach ( $vars as $key => $val ) {
-			$txt = str_replace ( '[' . $key . ']', $val, $txt );
-		}
-		return $txt;
-	}
-	
-	/**
 	 * Add Space Between Text
 	 *
 	 * @param $text string        	
@@ -630,8 +614,13 @@ class tools {
 		}
 		return $newText;
 	}
+	
+	/**
+	 * Generate Captcha HTML
+	 * @param string $from
+	 */
 	public static function captchaImg($from = '') {
-		echo captcha::generateHTML($from);	
+		echo captcha::generateHTML ( $from );
 	}
 	
 	/**
@@ -714,9 +703,13 @@ class tools {
 	 * @return interger
 	 */
 	public static function genRedirID($url) {
-		$data = self::$db->find ( 'redirects', array (), array ( 'url' => $url ) );
+		$data = self::$db->find ( 'redirects', array (), array (
+				'url' => $url 
+		) );
 		if (empty ( $data )) {
-			self::$db->save ( array ( 'url' => $url	), 'redirects' );
+			self::$db->save ( array (
+					'url' => $url 
+			), 'redirects' );
 			$id = self::$db->getLastID ();
 		} else {
 			$data = $data [0];
@@ -764,7 +757,7 @@ class tools {
 	
 	/**
 	 * Format hours
-	 * 
+	 *
 	 * @param integer $hours        	
 	 * @return string
 	 */
@@ -776,21 +769,25 @@ class tools {
 		} elseif ($hours < 24 && $hours > 1) {
 			$result .= $hours . ' horas';
 		}
+		
 		if ($hours >= 24 && $hours < 48) {
 			$result = '1 dia';
 		} elseif ($hours >= 24 && $hours < 168) {
 			$result .= round ( $hours / 24 ) . ' dias';
 		}
+		
 		if ($hours >= 168 && $hours < 336) {
 			$result = '1 semana';
 		} elseif ($hours > 168 && $hours < 672) {
 			$result .= round ( $hours / 168 ) . ' semanas';
 		}
+		
 		if ($hours >= 672 && $hours < 1344) {
 			$result = '1 mês';
 		} elseif ($hours >= 672 && $hours < 8064) {
 			$result .= round ( $hours / 672 ) . ' meses';
 		}
+		
 		if ($hours >= 8064 && $hours < 16128) {
 			$result = '1 ano';
 		} elseif ($hours >= 16128) {
@@ -839,7 +836,7 @@ class tools {
 	
 	/**
 	 * Calculate the time between 2 Dates
-	 * 
+	 *
 	 * @param multitype:string|integer $date1        	
 	 * @param multitype:string|integer $date2        	
 	 * @return multitype:number boolean

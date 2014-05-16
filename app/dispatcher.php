@@ -7,7 +7,7 @@
  */
 
 // Signature
-@header ( 'X-Powered-By: jFramework 1.2', true );
+@header ( 'X-Powered-By: jFramework ' . VERSION, true );
 
 // Set User IP
 define ( 'CLIENT_IP', $_SERVER ['REMOTE_ADDR'] );
@@ -21,7 +21,7 @@ require (APP_DIR . '/configs/core.php');
 
 // Tools Library
 require (LIBRARY_DIR . '/tools.php');
-
+exit("ALAL");
 // Load Database Config
 tools::Configs ( 'database' );
 // Load Mail Config
@@ -31,6 +31,7 @@ tools::Configs ( 'session' );
 
 // Load View Library
 tools::Library ( 'view' );
+
 // Load Database Manager Library
 tools::Library ( 'databaseManager' );
 
@@ -48,7 +49,7 @@ $db->setSettings ( $CONFIGS ['database'] );
 header ( 'Content-Type: text/html; charset=' . CHARSET, true );
 
 // Starting database connection
-//$db->connect ();
+$db->connect ();
 
 // SET to archive sql History like DEBUG (YES OR NOT)
 $db->sqlArchive = DEBUG;
@@ -101,7 +102,7 @@ try {
 		echo $tidy;
 	}
 	
-// Exception Catcher
+	// Exception Catcher
 } catch ( Exception $e ) {
 	// Debug
 	tools::debug ( $e->getMessage () . '<br />' . tools::traceException ( $e ) );

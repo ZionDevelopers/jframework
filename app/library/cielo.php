@@ -1,51 +1,61 @@
 <?php
 /**
  * jFramework
-* @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
-* @author Júlio César de Oliveira <talk@juliocesar.me>
-* @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
-*/
+ *
+ * @version 1.2
+ * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
+ * @author Júlio César de Oliveira <talk@juliocesar.me>
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
+ */
 
+/**
+ * Cielo
+ *
+ * @author Júlio César
+ * @version 1.0
+ */
 class Cielo {
 	private $log_file = null;
 	private $xml = array ();
 	public $dataEcNumber;
 	public $dataEcKey;
-	
 	public $dataCarrierNumber;
 	public $dataCarrierExp;
 	public $dataCarrierInd;
 	public $dataCarrierSecKey;
 	public $dataCarrierName;
-	
 	public $dataOrderNumber;
 	public $dataOrderPrice;
 	public $dataOrderCurrency = "986";
 	public $dataOrderDate;
 	public $dataOrderDesc;
 	public $dataOrderLanguage = "PT";
-	
 	public $paymentMethodFlag;
 	public $paymentMethodProduct;
 	public $paymentMethodParcels;
-	
 	public $returnURL;
 	public $authorize;
 	public $capture;
-	
 	public $tid;
 	public $status;
 	public $urlAuthorization;
-	
 	const ENCODING = "ISO-8859-1";
 	const VERSION = "1.1.0";
 	const ADDRESS_PRODUCTION = "https://ecommerce.cielo.com.br/servicos/ecommwsec.do";
 	const ADDRESS_TEST = "https://qasecommerce.cielo.com.br/servicos/ecommwsec.do";
 	
+	/**
+	 * _Construct
+	 *
+	 * @param string $id
+	 */
 	public function __construct($id) {
 		$this->log_file = $this->folder ( LOGS_DIR . "/cielo/" . date ( "Y/m/d/" ) ) . date ( "H-i." ) . $id . ".log";
 	}
 	
+	/**
+	 * Build XML data
+	 */
 	public function buildData() {
 		// XML Strings
 		$this->xml ['header'] = '<?xml version="1.0" encoding="' . self::ENCODING . '" ?>';
@@ -74,6 +84,12 @@ class Cielo {
 		$this->xml ['capture'] = '<capturar>' . $this->capture . '</capturar>';
 	}
 	
+	/**
+	 * Fix folder
+	 *
+	 * @param string $path        	
+	 * @return string
+	 */
 	public static function folder($path) {
 		if (! file_exists ( $path )) {
 			if (! is_dir ( $path )) {
@@ -83,8 +99,15 @@ class Cielo {
 		return $path;
 	}
 	
-	// Send Request
+	/**
+	 * Send Request
+	 *
+	 * @param string $post        	
+	 * @param string $transaction        	
+	 * @return SimpleXMLElement
+	 */
 	public function send($post, $transaction) {
+		// Write Log
 		$this->logWrite ( "SEND: " . $post, $transaction );
 		
 		// Send Request to Cielo Website
@@ -96,8 +119,14 @@ class Cielo {
 		return simplexml_load_string ( $vmResponse );
 	}
 	
-	// Requests
+	/**
+	 * Request Transaction
+	 *
+	 * @param string $includeCarrier        	
+	 * @return SimpleXMLElement
+	 */
 	public function requestTransaction($includeCarrier) {
+		// Build XML Data
 		$this->buildData ();
 		$data = $this->xml ['header'] . "\n" . '<requisicao-transacao id="' . md5 ( date ( "YmdHisu" ) ) . '" versao="' . self::VERSION . '">' . "\n   " . $this->xml ['dataEc'] . "\n   ";
 		if ($includeCarrier == true) {
@@ -109,21 +138,41 @@ class Cielo {
 		return $this->send ( $data, "Transacao" );
 	}
 	
+	/**
+	 * Request TID
+	 */
 	public function requestTid() {
 		$data = $this->xml ['header'] . "\n" . '<requisicao-tid id="' . md5 ( date ( "YmdHisu" ) ) . '" versao ="' . self::VERSION . '">' . "\n   " . $this->xml ['dataEc'] . "\n   " . $this->xml ['paymentMethod'] . "\n" . '</requisicao-tid>';
 		return $this->send ( $data, "Requisicao Tid" );
 	}
 	
+	/**
+	 * Request Carrier Authorization
+	 *
+	 * @return SimpleXMLElement
+	 */
 	public function requestCarrierAuthorization() {
 		$data = $this->xml ['header'] . "\n" . '<requisicao-autorizacao-portador id="' . md5 ( date ( "YmdHisu" ) ) . '" versao ="' . self::VERSION . '">' . "\n" . '<tid>' . $this->tid . '</tid>' . "\n   " . $this->xml ['dataEc'] . "\n   " . $this->xml ['dataCard'] . "\n   " . $this->xml ['dataOrder'] . "\n   " . $this->xml ['paymentMethod'] . "\n   " . '<capturar-automaticamente>' . $this->capture . '</capturar-automaticamente>' . "\n" . '</requisicao-autorizacao-portador>';
 		return $this->send ( $data, "Autorizacao Portador" );
 	}
 	
+	/**
+	 * Request TID Authorization
+	 *
+	 * @return SimpleXMLElement
+	 */
 	public function requestTidAuthorization() {
 		$data = $this->xml ['header'] . "\n" . '<requisicao-autorizacao-tid id="' . md5 ( date ( "YmdHisu" ) ) . '" versao="' . self::VERSION . '">' . "\n  " . '<tid>' . $this->tid . '</tid>' . "\n  " . $this->xml ['dataEc'] . "\n" . '</requisicao-autorizacao-tid>';
 		return $this->send ( $data, "Autorizacao Tid" );
 	}
 	
+	/**
+	 * Request Capture
+	 *
+	 * @param string $capturePercent        	
+	 * @param string $attach        	
+	 * @return SimpleXMLElement
+	 */
 	public function requestCapture($capturePercent, $attach) {
 		$data = $this->xml ['header'] . "\n" . '<requisicao-captura id="' . md5 ( date ( "YmdHisu" ) ) . '" versao="' . self::VERSION . '">' . "\n   " . '<tid>' . $this->tid . '</tid>' . "\n   " . $this->xml ['dataEc'] . "\n   " . '<valor>' . $capturePercent . '</valor>' . "\n";
 		if (! empty ( $attach )) {
@@ -134,21 +183,40 @@ class Cielo {
 		return $this->send ( $data, "Captura" );
 	}
 	
+	/**
+	 * Request Cancel
+	 *
+	 * @return SimpleXMLElement
+	 */
 	public function requestCancel() {
 		$data = $this->xml ['header'] . "\n" . '<requisicao-cancelamento id="' . md5 ( date ( "YmdHisu" ) ) . '" versao="' . self::VERSION . '">' . "\n   " . '<tid>' . $this->tid . '</tid>' . "\n   " . $this->xml ['dataEc'] . "\n" . '</requisicao-cancelamento>';
 		return $this->send ( $data, "Cancelamento" );
 	}
 	
+	/**
+	 * Request Inquiry
+	 *
+	 * @return SimpleXMLElement
+	 */
 	public function requestInquiry() {
 		$data = $this->xml ['header'] . "\n" . '<requisicao-consulta id="' . md5 ( date ( "YmdHisu" ) ) . '" versao="' . self::VERSION . '">' . "\n   " . '<tid>' . $this->tid . '</tid>' . "\n   " . $this->xml ['dataEc'] . "\n" . '</requisicao-consulta>';
 		return $this->send ( $data, "Consulta" );
 	}
 	
-	// Join all
+	/**
+	 * Implode all XML data
+	 *
+	 * @return string
+	 */
 	public function ToString() {
 		return $this->xml ['header'] . '<objeto-pedido>' . '<tid>' . $this->tid . '</tid>' . '<status>' . $this->status . '</status>' . $this->xml ['dataEc'] . $this->xml ['orderData'] . $this->xml ['paymentMethod'] . '</objeto-pedido>';
 	}
 	
+	/**
+	 * From String
+	 *
+	 * @param string $str
+	 */
 	public function FromString($str) {
 		$xml = simplexml_load_string ( $str );
 		
@@ -163,7 +231,11 @@ class Cielo {
 		$this->paymentMethodParcels = $xml->{'forma-pagamento'}->parcelas;
 	}
 	
-	// Translate status code
+	/**
+	 * Translate status code
+	 *
+	 * @return string
+	 */
 	public function getStatus() {
 		if ($this->status == 0) {
 			$status = "Criada";
@@ -192,6 +264,12 @@ class Cielo {
 		return $status;
 	}
 	
+	/**
+	 * Log Write
+	 * 
+	 * @param string $strMessage        	
+	 * @param string $transaction        	
+	 */
 	public function logWrite($strMessage, $transaction) {
 		$log = "***********************************************" . "\n";
 		$log .= date ( "Y-m-d H:i:s:u (T)" ) . "\n";
@@ -201,21 +279,27 @@ class Cielo {
 		
 		file_put_contents ( $this->log_file, $log, FILE_APPEND );
 	}
-	
+	/**
+	 * Process Transaction
+	 * 
+	 * @param string $address        	
+	 * @param array $post        	
+	 * @return mixed
+	 */
 	public function process($address, $post) {
 		$curl = curl_init ();
 		curl_setopt ( $curl, CURLOPT_URL, $address );
 		curl_setopt ( $curl, CURLOPT_FAILONERROR, true );
-		//  Validate Cert
+		// Validate Cert
 		curl_setopt ( $curl, CURLOPT_SSL_VERIFYPEER, true );
-		//  Validate Server
+		// Validate Server
 		curl_setopt ( $curl, CURLOPT_SSL_VERIFYHOST, 2 );
-		//  Tell the Cert Location
+		// Tell the Cert Location
 		curl_setopt ( $curl, CURLOPT_CAINFO, WEBROOT_DIR . "/VeriSignClass3PublicPrimaryCertificationAuthority-G5.crt" );
 		curl_setopt ( $curl, CURLOPT_SSLVERSION, 3 );
-		//  Set Connection timeout 
+		// Set Connection timeout
 		curl_setopt ( $curl, CURLOPT_CONNECTTIMEOUT, 10 );
-		//  Set timeout
+		// Set timeout
 		curl_setopt ( $curl, CURLOPT_TIMEOUT, 40 );
 		// Force Return
 		curl_setopt ( $curl, CURLOPT_RETURNTRANSFER, true );
@@ -232,6 +316,14 @@ class Cielo {
 		return $result;
 	}
 	
+	/**
+	 * Verify Error
+	 *
+	 * @param string $post        	
+	 * @param string $response        	
+	 * @throws Exception
+	 * @return boolean
+	 */
 	public function verifyError($post, $response) {
 		$error_msg = null;
 		

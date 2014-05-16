@@ -8,10 +8,11 @@
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
-
 class captcha {
 	/**
 	 * Auto Detect File
+	 *
+	 * @return void
 	 */
 	public static function check() {
 		if (! file_exists ( CAPTCHA_ENFORCER_FILE )) {
@@ -22,34 +23,37 @@ class captcha {
 	
 	/**
 	 * Check if IP is Captcha Enforced
+	 *
 	 * @return boolean
 	 */
-	public static function isEnforced(){
-		self::check();
-		return find(CLIENT_IP, file_get_contents(CAPTCHA_ENFORCER_FILE));
+	public static function isEnforced() {
+		self::check ();
+		return find ( CLIENT_IP, file_get_contents ( CAPTCHA_ENFORCER_FILE ) );
 	}
 	
 	/**
 	 * Generate Captcha IMAGE
-	 * @param string $referer
+	 *
+	 * @param string $referer        	
+	 * @return void
 	 */
-	public static function generate($referer){
-		self::check();
-		//Generate Text
+	public static function generate($referer) {
+		self::check ();
+		// Generate Text
 		$text = str_shuffle ( 'CDFHJKNPRTUVXY49' );
 		$text = substr ( $text, - 4 );
 		$showText = tools::addSpaceText ( $text );
 		$text = strtolower ( $text );
 		
 		if (! empty ( $referer )) {
-			//Add Captcha to Session
+			// Add Captcha to Session
 			$_SESSION ['SYSTEM'] ['CAPTCHA'] [$referer] = $text;
-		
-			//Generate Captcha Image
+			
+			// Generate Captcha Image
 			$captcha = new Image ( WEBROOT_DIR . '/img/captcha.jpg' );
 			$captcha->newSize ( 125, 40 );
-			$captcha->text ( $showText, 20, 10, 30, array (160, 160, 160 ), 'ITCKRIST' );
-			//Show Captcha and Destroy memory Resources
+			$captcha->text ( $showText, 20, 10, 30, array ( 160, 160, 160 ), 'ITCKRIST' );
+			// Show Captcha and Destroy memory Resources
 			$captcha->show ();
 			$captcha->destroy ();
 			unset ( $captcha );
@@ -58,29 +62,32 @@ class captcha {
 	
 	/**
 	 * Lock/UnLock IP Address on the CAPTCHA Enforce
-	 * @param boolean $add
+	 *
+	 * @param boolean $add        	
+	 * @return void
 	 */
-	public static function enforce($add = true){
-		$enforced = file_get_contents(CAPTCHA_ENFORCER_FILE);
-		if(!$add){
-			if(self::isEnforced()){				
-				$enforced = str_replace("\r\n". CLIENT_IP, "", $enforced);
+	public static function enforce($add = true) {
+		$enforced = file_get_contents ( CAPTCHA_ENFORCER_FILE );
+		if (! $add) {
+			if (self::isEnforced ()) {
+				$enforced = str_replace ( "\r\n" . CLIENT_IP, "", $enforced );
 			}
-		}else{
-			if(!self::isEnforced()){
-				$enforced = $enforced."\r\n".CLIENT_IP;				
-			}	
+		} else {
+			if (! self::isEnforced ()) {
+				$enforced = $enforced . "\r\n" . CLIENT_IP;
+			}
 		}
-
-		file_put_contents(CAPTCHA_ENFORCER_FILE, $enforced);
+		
+		file_put_contents ( CAPTCHA_ENFORCER_FILE, $enforced );
 	}
 	
 	/**
 	 * Generate HTML Captcha <img>
-	 * @param string $from
+	 *
+	 * @param string $from        	
 	 * @return string
 	 */
-	public static function generateHTML($from){
+	public static function generateHTML($from) {
 		return '<img src="' . BASE_DIR . '/captcha?from=' . $from . '&_=' . mt_rand ( 111, 999 ) . '" rel="' . $from . '" title="Trocar Imagem" style="cursor:pointer" onclick="this.src=\'' . BASE_DIR . '/captcha?from=' . $from . '&_=\'+Math.random()" />';
 	}
 }

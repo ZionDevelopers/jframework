@@ -1,6 +1,8 @@
-<?php 
+<?php
 /**
  * jFramework
+ *
+ * @version 1.2
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
@@ -8,8 +10,9 @@
 
 /**
  * To Find
- * @param string $what
- * @param string $context
+ *
+ * @param string $what        	
+ * @param string $context        	
  * @return boolean
  */
 function find($what, $context) {
@@ -19,7 +22,7 @@ function find($what, $context) {
 /**
  * Decode URL to UTF8
  *
- * @param $value string        	
+ * @param string $value        	
  */
 function urldec(&$value) {
 	if (is_string ( $value )) {
@@ -32,11 +35,8 @@ function urldec(&$value) {
 /**
  * Encode string for URL
  *
- * @param $value string        	
- * @return
- *
- *
- *
+ * @param string $value        	
+ * @return string
  */
 function urlenc($value) {
 	if (is_string ( $value )) {
@@ -51,7 +51,7 @@ function urlenc($value) {
 /**
  * Convert Hex to Bin (reverse bin2hex)
  *
- * @param $h string        	
+ * @param string $h        	
  * @return string
  */
 if (! function_exists ( "hex2bin" )) {
@@ -71,7 +71,7 @@ if (! function_exists ( "hex2bin" )) {
  * Return the First (ZERO) element from array
  *
  * @param array $array        	
- * @return mixed
+ * @return string
  */
 function z(array $array) {
 	return $array [0];
@@ -133,7 +133,12 @@ function getWebPort($secure = false) {
 	return $result;
 }
 
-// Function to convert IP address (xxx.xxx.xxx.xxx) to IP number (0 to 256^4-1)
+/**
+ * Function to convert IP address (xxx.xxx.xxx.xxx) to IP number (0 to 256^4-1)
+ *
+ * @param string $IPaddr        	
+ * @return integer
+ */
 function dot2LongIP($IPaddr) {
 	if ($IPaddr == "") {
 		return 0;
