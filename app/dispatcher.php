@@ -50,9 +50,11 @@ $_GET = array_filter ( $_GET );
 if (file_exists ( CONTROLLERS_DIR . '/' . CONTROLLER . '.php' )) {
 	// Require Controller
 	require CONTROLLERS_DIR . '/' . CONTROLLER . '.php';
+	
 	// Defining Render Options
 	define ( 'LAYOUT_PAGE', isset ( $layout ) ? $layout : LAYOUT_DEFAULT );
 	define ( 'VIEW_PAGE', isset ( $view ) ? $view : CONTROLLER );
+	
 	// Check out View
 	$contents = view::renderView ( VIEW_PAGE );
 } else {
