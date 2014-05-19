@@ -9,58 +9,13 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 class tools {
-	public static $mail_configs = array (
-			'host' => 'localhost',
-			'user' => 'test',
-			'pass' => 'test',
-			'from_name' => 'Test',
-			'from_email' => 'test@test.com',
-			'copy' => array (
-					'test@test.com' 
-			) 
-	);
-	public static $db = null;
-	
-	/**
-	 * To Send email
-	 *
-	 * @param $email string        	
-	 * @param $subject string        	
-	 * @param $body string        	
-	 * @param $charset string        	
-	 */
-	public static function mail($email, $subject, $body) {
-		require_once (LIBRARY_DIR . "/mailer/class.phpmailer.php");
-		
-		$mail = new PHPMailer ( true );
-		$mail->PluginDir = LIBRARY_DIR . '/mailer/';
-		$mail->IsSMTP (); // telling the class to use SMTP
-		
-		$mail->CharSet = CHARSET;
-		$mail->SMTPAuth = true; // enable SMTP authentication
-		$mail->Host = self::$mail_configs ['host']; // sets the SMTP server
-		$mail->Username = self::$mail_configs ['user']; // SMTP account username
-		$mail->Password = self::$mail_configs ['pass']; // SMTP account password
-		$mail->SetFrom ( self::$mail_configs ['from_email'], self::$mail_configs ['from_name'] );
-		$mail->Subject = $subject;
-		$mail->AltBody = "Para ver esta mensagem, favor usar um leitor de e-mail compativel com HTML!";
-		
-		$mail->MsgHTML ( $body );
-		$mail->AddAddress ( $email );
-		
-		foreach ( self::$mail_configs ['copy'] as $copy ) {
-			$mail->AddBCC ( $copy );
-		}
-		
-		return $mail->Send ();
-	}
 	
 	/**
 	 * To Debug
 	 *
 	 * @param $any mixed        	
 	 */
-	public static function debug() {
+	public static function  debug() {
 		if (DEBUG) {
 			echo '<pre>';
 			foreach ( func_get_args () as $arg ) {
@@ -75,23 +30,8 @@ class tools {
 	 *
 	 * @param int $error        	
 	 */
-	public static function error($error = 404) {
+	public static function  error($error = 404) {
 		self::redir ( BASE_DIR . '/errors/' . $error . '?referer=' . CONTROLLER );
-	}
-	
-	/**
-	 *
-	 * @param $file string        	
-	 */
-	public static function getContents($file) {
-		$contents = 'nothing';
-		if (file_exists ( $file )) {
-			ob_start ();
-			require_once ($file);
-			$contents = ob_get_contents ();
-			ob_end_clean ();
-		}
-		return $contents;
 	}
 	
 	/**
@@ -101,7 +41,7 @@ class tools {
 	 * @param $noCents boolean        	
 	 * @return string
 	 */
-	public static function formatPrice($price, $noCents = false) {
+	public static function  formatPrice($price, $noCents = false) {
 		$newPrice = 'R$ ' . number_format ( self::price2Float ( $price ), 2, ",", "." );
 		if ($noCents) {
 			$newPrice = explode ( ',', $newPrice );
@@ -113,9 +53,9 @@ class tools {
 	/**
 	 * To clean a formated Price into Float
 	 *
-	 * @param string $value
+	 * @param string $value        	
 	 */
-	public static function price2Float($value) {
+	public static function  price2Float($value) {
 		$string = ( string ) $value;
 		
 		if (strpos ( $string, "." ) !== false && strpos ( $string, "," ) !== false) {
@@ -128,25 +68,12 @@ class tools {
 	}
 	
 	/**
-	 * Format area
-	 *
-	 * @param $value string        	
-	 * @return string
-	 */
-	public static function formatArea($value) {
-		$value = number_format ( $value, 2, ',', '.' );
-		$value = explode ( ',', $value );
-		$value = array_shift ( $value );
-		return $value;
-	}
-	
-	/**
 	 * To get a file extension
 	 *
-	 * @param string $file
+	 * @param string $file        	
 	 * @return string
 	 */
-	public static function fileType($file) {
+	public static function  fileType($file) {
 		$ext = explode ( ".", $file );
 		$ext = $ext [count ( $ext ) - 1];
 		return strtolower ( $ext );
@@ -158,7 +85,7 @@ class tools {
 	 * @param $quit boolean        	
 	 * @return boolean
 	 */
-	public static function checkAjax($quit = true) {
+	public static function  checkAjax($quit = true) {
 		$result = false;
 		
 		if (isset ( $_SERVER ["HTTP_X_REQUESTED_WITH"] )) {
@@ -179,261 +106,12 @@ class tools {
 	}
 	
 	/**
-	 * Convert XML to ARRAY
-	 *
-	 * @param $xml string        	
-	 * @param $recursive boolean        	
-	 */
-	public static function XML2Array($xml, $recursive = false) {
-		if (! $recursive) {
-			$array = simplexml_load_string ( $xml );
-		} else {
-			$array = $xml;
-		}
-		
-		$newArray = array ();
-		$array = ( array ) $array;
-		foreach ( $array as $key => $value ) {
-			$value = ( array ) $value;
-			if (isset ( $value [0] )) {
-				$newArray [$key] = trim ( $value [0] );
-			} else {
-				$newArray [$key] = self::XML2Array ( $value, true );
-			}
-		}
-		return $newArray;
-	}
-	
-	/**
-	 * To convert Array TO XML
-	 *
-	 * @param $array array        	
-	 * @param $version string        	
-	 * @param $encoding string        	
-	 * @param $rev boolean        	
-	 * @return string
-	 */
-	public static function Array2XML(array $array, $version = "1.0", $encoding = "utf-8", $rev = false) {
-		if (! $rev) {
-			$xml = "<?xml version=\"" . $version . "\" encoding=\"" . $encoding . "\"?>\n\t<root>\n\t";
-		} else {
-			$xml = "";
-		}
-		
-		foreach ( $array as $key => $value ) {
-			if (is_numeric ( $key )) {
-				$key = "_" . $key;
-			}
-			
-			if (is_array ( $value )) {
-				$xml .= "\t<" . str_replace ( '/', '-', $key ) . ">\n\t" . self::Array2XML ( $value, $version, $encoding, true ) . "\n\t</" . $key . ">\n";
-			} else {
-				$xml .= "\t<" . str_replace ( '/', '-', $key ) . ">" . $value . "</" . $key . ">\n";
-			}
-		}
-		
-		if (! $rev) {
-			return $xml . "\n\t</root>";
-		} else {
-			return $xml;
-		}
-	}
-	
-	/**
-	 * To validate an brazillian CPF (Document)
-	 *
-	 * @param $cpf string        	
-	 * @return string
-	 */
-	public static function validateCPF($cpf) {
-		// Retirar todos os caracteres que nao sejam 0-9
-		$s = "";
-		$s = preg_replace ( "/([^0-9])/", "", $cpf );
-		
-		$cpf = $s;
-		if (strlen ( $cpf ) != 11) {
-			return false;
-		} elseif ($cpf == "00000000000") {
-			return false;
-		} elseif ($cpf == "11111111111") {
-			return false;
-		} elseif ($cpf == "22222222222") {
-			return false;
-		} elseif ($cpf == "33333333333") {
-			return false;
-		} elseif ($cpf == "44444444444") {
-			return false;
-		} elseif ($cpf == "55555555555") {
-			return false;
-		} elseif ($cpf == "66666666666") {
-			return false;
-		} elseif ($cpf == "77777777777") {
-			return false;
-		} elseif ($cpf == "88888888888") {
-			return false;
-		} elseif ($cpf == "99999999999") {
-			return false;
-		} else {
-			$number [1] = intval ( substr ( $cpf, 1 - 1, 1 ) );
-			$number [2] = intval ( substr ( $cpf, 2 - 1, 1 ) );
-			$number [3] = intval ( substr ( $cpf, 3 - 1, 1 ) );
-			$number [4] = intval ( substr ( $cpf, 4 - 1, 1 ) );
-			$number [5] = intval ( substr ( $cpf, 5 - 1, 1 ) );
-			$number [6] = intval ( substr ( $cpf, 6 - 1, 1 ) );
-			$number [7] = intval ( substr ( $cpf, 7 - 1, 1 ) );
-			$number [8] = intval ( substr ( $cpf, 8 - 1, 1 ) );
-			$number [9] = intval ( substr ( $cpf, 9 - 1, 1 ) );
-			$number [10] = intval ( substr ( $cpf, 10 - 1, 1 ) );
-			$number [11] = intval ( substr ( $cpf, 11 - 1, 1 ) );
-			
-			$sum = 10 * $number [1] + 9 * $number [2] + 8 * $number [3] + 7 * $number [4] + 6 * $number [5] + 5 * $number [6] + 4 * $number [7] + 3 * $number [8] + 2 * $number [9];
-			$sum = $sum - (11 * (intval ( $sum / 11 )));
-			
-			if ($sum == 0 || $sum == 1) {
-				$result1 = 0;
-			} else {
-				$result1 = 11 - $sum;
-			}
-			
-			if ($result1 == $number [10]) {
-				$sum = $number [1] * 11 + $number [2] * 10 + $number [3] * 9 + $number [4] * 8 + $number [5] * 7 + $number [6] * 6 + $number [7] * 5 + $number [8] * 4 + $number [9] * 3 + $number [10] * 2;
-				$sum = $sum - (11 * (intval ( $sum / 11 )));
-				
-				if ($sum == 0 || $sum == 1) {
-					$result2 = 0;
-				} else {
-					$result2 = 11 - $sum;
-				}
-				if ($result2 == $number [11]) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return false;
-			}
-		}
-	}
-	
-	/**
-	 * To validate an document (CPF or CNPJ)
-	 *
-	 * @param $doc string        	
-	 * @param
-	 *        	boolean
-	 */
-	public static function validateDoc($doc) {
-		$doc = preg_replace ( "/([^0-9])/", "", $doc );
-		$result = false;
-		
-		if (strlen ( $doc ) == 11) {
-			$result = self::validateCPF ( $doc );
-		} elseif (strlen ( $doc ) == 14) {
-			$result = self::validateCNPJ ( $doc );
-		}
-		
-		return $result;
-	}
-	
-	/**
-	 * Validate CNPJ
-	 *
-	 * @param $cnpj string        	
-	 * @return string
-	 */
-	public static function validateCNPJ($cnpj) {
-		$s = "";
-		$s = preg_replace ( "/([^0-9])/", "", $cnpj );
-		
-		$cnpj = $s;
-		if (strlen ( $cnpj ) != 14) {
-			return false;
-		} elseif ($cnpj == "00000000000000") {
-			return false;
-		} elseif ($cnpj == "11111111111111") {
-			return false;
-		} elseif ($cnpj == "22222222222222") {
-			return false;
-		} elseif ($cnpj == "33333333333333") {
-			return false;
-		} elseif ($cnpj == "44444444444444") {
-			return false;
-		} elseif ($cnpj == "55555555555555") {
-			return false;
-		} elseif ($cnpj == "66666666666666") {
-			return false;
-		} elseif ($cnpj == "77777777777777") {
-			return false;
-		} elseif ($cnpj == "88888888888888") {
-			return false;
-		} elseif ($cnpj == "99999999999999") {
-			return false;
-		} else {
-			$number [1] = intval ( substr ( $cnpj, 1 - 1, 1 ) );
-			$number [2] = intval ( substr ( $cnpj, 2 - 1, 1 ) );
-			$number [3] = intval ( substr ( $cnpj, 3 - 1, 1 ) );
-			$number [4] = intval ( substr ( $cnpj, 4 - 1, 1 ) );
-			$number [5] = intval ( substr ( $cnpj, 5 - 1, 1 ) );
-			$number [6] = intval ( substr ( $cnpj, 6 - 1, 1 ) );
-			$number [7] = intval ( substr ( $cnpj, 7 - 1, 1 ) );
-			$number [8] = intval ( substr ( $cnpj, 8 - 1, 1 ) );
-			$number [9] = intval ( substr ( $cnpj, 9 - 1, 1 ) );
-			$number [10] = intval ( substr ( $cnpj, 10 - 1, 1 ) );
-			$number [11] = intval ( substr ( $cnpj, 11 - 1, 1 ) );
-			$number [12] = intval ( substr ( $cnpj, 12 - 1, 1 ) );
-			$number [13] = intval ( substr ( $cnpj, 13 - 1, 1 ) );
-			$number [14] = intval ( substr ( $cnpj, 14 - 1, 1 ) );
-			
-			$sum = $number [1] * 5 + $number [2] * 4 + $number [3] * 3 + $number [4] * 2 + $number [5] * 9 + $number [6] * 8 + $number [7] * 7 + $number [8] * 6 + $number [9] * 5 + $number [10] * 4 + $number [11] * 3 + $number [12] * 2;
-			
-			$sum = $sum - (11 * (intval ( $sum / 11 )));
-			
-			if ($sum == 0 || $sum == 1) {
-				$result1 = 0;
-			} else {
-				$result1 = 11 - $sum;
-			}
-			if ($result1 == $number [13]) {
-				$sum = $number [1] * 6 + $number [2] * 5 + $number [3] * 4 + $number [4] * 3 + $number [5] * 2 + $number [6] * 9 + $number [7] * 8 + $number [8] * 7 + $number [9] * 6 + $number [10] * 5 + $number [11] * 4 + $number [12] * 3 + $number [13] * 2;
-				$sum = $sum - (11 * (intval ( $sum / 11 )));
-				if ($sum == 0 || $sum == 1) {
-					$result2 = 0;
-				} else {
-					$result2 = 11 - $sum;
-				}
-				if ($result2 == $number [14]) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return false;
-			}
-		}
-	}
-	
-	/**
-	 * Check if this is a valid email
-	 *
-	 * @param $email string        	
-	 * @return boolean
-	 */
-	public static function validateEmail($email) {
-		if (! strstr ( $email, "@" )) {
-			return false;
-		} else {
-			list ( $user, $host ) = explode ( "@", $email );
-			return fsockopen ( "www." . $host, 80, $errno, $errstr, 5 ) == true;
-		}
-	}
-	
-	/**
 	 * To check if an url exists
 	 *
 	 * @param $url string        	
 	 * @return boolean
 	 */
-	public static function urlExists($url) {
+	public static function  urlExists($url) {
 		$headers = get_headers ( $url, true );
 		$response = $headers [0];
 		
@@ -445,7 +123,7 @@ class tools {
 	 *
 	 * @param $url string        	
 	 */
-	public static function redir($url) {
+	public static function  redir($url) {
 		header ( 'Location: ' . $url, true );
 		exit ();
 	}
@@ -456,7 +134,7 @@ class tools {
 	 * @param $file string        	
 	 * @return boolean
 	 */
-	public static function testFile($file) {
+	public static function  testFile($file) {
 		$result = false;
 		if (file_exists ( $file )) {
 			if (is_readable ( $file )) {
@@ -474,7 +152,7 @@ class tools {
 	 *
 	 * @param $list array        	
 	 */
-	public static function unlinkArray(array $list) {
+	public static function  unlinkArray(array $list) {
 		foreach ( $list as $file ) {
 			if (! empty ( $file )) {
 				if (file_exists ( $file )) {
@@ -485,31 +163,11 @@ class tools {
 	}
 	
 	/**
-	 * Check if the current user was been logged
-	 *
-	 * @return boolean
-	 */
-	public static function userIsLogged() {
-		return isset ( $_SESSION ['SYSTEM'] ['RESTRICT'] ['LOGGED'], $_SESSION ['USER'] );
-	}
-	
-	/**
-	 * To redir by System Session
-	 */
-	public static function SystemRedir() {
-		if (isset ( $_SESSION ['SYSTEM'] ['REDIR'] )) {
-			$redir = $_SESSION ['SYSTEM'] ['REDIR'];
-			unset ( $_SESSION ['SYSTEM'] ['REDIR'] );
-			tools::redir ( $redir );
-		}
-	}
-	
-	/**
 	 * To remove a complete folder
 	 *
 	 * @param $dir string        	
 	 */
-	public static function removeDir($dir) {
+	public static function  removeDir($dir) {
 		$files = glob ( $dir . '*', GLOB_MARK );
 		foreach ( $files as $file ) {
 			if (substr ( $file, - 1 ) == '/') {
@@ -526,11 +184,11 @@ class tools {
 	
 	/**
 	 * Check if folder exists and if is writable
-	 * 
+	 *
 	 * @param string $path        	
 	 * @return string
 	 */
-	public static function folder($path) {
+	public static function  folder($path) {
 		if (! file_exists ( $path )) {
 			if (! is_dir ( $path )) {
 				mkdir ( $path, 0777, true );
@@ -538,60 +196,14 @@ class tools {
 		}
 		return $path;
 	}
-	
-	/**
-	 * To count script generation time
-	 *
-	 * @param $param interger        	
-	 * @param $starttime integer        	
-	 */
-	public static function timer($param, $starttime = 0) {
-		$result = null;
-		if ($param === 1) {
-			$mtime = microtime ();
-			$mtime = explode ( " ", $mtime );
-			$mtime = $mtime [1] + $mtime [0];
-			$starttime = $mtime;
-			$result = $starttime;
-		} elseif ($param === 2) {
-			$mtime = microtime ();
-			$mtime = explode ( " ", $mtime );
-			$mtime = $mtime [1] + $mtime [0];
-			$endtime = $mtime; // Finaliza a variável de contagem do tempo de
-			                   // geração da página.
-			$totaltime = ($endtime - $starttime);
-			$result = round ( $totaltime, 2 );
-		}
 		
-		return $result;
-	}
-	
-	/**
-	 * Request a file from Library
-	 *
-	 * @param $class string        	
-	 */
-	public static function Library($class) {
-		require_once (LIBRARY_DIR . '/' . $class . '.php');
-	}
-	
-	/**
-	 * Request a file from Configs
-	 *
-	 * @param $file string        	
-	 */
-	public static function Configs($file) {
-		global $CONFIGS;
-		require (CONFIGS_DIR . '/' . $file . '.php');
-	}
-	
 	/**
 	 * To Truncate an Text
 	 *
 	 * @param $txt string        	
 	 * @param $max integer        	
 	 */
-	public static function truncateText($txt, $max, $end = '...') {
+	public static function  truncateText($txt, $max, $end = '...') {
 		$txtSize = strlen ( $txt );
 		if ($txtSize >= $max) {
 			$txt = substr ( $txt, 0, $max - strlen ( $end ) );
@@ -606,7 +218,7 @@ class tools {
 	 * @param $text string        	
 	 * @return string
 	 */
-	public static function addSpaceText($text) {
+	public static function  addSpaceText($text) {
 		$newText = '';
 		$n = strlen ( $text );
 		for($i = 0; $i < $n; $i ++) {
@@ -616,133 +228,12 @@ class tools {
 	}
 	
 	/**
-	 * Generate Captcha HTML
-	 * @param string $from
-	 */
-	public static function captchaImg($from = '') {
-		echo captcha::generateHTML ( $from );
-	}
-	
-	/**
-	 * Encrypt a text (Encrypting 3 times with 2 keys by RIJNDAEL 256 bit
-	 * Cryptographic, messing the text a loot! and coding the text a loot too!
-	 * and converting and reconverting): With that you protect the text and
-	 * leaving the text 470% larger than the original
-	 *
-	 * @author Júlio César <talk@juliocesar.me>
-	 * @param $str string        	
-	 * @param $key string        	
-	 * @return string
-	 */
-	public static function encrypt($str, $key1, $key2) {
-		// Get MD5 SHA1 Keys HASH
-		$key1 = md5 ( sha1 ( $key1 ) );
-		$key2 = md5 ( sha1 ( $key2 ) );
-		
-		// Encrypt String
-		$encrypted = mcrypt_encrypt ( MCRYPT_RIJNDAEL_256, $key1, $str, MCRYPT_MODE_CFB, $key2 );
-		// Compress and mess the encrypted text
-		$encrypted = gzcompress ( $encrypted, 9 );
-		// Format to a readable text
-		$encrypted = convert_uuencode ( $encrypted );
-		// Encrypt again by interting the keys position
-		$encrypted = mcrypt_encrypt ( MCRYPT_RIJNDAEL_256, $key2, $encrypted, MCRYPT_MODE_CFB, $key1 );
-		// Format to a readable text
-		$encrypted = base64_encode ( $encrypted );
-		// Encrypt one more time with the 2 keys concatenaed by md5 hash
-		$encrypted = mcrypt_encrypt ( MCRYPT_RIJNDAEL_256, md5 ( $key1 . $key2 ), $encrypted, MCRYPT_MODE_CFB, md5 ( $key2 . $key1 ) );
-		// Convert the Binary Encryted code to Hexa code (Readable text)
-		$encrypted = bin2hex ( $encrypted );
-		// Revert string
-		$encrypted = strrev ( $encrypted );
-		return $encrypted;
-	}
-	
-	/**
-	 * Decrypt a text encrypted by tools::encrypt function Decrypting 3 times
-	 * with 2 keys by RIJNDAEL 256 bit Cryptographic, unmessing the text a loot!
-	 * and uncoding the text a loot too! and unconverting): With that you
-	 * unprotect the text and leaving the text 470% smaller than the "original"
-	 * (Encrypted text) but EXACLY THE SAME as the ORIGINAL TEXT
-	 *
-	 * @author Júlio César <talk@juliocesar.me>
-	 * @param $str string        	
-	 * @param $key string        	
-	 * @return string
-	 */
-	public static function decrypt($str, $key1, $key2) {
-		// Get MD5 Sha1 Keys HASH
-		$key1 = md5 ( sha1 ( $key1 ) );
-		$key2 = md5 ( sha1 ( $key2 ) );
-		
-		// UnRevert string
-		$decrypted = strrev ( $str );
-		// Convert hexa code to original binary code
-		$decrypted = hex2bin ( $decrypted );
-		// Uncrypt by 2 keys concatenaed by md5 hash
-		$decrypted = mcrypt_decrypt ( MCRYPT_RIJNDAEL_256, md5 ( $key1 . $key2 ), $decrypted, MCRYPT_MODE_CFB, md5 ( $key2 . $key1 ) );
-		// Unformat from readable text
-		$decrypted = base64_decode ( $decrypted );
-		// Uncrypt by interting the keys position
-		$decrypted = mcrypt_decrypt ( MCRYPT_RIJNDAEL_256, $key2, $decrypted, MCRYPT_MODE_CFB, $key1 );
-		// UnFormat from a readable text
-		$decrypted = convert_uudecode ( $decrypted );
-		// Uncompress and unmess the text
-		$decrypted = gzuncompress ( $decrypted );
-		// Uncrypt the text
-		$decrypted = mcrypt_decrypt ( MCRYPT_RIJNDAEL_256, $key1, $decrypted, MCRYPT_MODE_CFB, $key2 );
-		// Remove the ODD spaces and make it clean!
-		$decrypted = trim ( $decrypted );
-		return $decrypted;
-	}
-	
-	/**
-	 * Generate a redirect ID
-	 *
-	 * @param $url string        	
-	 * @return interger
-	 */
-	public static function genRedirID($url) {
-		$data = self::$db->find ( 'redirects', array (), array (
-				'url' => $url 
-		) );
-		if (empty ( $data )) {
-			self::$db->save ( array (
-					'url' => $url 
-			), 'redirects' );
-			$id = self::$db->getLastID ();
-		} else {
-			$data = $data [0];
-			$id = $data ['id'];
-		}
-		
-		return $id;
-	}
-	
-	/**
-	 * Generate a saldation message relative of hour of day
-	 */
-	public static function saldation() {
-		$h = ( int ) date ( "H" );
-		if ($h >= 0 && $h <= 4) {
-			$text = "Boa Madrugada";
-		} elseif ($h >= 5 && $h <= 11) {
-			$text = "Bom Dia";
-		} elseif ($h >= 12 && $h <= 18) {
-			$text = "Boa Tarde";
-		} elseif ($h >= 19 && $h <= 23) {
-			$text = "Boa Noite";
-		}
-		echo $text;
-	}
-	
-	/**
 	 * Slug function
 	 *
 	 * @param $str string        	
 	 * @return string
 	 */
-	public static function slug($str) {
+	public static function  slug($str) {
 		// Convert UTF-8 to ASCII-TRANSLIT
 		$str = iconv ( CHARSET, 'ASCII//TRANSLIT', $str );
 		// Convert str to lowerCase
@@ -761,7 +252,7 @@ class tools {
 	 * @param integer $hours        	
 	 * @return string
 	 */
-	public static function formatHours($hours) {
+	public static function  formatHours($hours) {
 		$result = '';
 		
 		if ($hours == 1) {
@@ -804,7 +295,7 @@ class tools {
 	 * @param $phone string        	
 	 * @return string
 	 */
-	public static function phoneEncode($phone) {
+	public static function  phoneEncode($phone) {
 		// Compress and mess the encrypted text
 		$result = gzcompress ( $phone, 9 );
 		// Format to a readable text
@@ -822,7 +313,7 @@ class tools {
 	 * @param $phone string        	
 	 * @return string
 	 */
-	public static function phoneDecode($phone) {
+	public static function  phoneDecode($phone) {
 		$result = preg_replace ( '/[^a-z,0-9]/', '', $phone );
 		// Format to hex from Binary
 		$result = @hex2bin ( $result );
@@ -835,69 +326,75 @@ class tools {
 	}
 	
 	/**
-	 * Calculate the time between 2 Dates
+	 * Encrypt a text (Encrypting 3 times with 2 keys by RIJNDAEL 256 bit
+	 * Cryptographic, messing the text a loot! and coding the text a loot too!
+	 * and converting and reconverting): With that you protect the text and
+	 * leaving the text 470% larger than the original
 	 *
-	 * @param multitype:string|integer $date1        	
-	 * @param multitype:string|integer $date2        	
-	 * @return multitype:number boolean
+	 * @author Júlio César <talk@juliocesar.me>
+	 * @param $str string
+	 * @param $key string
+	 * @return string
 	 */
-	public static function time2dates($date1, $date2) {
-		$date1 = is_int ( $date1 ) ? $date1 : strtotime ( $date1 );
-		$date2 = is_int ( $date2 ) ? $date2 : strtotime ( $date2 );
-		
-		if (($date1 !== false) && ($date2 !== false)) {
-			if ($date2 >= $date1) {
-				$diff = ($date2 - $date1);
-				
-				if ($days = intval ( (floor ( $diff / 86400 )) )) {
-					$diff %= 86400;
-				}
-				if ($hours = intval ( (floor ( $diff / 3600 )) )) {
-					$diff %= 3600;
-				}
-				if ($minutes = intval ( (floor ( $diff / 60 )) )) {
-					$diff %= 60;
-				}
-				
-				return array (
-						$days,
-						$hours,
-						$minutes,
-						intval ( $diff ) 
-				);
-			}
-		}
-		
-		return false;
+	public static function encrypt($str, $key1, $key2) {
+		// Get MD5 SHA1 Keys HASH
+		$key1 = md5 ( sha1 ( $key1 ) );
+		$key2 = md5 ( sha1 ( $key2 ) );
+	
+		// Encrypt String
+		$encrypted = mcrypt_encrypt ( MCRYPT_RIJNDAEL_256, $key1, $str, MCRYPT_MODE_CFB, $key2 );
+		// Compress and mess the encrypted text
+		$encrypted = gzcompress ( $encrypted, 9 );
+		// Format to a readable text
+		$encrypted = convert_uuencode ( $encrypted );
+		// Encrypt again by interting the keys position
+		$encrypted = mcrypt_encrypt ( MCRYPT_RIJNDAEL_256, $key2, $encrypted, MCRYPT_MODE_CFB, $key1 );
+		// Format to a readable text
+		$encrypted = base64_encode ( $encrypted );
+		// Encrypt one more time with the 2 keys concatenaed by md5 hash
+		$encrypted = mcrypt_encrypt ( MCRYPT_RIJNDAEL_256, md5 ( $key1 . $key2 ), $encrypted, MCRYPT_MODE_CFB, md5 ( $key2 . $key1 ) );
+		// Convert the Binary Encryted code to Hexa code (Readable text)
+		$encrypted = bin2hex ( $encrypted );
+		// Revert string
+		$encrypted = strrev ( $encrypted );
+		return $encrypted;
 	}
 	
 	/**
-	 * Trace Exception GetTraceArray
+	 * Decrypt a text encrypted by tools::encrypt function Decrypting 3 times
+	 * with 2 keys by RIJNDAEL 256 bit Cryptographic, unmessing the text a loot!
+	 * and uncoding the text a loot too! and unconverting): With that you
+	 * unprotect the text and leaving the text 470% smaller than the "original"
+	 * (Encrypted text) but EXACLY THE SAME as the ORIGINAL TEXT
 	 *
-	 * @param Exception $exception        	
+	 * @author Júlio César <talk@juliocesar.me>
+	 * @param $str string
+	 * @param $key string
 	 * @return string
 	 */
-	public static function traceException(Exception $exception) {
-		// Default String
-		$result = "";
-		
-		// Loop exception trace
-		foreach ( $exception->getTrace () as $i => $t ) {
-			// Check if have class and args
-			if (isset ( $t ['class'], $t ['args'] )) {
-				// Concatanate the full trace line with class and args
-				$result .= '#' . $i . ' ' . $t ['file'] . '(' . $t ['line'] . '): ' . $t ['class'] . $t ['type'] . $t ['function'] . "('" . @implode ( "', '", $t ['args'] ) . "')\r\n";
-			} elseif (isset ( $t ['function'] ) && ! isset ( $t ['class'] )) {
-				// Concatanate the full trace line without class
-				$result .= '#' . $i . ' ' . $t ['file'] . '(' . $t ['line'] . '): ' . $t ['function'] . "('" . implode ( ',', $t ['args'] ) . "')\r\n";
-			}
-		}
-		
-		// Concatanate the last line "MAIN"
-		$result .= "#" . ($i + 1) . " {main} \r\n";
-		
-		// Return result
-		return $result;
+	public static function decrypt($str, $key1, $key2) {
+		// Get MD5 Sha1 Keys HASH
+		$key1 = md5 ( sha1 ( $key1 ) );
+		$key2 = md5 ( sha1 ( $key2 ) );
+	
+		// UnRevert string
+		$decrypted = strrev ( $str );
+		// Convert hexa code to original binary code
+		$decrypted = hex2bin ( $decrypted );
+		// Uncrypt by 2 keys concatenaed by md5 hash
+		$decrypted = mcrypt_decrypt ( MCRYPT_RIJNDAEL_256, md5 ( $key1 . $key2 ), $decrypted, MCRYPT_MODE_CFB, md5 ( $key2 . $key1 ) );
+		// Unformat from readable text
+		$decrypted = base64_decode ( $decrypted );
+		// Uncrypt by interting the keys position
+		$decrypted = mcrypt_decrypt ( MCRYPT_RIJNDAEL_256, $key2, $decrypted, MCRYPT_MODE_CFB, $key1 );
+		// UnFormat from a readable text
+		$decrypted = convert_uudecode ( $decrypted );
+		// Uncompress and unmess the text
+		$decrypted = gzuncompress ( $decrypted );
+		// Uncrypt the text
+		$decrypted = mcrypt_decrypt ( MCRYPT_RIJNDAEL_256, $key1, $decrypted, MCRYPT_MODE_CFB, $key2 );
+		// Remove the ODD spaces and make it clean!
+		$decrypted = trim ( $decrypted );
+		return $decrypted;
 	}
 }
-?>

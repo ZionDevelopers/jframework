@@ -11,8 +11,7 @@ view::autoRender ( false );
 
 if (defined ( 'STDIN' )) {
 	echo "\r\nStarting PHP Session Cleaner for jFramework...\r\n";
-	// Loading Class
-	tools::Library ( 'jSessCleaner' );
+
 	// Starts Session Cleaner
 	$sc = new jSessCleaner ();
 	// Get Old Session Files
@@ -20,4 +19,3 @@ if (defined ( 'STDIN' )) {
 	// Clean and Show
 	$sc->cleanupAndShow ( $files );
 }
-?>

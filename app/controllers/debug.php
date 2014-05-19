@@ -12,19 +12,8 @@ $pageTitle = 'Debug';
 
 // Check if Debug is Enabled
 if (DEBUG) {
-	// Check if DB is a Objct
-	if (! empty ( $db )) {
-		// Get Tables/Fields Names from Cache
-		$cache = $db->cacheGet ();
-	} else {
-		// Nullify db
-		$db = null;
-		$cache = array ();
-	}
-		
-	view::set ( compact ( 'cache' ) );
+
 } else {
 	// Disable View Rendering
 	view::autoRender ( false );
 }
-?>

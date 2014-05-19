@@ -27,7 +27,6 @@ define ( 'SITE_NAME', 'jFramework' );
 define ( 'SITE_EMAIL_COPIES', 'talk@juliocesar.me' );
 define ( 'SITE_EMAIL', 'talk@juliocesar.me' );
 define ( 'DEBUG', false );
-
 define ( 'CHARSET', 'utf-8' );
 define ( 'BASE_DIR', ($BASE_DIR == '/' ? '' : $BASE_DIR) );
 define ( 'LAYOUT_DEFAULT', 'default' );
@@ -42,24 +41,13 @@ static $CONFIGS = array ();
  */
 
 if ( DEBUG ) {
-	error_reporting ( E_ALL | E_STRICT );
+	error_reporting ( E_ALL );
 	ini_set ( "display_errors", "On" ); // To Show Errors
 	ini_set ( "error_log", LOGS_DIR . "/phpErrors_development.log" );
 	ini_set ( "log_errors", "On" ); // To log errors on files
 } else {
-	error_reporting ( E_ALL & ~ E_NOTICE );
+	error_reporting ( E_ALL );
 	ini_set ( "display_errors", "Off" ); // To not show errors
 	ini_set ( "error_log", LOGS_DIR . "/phpErrors_production.log" );
 	ini_set ( "log_errors", "On" ); // To log errors on files
 }
-
-/**
- * **** INI SET ADAPTATIONS: START *****
- */
-
-ini_set ( 'memory_limit', '64M' );
-
-/**
- * **** INIT SET ADAPTATIONS: END *****
- */
-?>

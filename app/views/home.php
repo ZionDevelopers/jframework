@@ -6,4 +6,4 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 ?>
-Hello World
+Hello there! <?php tools::debug($data)?>

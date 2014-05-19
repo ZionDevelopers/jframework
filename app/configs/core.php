@@ -15,8 +15,9 @@ define ( 'VERSION', '1.2' );
 
 // Folders Defination
 define ( 'LIBRARY_DIR', APP_DIR . '/library' );
+define ( 'LIB_DIR', LIBRARY_DIR);
 define ( 'TMP_DIR', APP_DIR . '/tmp' );
-define ( 'LOGS_DIR', TMP_DIR . '/log' );
+define ( 'LOGS_DIR', TMP_DIR . '/logs' );
 define ( 'SESSION_DIR', TMP_DIR . '/session' );
 define ( 'CONTROLLERS_DIR', APP_DIR . '/controllers' );
 define ( 'VIEWS_DIR', APP_DIR . '/views' );
@@ -27,21 +28,15 @@ define ( 'CACHE_DIR', TMP_DIR . '/cache' );
 
 // Configs
 define ( 'SITE_NAME', 'jFramework' );
-define ( 'SITE_EMAIL_COPIES', 'talk@juliocesar.me' );
+define ( 'SITE_EMAIL_COPIES', 'julio@juliocesar.me' );
 define ( 'SITE_EMAIL', 'talk@juliocesar.me' );
 define ( 'DEBUG', true );
-define ( 'DEBUG_HTTP_PORT', 2052 );
-define ( 'DEBUG_HTTPS_PORT', 2352 );
-define ( 'PRODUCTION_HTTP_PORT', 80 );
-define ( 'PRODUCTION_HTTPS_PORT', 443 );
 define ( 'CHARSET', 'utf-8' );
 define ( 'BASE_DIR', ($BASE_DIR == '/' ? '' : $BASE_DIR) );
-define ( 'BASE_URL_SECURE', 'https://' . $_SERVER ['SERVER_NAME'] . (DEBUG ? ':' . DEBUG_HTTPS_PORT : '') . '/' . BASE_DIR );
-define ( 'BASE_URL_NON_SECURE', 'http://' . $_SERVER ['SERVER_NAME'] . (DEBUG ? ':' . DEBUG_HTTP_PORT : '') . '/' . BASE_DIR );
-define ( 'BASE_URL', 'http' . (isSSL () ? 's' : '') . '://' . $_SERVER ['SERVER_NAME'] . (DEBUG ? ':' . $_SERVER ['SERVER_PORT'] : '') . BASE_DIR );
+define ( 'BASE_URL', 'http://' . $_SERVER ['SERVER_NAME'] . BASE_DIR );
 define ( 'LAYOUT_DEFAULT', 'default' );
 
-static $CONFIGS = array ();
+$CONFIGS = array ();
 
 /**
  * Debugging
@@ -51,23 +46,13 @@ static $CONFIGS = array ();
  */
 
 if ( DEBUG ) {
-	error_reporting ( E_ALL | E_STRICT );
+	error_reporting ( E_ALL );
 	ini_set ( "display_errors", "On" ); // To Show Errors
 	ini_set ( "error_log", LOGS_DIR . "/phpErrors_development.log" );
 	ini_set ( "log_errors", "On" ); // To log errors on files
 } else {
-	error_reporting ( E_ALL & ~ E_NOTICE );
+	error_reporting ( E_ALL );
 	ini_set ( "display_errors", "Off" ); // To not show errors
 	ini_set ( "error_log", LOGS_DIR . "/phpErrors_production.log" );
 	ini_set ( "log_errors", "On" ); // To log errors on files
 }
-/**
- * **** INI SET ADAPTATIONS: START *****
- */
-// Set Memory Limit to 10MB
-ini_set ( 'memory_limit', '64MB' );
-
-/**
- * **** INIT SET ADAPTATIONS: END *****
- */
-?>

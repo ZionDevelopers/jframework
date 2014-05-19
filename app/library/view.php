@@ -10,27 +10,28 @@
  */
 class view {
 	/**
-	 * 
+	 *
 	 * @var boolean
 	 */
 	private static $renderView = true, $renderLayout = true;
 	
 	/**
-	 * 
+	 *
 	 * @var array
 	 */
 	private static $vars = array ();
 	
 	/**
-	 * 
+	 *
 	 * @var string
 	 */
 	public static $contents = '';
 	
 	/**
 	 * To get some Var
-	 * @param string $var
-	 * @param string $controller
+	 *
+	 * @param string $var        	
+	 * @param string $controller        	
 	 * @return mixed
 	 */
 	public static function getVar($var, $controller = CONTROLLER) {
@@ -39,15 +40,16 @@ class view {
 	
 	/**
 	 * To Parse View
-	 * @param string $file
+	 *
+	 * @param string $file        	
 	 */
 	public static function renderView($file, $forceRender = false) {
 		$contents = '';
 		
 		if (self::check ( $file ) && (self::$renderView || $forceRender)) {
-			//Check if exists defined vars to this view
+			// Check if exists defined vars to this view
 			if (isset ( self::$vars [$file] )) {
-				//Setting all View Vars
+				// Setting all View Vars
 				foreach ( self::$vars [$file] as $key => $var ) {
 					$$key = $var;
 				}
@@ -63,17 +65,25 @@ class view {
 		return $contents;
 	}
 	
-	public static function element($file, array $vars = array()){
+	/**
+	 * Render Element
+	 *
+	 * @param string $file        	
+	 * @param array $vars        	
+	 * @return string
+	 */
+	public static function element($file, array $vars = array()) {
 		$file = '_elements/' . $file;
-		self::set($vars, $file);
-		$contents = self::renderView($file);
-		unset(self::$vars[$file]);
+		self::set ( $vars, $file );
+		$contents = self::renderView ( $file );
+		unset ( self::$vars [$file] );
 		return $contents;
 	}
 	
 	/**
 	 * To check if a view exists
-	 * @param string $file
+	 *
+	 * @param string $file        	
 	 */
 	public static function check($file) {
 		return file_exists ( VIEWS_DIR . '/' . $file . '.php' );
@@ -81,8 +91,9 @@ class view {
 	
 	/**
 	 * To parse Layout
-	 * @param string $contents
-	 * @param string $file
+	 *
+	 * @param string $contents        	
+	 * @param string $file        	
 	 */
 	public static function renderLayout($contents, $file = LAYOUT_PAGE, $forceRender = false) {
 		$layout = '';
@@ -98,7 +109,8 @@ class view {
 	
 	/**
 	 * To disable or enable auto view Renderization
-	 * @param boolean $val
+	 *
+	 * @param boolean $val        	
 	 */
 	public static function autoView($val = false) {
 		self::$renderView = $val;
@@ -106,7 +118,8 @@ class view {
 	
 	/**
 	 * To disable or enable auto layout Renderization
-	 * @param boolean $val
+	 *
+	 * @param boolean $val        	
 	 */
 	public static function autoLayout($val = false) {
 		self::$renderLayout = $val;
@@ -114,7 +127,8 @@ class view {
 	
 	/**
 	 * To disable or enable auto view and layout Renderization
-	 * @param boolean $val
+	 *
+	 * @param boolean $val        	
 	 */
 	public static function autoRender($val = false) {
 		self::autoView ( $val );
@@ -123,8 +137,9 @@ class view {
 	
 	/**
 	 * To set Vars into Views
-	 * @param array $vars
-	 * @param string $view
+	 *
+	 * @param array $vars        	
+	 * @param string $view        	
 	 */
 	public static function set(array $vars, $view = CONTROLLER) {
 		foreach ( $vars as $key => $val ) {
@@ -134,7 +149,9 @@ class view {
 	
 	/**
 	 * To Set a Flash Message
-	 * @param $message
+	 *
+	 * @param
+	 *        	$message
 	 */
 	public static function setFlash($message) {
 		$_SESSION ['SYSTEM'] ['MESSAGE'] = $message;
@@ -142,6 +159,7 @@ class view {
 	
 	/**
 	 * To get a Flash Message
+	 *
 	 * @return string
 	 */
 	public static function getFlash() {
@@ -159,8 +177,9 @@ class view {
 	
 	/**
 	 * To get an email template
-	 * @param string $template
-	 * @param array $vars
+	 *
+	 * @param string $template        	
+	 * @param array $vars        	
 	 * @return string
 	 */
 	public static function email($template, array $vars = array()) {

@@ -78,62 +78,6 @@ function z(array $array) {
 }
 
 /**
- * Check if server is running SSL
- *
- * @return boolean
- */
-function isSSL() {
-	$result = false;
-	if ($_SERVER ['SERVER_PORT'] == PRODUCTION_HTTPS_PORT || $_SERVER ['SERVER_PORT'] == DEBUG_HTTPS_PORT) {
-		$result = true;
-	}
-	
-	return $result;
-}
-
-/**
- * Check if the current HTTP/S port is Valid
- *
- * @return boolean
- */
-function isValidWebPort() {
-	$result = false;
-	$sPort = $_SERVER ['SERVER_PORT'];
-	
-	if ($sPort == PRODUCTION_HTTPS_PORT || $sPort == DEBUG_HTTPS_PORT || $sPort == PRODUCTION_HTTP_PORT || $sPort == DEBUG_HTTPS_PORT) {
-		$result = true;
-	}
-	
-	return $result;
-}
-
-/**
- * Get Web Port
- *
- * @param string $secure        	
- * @return Ambigous <NULL, string>
- */
-function getWebPort($secure = false) {
-	$result = null;
-	
-	if ($secure) {
-		if (DEBUG) {
-			$result = DEBUG_HTTPS_PORT;
-		} else {
-			$result = DEBUG_HTTPS_PORT;
-		}
-	} else {
-		if (DEBUG) {
-			$result = DEBUG_HTTP_PORT;
-		} else {
-			$result = DEBUG_HTTP_PORT;
-		}
-	}
-	
-	return $result;
-}
-
-/**
  * Function to convert IP address (xxx.xxx.xxx.xxx) to IP number (0 to 256^4-1)
  *
  * @param string $IPaddr        	
@@ -147,4 +91,19 @@ function dot2LongIP($IPaddr) {
 		return ($ips [3] + $ips [2] * 256 + $ips [1] * 256 * 256 + $ips [0] * 256 * 256 * 256);
 	}
 }
-?>
+
+/**
+ * AutoLoad classes
+ *
+ * @param string $class        	
+ */
+function jAutoloader($class) {
+	// Check for class
+	if (file_exists ( LIBRARY_DIR . '/' . $class . '.php' )) {
+		// Require class
+		require_once LIBRARY_DIR . '/' . $class . '.php';
+	}
+}
+
+// Register jAutoloader on SPL Autoloader
+spl_autoload_register ( 'jAutoloader' );

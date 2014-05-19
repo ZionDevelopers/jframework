@@ -28,22 +28,13 @@ if (defined ( 'STDIN' )) {
 		// View Library
 		tools::Library ( 'view' );
 		
-		// Try Exception Handler
-		try {
+		// Require Controller
+		if (file_exists ( CONTROLLERS_DIR . '/_cron/' . CONTROLLER . '.php' )) {
 			// Require Controller
-			if (file_exists ( CONTROLLERS_DIR . '/_cron/' . CONTROLLER . '.php' )) {
-				// Require Controller
-				require (CONTROLLERS_DIR . '/_cron/' . CONTROLLER . '.php');
-			} else {
-				// Generate a custom error page
-				echo 'Cron page not founded';
-			}
-			
-		// Exception Catcher
-		} catch ( Exception $e ) {
-			// Debug
-			tools::debug ( $e->getMessage () . "\r\n" . tools::traceException ( $e ) );
+			require (CONTROLLERS_DIR . '/_cron/' . CONTROLLER . '.php');
+		} else {
+			// Generate a custom error page
+			echo 'Cron page not founded';
 		}
 	}
 }
-?>

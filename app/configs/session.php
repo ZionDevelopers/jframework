@@ -21,5 +21,5 @@ ini_set ( 'session.cookie_httponly', 1 );
 
 // Fix folders
 tools::folder ( SESSION_DIR );
+
 session_start ();
-?>

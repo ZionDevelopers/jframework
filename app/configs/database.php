@@ -11,8 +11,7 @@
 /** jFramework Database configuration example **/
 $CONFIGS ['database'] = array ();
 $CONFIGS ['database'] ['host'] = 'localhost';
-$CONFIGS ['database'] ['user'] = 'test';
-$CONFIGS ['database'] ['password'] = '';
-$CONFIGS ['database'] ['base'] = 'test';
+$CONFIGS ['database'] ['user'] = 'jframework';
+$CONFIGS ['database'] ['password'] = 'jframework';
+$CONFIGS ['database'] ['base'] = 'jframework';
 $CONFIGS ['database'] ['charset'] = str_replace ( '-', '', CHARSET );
-?>

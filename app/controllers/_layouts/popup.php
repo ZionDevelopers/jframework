@@ -12,4 +12,3 @@ view::set ( array ( 'pageTitle' => SITE_NAME . (isset ( $pageTitle ) ? ' :: ' . 
 
 // Put view contents inside Layout
 echo view::renderLayout ( $contents );
-?>

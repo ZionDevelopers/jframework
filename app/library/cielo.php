@@ -90,7 +90,7 @@ class Cielo {
 	 * @param string $path        	
 	 * @return string
 	 */
-	public static function folder($path) {
+	public function folder($path) {
 		if (! file_exists ( $path )) {
 			if (! is_dir ( $path )) {
 				mkdir ( $path, 0777, true );
@@ -366,4 +366,3 @@ class Cielo {
 		}
 	}
 }
-?>

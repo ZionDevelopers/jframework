@@ -14,7 +14,7 @@ class captcha {
 	 *
 	 * @return void
 	 */
-	public static function check() {
+	public function check() {
 		if (! file_exists ( CAPTCHA_ENFORCER_FILE )) {
 			chmod ( TMP_DIR, '0755' );
 			file_put_contents ( CAPTCHA_ENFORCER_FILE, "" );
@@ -26,7 +26,7 @@ class captcha {
 	 *
 	 * @return boolean
 	 */
-	public static function isEnforced() {
+	public function isEnforced() {
 		self::check ();
 		return find ( CLIENT_IP, file_get_contents ( CAPTCHA_ENFORCER_FILE ) );
 	}
@@ -37,7 +37,7 @@ class captcha {
 	 * @param string $referer        	
 	 * @return void
 	 */
-	public static function generate($referer) {
+	public function generate($referer) {
 		self::check ();
 		// Generate Text
 		$text = str_shuffle ( 'CDFHJKNPRTUVXY49' );
@@ -52,7 +52,11 @@ class captcha {
 			// Generate Captcha Image
 			$captcha = new Image ( WEBROOT_DIR . '/img/captcha.jpg' );
 			$captcha->newSize ( 125, 40 );
-			$captcha->text ( $showText, 20, 10, 30, array ( 160, 160, 160 ), 'ITCKRIST' );
+			$captcha->text ( $showText, 20, 10, 30, array (
+					160,
+					160,
+					160 
+			), 'ITCKRIST' );
 			// Show Captcha and Destroy memory Resources
 			$captcha->show ();
 			$captcha->destroy ();
@@ -66,7 +70,7 @@ class captcha {
 	 * @param boolean $add        	
 	 * @return void
 	 */
-	public static function enforce($add = true) {
+	public function enforce($add = true) {
 		$enforced = file_get_contents ( CAPTCHA_ENFORCER_FILE );
 		if (! $add) {
 			if (self::isEnforced ()) {
@@ -87,9 +91,7 @@ class captcha {
 	 * @param string $from        	
 	 * @return string
 	 */
-	public static function generateHTML($from) {
+	public function generateHTML($from) {
 		return '<img src="' . BASE_DIR . '/captcha?from=' . $from . '&_=' . mt_rand ( 111, 999 ) . '" rel="' . $from . '" title="Trocar Imagem" style="cursor:pointer" onclick="this.src=\'' . BASE_DIR . '/captcha?from=' . $from . '&_=\'+Math.random()" />';
 	}
 }
-
-?>

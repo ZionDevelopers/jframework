@@ -864,4 +864,3 @@ class databaseManager extends mysqli {
 		return $this->insert_id;
 	}
 }
-?>
