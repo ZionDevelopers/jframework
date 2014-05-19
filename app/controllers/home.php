@@ -9,8 +9,10 @@
  */
 $pageTitle = 'Home';
 
+// jFramework MySQL data saving Example
 $db->save ( array (	'name' => 'Mr. #' . mt_rand ( 1, 9999 ) ), 'tests' );
 
+// jFramework MySQL data finding Example
 $data = $db->find ( 'tests' );
 
 view::set ( compact ( 'data' ) );

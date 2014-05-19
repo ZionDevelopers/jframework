@@ -1,10 +1,13 @@
 <?php
 /**
  * jFramework
+ * 
+ * @version 1.2.1
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
+
 if (defined ( 'STDIN' )) {
 	$BASE_DIR = str_replace ( "\\", '/', dirname ( $_SERVER ['SCRIPT_NAME'] ) );
 	define ( 'APP_DIR', str_replace ( "\\", '/', dirname ( getcwd () ) . '/app' ) );
@@ -13,28 +16,40 @@ if (defined ( 'STDIN' )) {
 	if (isset ( $argv [0] )) {
 		// Define Controller
 		define ( 'CONTROLLER', $argv [1] );
-		// Requesting Configs and Library Classes
-		// Basics Functions
-		require (APP_DIR . '/library/basic.php');
+		
 		// Core Config
-		require (APP_DIR . '/configs/cron.php');
+		require APP_DIR . '/configs/cron.php';
 		
-		// Tools Library
-		require (LIBRARY_DIR . '/tools.php');
+		// Basics Functions
+		require LIB_DIR . '/basic.php';
 		
-		// Start Timer
-		$timer = tools::timer ( 1 );
+		// Database config
+		require CONFIGS_DIR . '/database.php';
 		
-		// View Library
-		tools::Library ( 'view' );
+		// Check if the controller is private
+		if (substr ( CONTROLLER, - 1 ) == '_') {
+			tools::error ( 406 );
+		}
+		
+		// Creating new database manager OBJ
+		$db = new databaseManager ();
+		
+		// Setting database settings
+		$db->setSettings ( $CONFIGS ['database'] );
+		
+		// Connecting to mysql database
+		$db->connect ();
 		
 		// Require Controller
 		if (file_exists ( CONTROLLERS_DIR . '/_cron/' . CONTROLLER . '.php' )) {
 			// Require Controller
-			require (CONTROLLERS_DIR . '/_cron/' . CONTROLLER . '.php');
+			require CONTROLLERS_DIR . '/_cron/' . CONTROLLER . '.php';
 		} else {
 			// Generate a custom error page
-			echo 'Cron page not founded';
+			tools::error ( 404 );
 		}
+		
+		// Closing MySQL database connectiong
+		$db->close ();	
 	}
 }

@@ -12,7 +12,7 @@ $pageTitle = 'Debug';
 
 // Check if Debug is Enabled
 if (DEBUG) {
-
+	// Debug
 } else {
 	// Disable View Rendering
 	view::autoRender ( false );

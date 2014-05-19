@@ -1,8 +1,17 @@
 <?php
 /**
+ * jFramework
+ * 
+ * @version 1.2.1
+ * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
+ * @author Júlio César de Oliveira <talk@juliocesar.me>
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
+ */
+
+/**
  * Tools to do almost all things
  * @!created 2010-07-24 10:25 AM
- * @!updated 2014-04-05 05:02 AM
+ * @!updated 2014-05-19 02:51 PM
  * @version 1.1.2
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>

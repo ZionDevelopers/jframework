@@ -2,7 +2,7 @@
 /**
  * jFramework
  * 
- * @version 1.2
+ * @version 1.2.1
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
@@ -10,10 +10,14 @@
 // Date
 date_default_timezone_set ( 'America/Sao_Paulo' );
 
+// jFramework version
+define ( 'VERSION', '1.2.1' );
+
 // Folders Defination
 define ( 'LIBRARY_DIR', APP_DIR . '/library' );
+define ( 'LIB_DIR', LIBRARY_DIR);
 define ( 'TMP_DIR', APP_DIR . '/tmp' );
-define ( 'LOGS_DIR', TMP_DIR . '/log' );
+define ( 'LOGS_DIR', TMP_DIR . '/logs' );
 define ( 'SESSION_DIR', TMP_DIR . '/session' );
 define ( 'CONTROLLERS_DIR', APP_DIR . '/controllers' );
 define ( 'VIEWS_DIR', APP_DIR . '/views' );
@@ -24,8 +28,8 @@ define ( 'CACHE_DIR', TMP_DIR . '/cache' );
 
 // Configs
 define ( 'SITE_NAME', 'jFramework' );
-define ( 'SITE_EMAIL_COPIES', 'talk@juliocesar.me' );
-define ( 'SITE_EMAIL', 'talk@juliocesar.me' );
+define ( 'SITE_EMAIL_COPIES', 'example2@domain.com' );
+define ( 'SITE_EMAIL', 'example2@domain.com' );
 define ( 'DEBUG', false );
 define ( 'CHARSET', 'utf-8' );
 define ( 'BASE_DIR', ($BASE_DIR == '/' ? '' : $BASE_DIR) );

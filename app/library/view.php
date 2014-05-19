@@ -1,8 +1,17 @@
 <?php
 /**
+ * jFramework
+ * 
+ * @version 1.2.1
+ * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
+ * @author Júlio César de Oliveira <talk@juliocesar.me>
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
+ */
+
+/**
  * To manage Views
  * Created 2010-08-24 12:50 PM
- * Updated 2010-08-04 13:40 PM
+ * Updated 2014-05-19 02:51 PM
  * @version 1.1.0
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
