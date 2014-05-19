@@ -1,7 +1,7 @@
 jFramework
 ==========
 
-This is a PHP POO MVC framework, have built-in:
+This is a PHP OOP MVC framework, have built-in:
 
 * Database Manager
 * Image Handler
