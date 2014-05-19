@@ -45,6 +45,6 @@ $flashMessage = view::getFlash();
       ?>
       </div> 
       <?php  } ?> 
-     <br /><div align="center"><i>Page generated in</i> <b><?php echo round(microtime(true)-$_SERVER['REQUEST_TIME_FLOAT'],3);?></b> <i>seconds, consumed <b><?php echo round(memory_get_peak_usage(true)/1024,4); ?></b>kb.</i></div>
+     <br /><div align="center"><i>Page generated in</i> <b><?php echo round(microtime(true)-$_SERVER['REQUEST_TIME_FLOAT'],3);?></b> <i>seconds, consumed <b><?php echo round(memory_get_peak_usage(true)/1024,2); ?></b> kb.</i></div>
     </body>
 </html>
