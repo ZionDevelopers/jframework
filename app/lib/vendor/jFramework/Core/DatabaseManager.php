@@ -166,7 +166,7 @@ class DatabaseManager extends \mysqli
         $this->cacheTable = unserialize(file_get_contents($this->cacheFile));
 
         // Check
-        if (!isset($_SESSION ['SQL_HISTORY']) && $this->sqlArchive) {
+        if (!isset($_SESSION ['SQL_HISTORY']) && $this->sqlArchive && defined('CONTROLLER')) {
             // Reset Arrays
             $_SESSION ['SQL_HISTORY'] = array();
             $_SESSION ['SQL_LASTCONTROLLER'] = CONTROLLER;
