@@ -32,7 +32,7 @@ class View
      * @static
      */
     private static $renderView = true;
-    private $renderLayout = true;
+    private static $renderLayout = true;
 
     /**
      * @var array
