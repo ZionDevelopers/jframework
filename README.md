@@ -8,7 +8,7 @@ This is a PHP framework, have built-in:
 * Documented using PHPDoc 
 * Object-oriented programming.
 * MVC Framework
-* [PSR][] Standards
+* [PSR-0, 1, 2][] Standards
 * Database Manager
 * Image Handler
 * Exception Handler
@@ -21,4 +21,4 @@ This is a PHP framework, have built-in:
 * Tools (tons of useful functions)
 * Licensed under Apache 2.0 License
 
-[PSR]: <http://www.php-fig.org/psr/>
+[PSR-0, 1, 2]: <http://www.php-fig.org/psr/>
