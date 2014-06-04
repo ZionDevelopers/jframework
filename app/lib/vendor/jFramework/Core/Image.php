@@ -42,7 +42,17 @@ class Image
      * @var integer
      * @var boolean
      */
-    private $ext, $fontRcImg, $trans = false, $newImgRc, $originalSize, $finalSize, $wishedSize, $imgName, $photoX, $photoY, $forceScale = false;
+    private $ext;
+    private $fontRcImg;
+    private $trans = false;
+    private $newImgRc;
+    private $originalSize;
+    private $finalSize;
+    private $wishedSize;
+    private $imgName;
+    private $photoX;
+    private $photoY;
+    private $forceScale = false;
 
     /**
      * Function to define image type
@@ -58,6 +68,27 @@ class Image
         
         $this->trans = $trans;
         $this->setType();
+    }
+        
+    /**
+     * internal function to make a New Image Size
+     *
+     * @return resource
+     * @access private
+     */
+    protected function resize()
+    {
+        try {
+            if ($this->trans && $this->ext == 'png') {
+                imagealphablending($this->newImgRc, false);
+                imagesavealpha($this->newImgRc, true);
+            }
+            $result = imagecopyresampled($this->newImgRc, $this->fontRcImg, 0, 0, 0, 0, $this->finalSize ['width'], $this->finalSize ['height'], $this->originalSize ['width'], $this->originalSize ['height']);
+        } catch (Exception $e) {
+            $result = false;
+            throw new Exception($e->getMessage());
+        }
+        return $result;
     }
 
     /**
@@ -88,33 +119,12 @@ class Image
 
         $this->newImage();
         $this->import($this->imgName);
-        $this->newSize();
+        $this->resize();
     }
 
     protected function needScale() 
     {
         return ($this->originalSize ['width'] > $this->wishedSize ['width'] || $this->originalSize ['height'] > $this->wishedSize ['height']);
-    }
-
-    /**
-     * internal function to make a New Image Size
-     *
-     * @return resource
-     * @access private
-     */
-    protected function newSize()
-    {
-        try {
-            if ($this->trans && $this->ext == 'png') {
-                imagealphablending($this->newImgRc, false);
-                imagesavealpha($this->newImgRc, true);
-            }
-            $result = imagecopyresampled($this->newImgRc, $this->fontRcImg, 0, 0, 0, 0, $this->finalSize ['width'], $this->finalSize ['height'], $this->originalSize ['width'], $this->originalSize ['height']);
-        } catch (Exception $e) {
-            $result = false;
-            throw new Exception($e->getMessage());
-        }
-        return $result;
     }
 
     /**

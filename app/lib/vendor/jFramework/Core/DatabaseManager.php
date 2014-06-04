@@ -31,14 +31,24 @@ class DatabaseManager extends \mysqli
      * @var integer
      * @access protected
      */
-    protected $nRecords = 0, $currentPage = 0, $tRecords = 0, $nPages = 0;
+    protected $nRecords = 0;
+    protected $currentPage = 0;
+    protected $tRecords = 0;
+    protected $nPages = 0;
 
     /**
      *
      * @var array
      * @access private
      */
-    private $settings = array('host' => 'localhost', 'user' => 'root', 'password' => '', 'base' => 'test', 'charset' => 'utf8'), $cacheTable = array();
+    private $settings = array(
+        'host' => 'localhost',
+        'user' => 'root',
+        'password' => '',
+        'base' => 'test',
+        'charset' => 'utf8'
+    );
+    private $cacheTable = array();
 
     /**
      *
@@ -59,7 +69,8 @@ class DatabaseManager extends \mysqli
      * @var boolean
      * @access public
      */
-    public $removeHtml = true, $sqlArchive = false;
+    public $removeHtml = true;
+    public $sqlArchive = false;
 
     /**
      * Set Settings

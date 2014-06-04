@@ -31,7 +31,8 @@ class View
      * @access private
      * @static
      */
-    private static $renderView = true, $renderLayout = true;
+    private static $renderView = true;
+    private $renderLayout = true;
 
     /**
      * @var array

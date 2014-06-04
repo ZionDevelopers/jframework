@@ -28,7 +28,7 @@ class JSessCleaner
 {
 
     /**
-     * Construct
+     * Constructor
      * @access public
      */
     public function __construct()
