@@ -1,12 +1,15 @@
 <?php
 /**
  * jFramework
- * 
- * @version 1.2.1
+ *
+ * @version 1.3.0
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
+
+// Use View
+use \jFramework\Core\View;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -18,6 +21,6 @@
 </style>
 </head>
 <body>
-<?php echo view::$contents?>
+<?php echo View::$contents?>
 </body>
 </html>

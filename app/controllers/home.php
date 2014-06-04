@@ -7,6 +7,9 @@
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
+// Use View
+use \jFramework\Core\View;
+
 $pageTitle = 'Home';
 
 // jFramework MySQL data saving Example
@@ -15,4 +18,4 @@ $db->save ( array (	'name' => 'Mr. #' . mt_rand ( 1, 9999 ) ), 'tests' );
 // jFramework MySQL data finding Example
 $data = $db->find ( 'tests' );
 
-view::set ( compact ( 'data' ) );
+View::set ( compact ( 'data' ) );

@@ -1,14 +1,17 @@
 <?php
 /**
  * jFramework
- * 
- * @version 1.2.1
+ *
+ * @version 1.3.0
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
-$flashMessage = view::getFlash();
+// Use View
+use \jFramework\Core\View;
+
+$flashMessage = View::getFlash();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -27,12 +30,12 @@ $flashMessage = view::getFlash();
     	<div id="mainContainer">
 			<div id="contents">
 				<?php if (!empty($flashMessage)){echo '<div id="flashMessage">', $flashMessage , '</div>'; }?>
-				<?php echo view::$contents; ?>
+				<?php echo View::$contents; ?>
 			</div>
         </div>
         <?php 
         if (!empty($flashMessage)){ 
-			view::delFlash();
+			View::delFlash();
         }
         ?> 
       <?php if (!empty($sqlArchive[CONTROLLER])){?>
@@ -45,6 +48,6 @@ $flashMessage = view::getFlash();
       ?>
       </div> 
       <?php  } ?> 
-     <br /><div align="center"><i>Page generated in</i> <b><?php echo round(microtime(true)-$_SERVER['REQUEST_TIME_FLOAT'],3);?></b> <i>seconds, consumed <b><?php echo round(memory_get_peak_usage(true)/1024,2); ?></b> kb.</i></div>
+     <br /><div align="center"><i>Page generated in</i> <b><?php echo round(microtime(true)-$_SERVER['REQUEST_TIME'],3);?></b> <i>seconds, consumed <b><?php echo round(memory_get_peak_usage(true)/1024,2); ?></b> kb.</i></div>
     </body>
 </html>

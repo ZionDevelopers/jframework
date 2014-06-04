@@ -1,4 +1,5 @@
 <?php
+
 /**
  * jFramework
  *
@@ -8,12 +9,15 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
+// Use View
+use \jFramework\Core\View;
+
 $pageTitle = 'Debug';
 
 // Check if Debug is Enabled
 if (DEBUG) {
-	// Debug
+    // Debug
 } else {
-	// Disable View Rendering
-	view::autoRender ( false );
+    // Disable View Rendering
+    View::autoRender(false);
 }
