@@ -11,8 +11,9 @@
 
 // Use View
 use \jFramework\Core\View;
+
 // jSessCleaner
-use jFramework\Core\JSessCleaner as jSessCleaner;
+use jFramework\Core\JSessCleaner;
 
 View::autoRender(false);
 

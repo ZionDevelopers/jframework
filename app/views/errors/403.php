@@ -11,6 +11,7 @@
 
 // Use Tools
 use \jFramework\Core\Tools;
+
 ?>
 <div id="pageTitle">Error 403</div><br />
 Failure on sending form, try again.

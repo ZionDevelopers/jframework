@@ -19,7 +19,9 @@ require APP_DIR . '/configs/cron.php';
 // Basics Functions
 require LIB_DIR . '/basic.php';
 
+// Use Database Manager
 use \jFramework\Core\DatabaseManager;
+// Use Tools
 use \jFramework\Core\Tools;
 
 if (defined('STDIN')) {

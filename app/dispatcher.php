@@ -18,8 +18,13 @@ require CONFIGS_DIR . '/session.php';
 // Basics Functions
 require LIB_DIR . '/basic.php';
 
+// Use Database Manager
 use \jFramework\Core\DatabaseManager;
+
+// Use Tools
 use \jFramework\Core\Tools;
+
+// Use View
 use \jFramework\Core\View;
 
 // Fix folders
