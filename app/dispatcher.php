@@ -90,12 +90,18 @@ require CONTROLLERS_DIR . '/_layouts/' . LAYOUT_PAGE . '.php';
 // Closing MySQL database connectiong
 $db->close();
 
-// Parse XHTML
+// Format XHTML with Tidy (If available)
 if (class_exists('tidy') && $contents != '' && LAYOUT_PAGE == LAYOUT_DEFAULT) {
+    // Start Tidy
     $tidy = new tidy ();
-    $tidy->parseString(ob_get_clean(), array('indent' => true, 'output-xhtml' => true, 'wrap' => 200), 'utf8');
+    // Parse contents
+    $tidy->parseString(ob_get_contents(), array('indent' => true, 'output-xhtml' => true, 'wrap' => 200), 'utf8');
+    // Clear and Repair xHTML
     $tidy->cleanRepair();
-
-    // Output
+    
+    // End Buffering and Flush output
+    ob_end_clean();    
+    
+    // Output Fixed, Formated xHTML
     echo $tidy;
 }
