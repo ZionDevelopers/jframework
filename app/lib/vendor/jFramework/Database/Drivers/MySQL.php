@@ -11,6 +11,9 @@
 
 namespace jFramework\Database;
 
+// Use Tools 
+use \jFramework\Core\Tools;
+
 /**
  * Class to manage MySQL database data
  * 
@@ -29,12 +32,12 @@ class MySQL extends \mysqli
     /**
      *
      * @var integer
-     * @access protected
+     * @access public
      */
-    protected $nRecords = 0;
-    protected $currentPage = 0;
-    protected $tRecords = 0;
-    protected $nPages = 0;
+    public $nRecords = 0;
+    public $currentPage = 0;
+    public $tRecords = 0;
+    public $nPages = 0;
 
     /**
      *
@@ -84,14 +87,12 @@ class MySQL extends \mysqli
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see mysqli::connect()
+     * Connect to Database Server
      */
-    public function connect($host = 'localhost', $username = 'root', $passwd = '', $dbname = 'test', $port = 3306, $socket = '')
+    public function connect($host = 'localhost', $user = 'root', $password = '', $database = 'test', $port = 3306, $socket = '')
     {
-        // Talk back to the Parent
-        parent::__construct($this->settings ['host'], $this->settings ['user'], $this->settings ['password'], $this->settings ['base']);
+        // Talk back to the Driver
+        parent::connect($this->settings ['host'], $this->settings ['user'], $this->settings ['password'], $this->settings ['base']);
 
         // Test Connecton
         if (!$this->testCon()) {
@@ -142,9 +143,8 @@ class MySQL extends \mysqli
      * 
      * @access public
      */
-    protected function cacheRefresh()
+    public function cacheRefresh()
     {
-
         // Check if cache folder not exits
         if (!file_exists(CACHE_DIR)) {
             // Create folders
@@ -182,7 +182,7 @@ class MySQL extends \mysqli
      * @access public
      * @param string $table        	
      */
-    protected function cache($table)
+    public function cache($table)
     {
         // Check if has table fields cache
         if (!isset($this->cacheTable [$table])) {
@@ -206,7 +206,7 @@ class MySQL extends \mysqli
      */
     public function error($text)
     {
-        throw new \Exception('Database Manager Exception: ' . $text . "\r\nDetails: " . $this->error);
+        throw new \Exception('Database Manager Exception: ' . $text . "\r\nDetails: " . $this->driver->error);
     }
 
     /**
@@ -298,7 +298,7 @@ class MySQL extends \mysqli
         // Test Connection
         if ($this->testCon()) {
             // Escape string with real escape string
-            $string = self::real_escape_string($string);
+            $string = $this->real_escape_string($string);
         }
 
         $string = trim($string);
@@ -579,7 +579,7 @@ class MySQL extends \mysqli
      * @param $sql string        	
      * @param $recursive boolean        	
      */
-    protected function where($table, array $where, &$sql, $recursive = false)
+    public function where($table, array $where, &$sql, $recursive = false)
     {
         // To Cache
         $this->cache($table);
@@ -620,8 +620,8 @@ class MySQL extends \mysqli
                     // FUNCTION SEARCH
                     if (preg_match('/(sha1|md5)/', $key, $matches)) {
                         $func = $matches [0];
-                        if (!empty($func)) {
-                            tools::debug($func);
+                        if (!empty($func)) { 
+                            Tools::debug($func);
                             exit();
                         }
 
@@ -752,11 +752,11 @@ class MySQL extends \mysqli
     /**
      * Generate LIMIT SQL
      *
-     * @access protected
+     * @access public
      * @param $limit array        	
      * @param $sql string        	
      */
-    protected function limit(array $limit, &$sql)
+    public function limit(array $limit, &$sql)
     {
         if (!empty($limit)) {
             $sql .= ' LIMIT ' . implode(',', $limit);
@@ -766,12 +766,12 @@ class MySQL extends \mysqli
     /**
      * Generete Order SQL
      *
-     * @access protected
+     * @access public
      * @param $table string        	
      * @param $order array        	
      * @param $sql string        	
      */
-    protected function order($table, array $order, &$sql)
+    public function order($table, array $order, &$sql)
     {
         // To Cache
         $this->cache($table);
@@ -797,12 +797,12 @@ class MySQL extends \mysqli
     /**
      * Generete Group By SQL
      *
-     * @access protected
+     * @access public
      * @param $table string        	
      * @param $order array        	
      * @param $sql string        	
      */
-    protected function group($table, array $group, &$sql)
+    public function group($table, array $group, &$sql)
     {
         // To Cache
         $this->cache($table);

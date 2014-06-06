@@ -19,7 +19,7 @@ require CONFIGS_DIR . '/session.php';
 require LIB_DIR . '/basic.php';
 
 // Use Database Manager
-use \jFramework\Core\DatabaseManager;
+use jFramework\Database\Drivers\MySQL as Database;
 
 // Use Tools
 use \jFramework\Core\Tools;
@@ -28,7 +28,7 @@ use \jFramework\Core\Tools;
 use \jFramework\Core\View;
 
 // Fix folders
-tools::folder ( SESSION_DIR );
+Tools::folder ( SESSION_DIR );
 
 // Start Session on Dispatcher
 session_start ();
@@ -45,14 +45,13 @@ define('CLIENT_IP', $_SERVER ['REMOTE_ADDR']);
 // Database config
 require CONFIGS_DIR . '/database.php';
 
-
 // Check if the controller is private
 if (substr(CONTROLLER, - 1) == '_') {
     Tools::error(406);
 }
 
 // Creating new database manager OBJ
-$db = new DatabaseManager ();
+$db = new Database;
 
 // Setting database settings
 $db->setSettings($CONFIGS ['database']);
