@@ -2,7 +2,7 @@
 /**
  * jFramework
  *
- * @version 1.3.0
+ * @version 2.0.0
  * @link https://github.com/ZionDevelopers/jframework/ The jFramework GitHub Project
  * @copyright 2010-2014, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
@@ -75,52 +75,3 @@ if (!function_exists("hex2bin")){
         return $r;
     }
 }
-
-/**
- * Return the First (ZERO) element from array
- *
- * @param array $array        	
- * @return string
- */
-function z(array $array)
-{
-    return $array [0];
-}
-
-/**
- * Function to convert IP address (xxx.xxx.xxx.xxx) to IP number (0 to 256^4-1)
- *
- * @param string $IPaddr        	
- * @return integer
- */
-function dot2LongIP($IPaddr)
-{
-    if ($IPaddr == "") {
-        return 0;
-    } else {
-        $ips = explode(".", $IPaddr);
-        return ($ips [3] + $ips [2] * 256 + $ips [1] * 256 * 256 + $ips [0] * 256 * 256 * 256);
-    }
-}
-
-// Register Autoload to Automatic load of Classes
-spl_autoload_register(function ($className)
-{
-    $className = ltrim($className, '\\');
-    $fileName = '';
-    $namespace = '';
-
-    if ($lastNsPos = strrpos($className, '\\')) {
-        $namespace = substr($className, 0, $lastNsPos);
-        $className = substr($className, $lastNsPos + 1);
-        $fileName = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
-    }
-
-    $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
-    
-    $fileName = LIB_DIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . $fileName;
-
-    if (file_exists($fileName)) {
-        require $fileName;
-    }
-});

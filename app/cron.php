@@ -2,7 +2,7 @@
 /**
  * jFramework
  *
- * @version 1.3.0
+ * @version 2.0.0
  * @link https://github.com/ZionDevelopers/jframework/ The jFramework GitHub Project
  * @copyright 2010-2014, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
@@ -19,8 +19,8 @@ require APP_DIR . '/configs/cron.php';
 // Basics Functions
 require LIB_DIR . '/basic.php';
 
-// Use Database Manager
-use \jFramework\Core\DatabaseManager;
+// Use Database
+use jFramework\Database\Drivers\MySQL as Database;
 // Use Tools
 use \jFramework\Core\Tools;
 
@@ -33,7 +33,7 @@ if (defined('STDIN')) {
         require CONFIGS_DIR . '/database.php';       
 
         // Creating new database manager OBJ
-        $db = new DatabaseManager ();
+        $db = new Database ();
 
         // Setting database settings
         $db->setSettings($CONFIGS ['database']);
