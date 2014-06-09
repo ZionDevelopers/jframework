@@ -108,7 +108,7 @@ class Router
         }
         
         // Check if controller was successfully spawned
-        if(!is_object($controller)){     
+        if(!isset($controller)){     
             // Spawn new Error Controller
             $controller = new \jFramework\MVC\Controller\ErrorController();
             // Run NotFound Action
@@ -171,6 +171,7 @@ class Router
             // Remove index.php from URI
             $uri = preg_replace($this->basepath . '(index.php)?/', '', $uri);
         }else{
+            // Format a Request URI for Console
             $uri = isset ($this->core->args[1]) ? '/' . $this->core->args[1] : '/';
         }
         
@@ -178,7 +179,7 @@ class Router
         $request = parse_url($uri);
         
         // Detect a match for custom route
-        $route = $this->match($request['path'], $_SERVER['REQUEST_METHOD']);
+        $route = $this->match($request['path'], $this->core->server('REQUEST_METHOD'));
         
         // If not found a custom route
         if(is_null($route['controller'])){

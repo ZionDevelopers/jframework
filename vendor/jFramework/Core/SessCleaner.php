@@ -65,7 +65,7 @@ class SessCleaner
             }
         } else {
             // All files Already Cleaned!
-            echo "\r\n Session files already Cleaned! \r\n";
+            echo "\r\nSession files already Cleaned!\r\n";
         }
     }
 
@@ -85,7 +85,7 @@ class SessCleaner
             // Check if is not Scan parent Folders
             if ($file != '.' && $file != '..') {
                 // Get Full File Patch
-                $fullFile = SESSION_DIR . '/' . $file;
+                $fullFile = Registry::get('FOLDER.session') . '/' . $file;
                 // Check if is really a File
                 if (is_file($fullFile)) {
                     // Check if is a Session File
