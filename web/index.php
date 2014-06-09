@@ -13,9 +13,9 @@
 $root = dirname(__DIR__);
 
 // Require autoloader
-require $root . '/app/vendor/autoload.php';
+require $root . '/vendor/autoload.php';
 // Add path to autoloader
-autoload::addPath ($root . '/app/vendor/');
+autoload::addPath ($root . '/vendor/');
 // Register autoloader
 autoload::register(true);
 
