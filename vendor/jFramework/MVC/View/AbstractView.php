@@ -17,8 +17,8 @@ use jFramework\Core\Registry;
  * To manage Views
  * 
  * Created: 2010-08-24 12:50 PM (GMT -03:00)
- * Updated: 2014-06-09 10:16 AM (GMT -03:00)
- * @version 2.0.2 
+ * Updated: 2014-06-09 14:13 PM (GMT -03:00)
+ * @version 2.0.3 
  * @package jFramework
  * @subpackage MVC
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
@@ -27,17 +27,70 @@ use jFramework\Core\Registry;
  */
 abstract class AbstractView 
 {
-    protected $viewFile = '';
-    protected $layoutFile = '';
+    protected $file = '';
+    protected $view = '';
+    public $fileExt = '.phtml';
     
     /**
      * Constructor
      * @param string $layout
      */
     public function __construct(){
+        // Get Request
         $request = Registry::get('Request');
-        $this->viewFile = strtolower($request['controller']) . '/' . strtolower($request['action']);
+        
+        // Get View folder
+        $this->file = Registry::get('FOLDER.view');
+        $this->file .= '/' . strtolower($request['controller']);
+        $this->file .= '/' . strtolower($request['action']) . $this->fileExt;
     }
+    
+    /**
+     * Set a property
+     * @param string $name
+     * @param mixed $value
+     */
+    public function __set($name, $value)
+    {                
+        // Set Key
+        $key = str_replace(Registry::get('FOLDER.app') . '/View/', '', $this->file);
+        $key = str_replace($this->fileExt, '', $key);
+        
+        // Set Registry
+        $registry = Registry::get('ViewRegistry.'.$key);
+        $registry [$name] = $value;
+        
+        // Set View Registry
+        Registry::set('ViewRegistry.'.$key, $registry);
+    }
+    
+    /**
+     * Get a property
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        // Set Key
+        $key = str_replace(Registry::get('FOLDER.app') . '/View/', '', $this->file);
+        $key = str_replace($this->fileExt, '', $key);
+        
+        // Get Registry
+        $registry = Registry::get('ViewRegistry.' . $key);
+        
+        $result = null;
+        
+        if(isset($this->$name)){
+            $result = $this->$name;
+        }
+        
+        if(isset($registry[$name])){
+            $result = $registry[$name];     
+        }
+        
+        return $result;
+    }  
+    
     /**
      * To Set a Flash Message
      *     
@@ -69,8 +122,32 @@ abstract class AbstractView
         }
     }
     
-    public function setLayout($layout)
+    /**
+     * Render a view/layout
+     * @param string $file
+     * @return string
+     */
+    protected function render($file)
     {
-        $this->layoutFile = $layout;
+        // Define result failsafe
+        $result = '';
+        
+        // Check if file is readable
+        if(is_readable($file)){
+            // Start Buff obtainer
+            ob_start();
+            
+            // Require file
+            require $file;
+            
+            // Get Buff contents
+            $result = ob_get_contents();
+            
+            // Stop the buffering and clean
+            ob_end_clean();
+        }
+        
+        // Result buff
+        return $result;
     }
 }

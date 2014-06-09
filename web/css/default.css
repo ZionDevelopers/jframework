@@ -33,3 +33,9 @@ a:active {
 	text-decoration: none;
 	color: #06F;
 }
+
+div#mainContainer{
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 10px;
+}

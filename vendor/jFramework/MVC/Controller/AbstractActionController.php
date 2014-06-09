@@ -11,7 +11,9 @@
 
 namespace jFramework\MVC\Controller;
 
+use jFramework\MVC\View\Layout;
 use jFramework\MVC\View;
+use jFramework\Core\Registry;
 
 /**
  * Base Action Controller who will Controllers will extend to
@@ -27,6 +29,9 @@ use jFramework\MVC\View;
  */
 abstract class AbstractActionController extends AbstractController
 {
+    /**
+     * Default Action
+     */
     public function indexAction ()
     {
         
@@ -39,11 +44,15 @@ abstract class AbstractActionController extends AbstractController
      */
     public function layout($viewContents)
     {
-        $view = new View();
-        $view->setLayout('default');
-        $view->title = 'Welcome to jFramework!';
+        // Spawn new Layout
+        $layout = new Layout();
+        // Set layout
+        $layout->setFile('default');
+        // Set Page title
+        $layout->title = Registry::get('APP.title');
         
-        return $view->renderLayout($viewContents);
+        // Render Layout with view contents
+        return $layout->render($viewContents);
     }
     
     /**
@@ -51,7 +60,20 @@ abstract class AbstractActionController extends AbstractController
      * @return string
      */
     public function notFoundAction()
-    {
-        return '<h1>Page Not found</h1>';
+    {      
+        // Spawn new View
+        $view = new View();
+        
+        // Get view file
+        $file = Registry::get('FOLDER.error-view') . '/notFound' . $view->fileExt;
+        // Set view file
+        $view->setFile($file);
+        
+        // Set App title
+        Registry::set('APP.title', Registry::get('APP.title') . ' :: Page not found!');
+        
+        $view->title = 'Error 404';
+        $view->message = 'The page you requested was not found!';        
+        return $view->render();
     }
 }

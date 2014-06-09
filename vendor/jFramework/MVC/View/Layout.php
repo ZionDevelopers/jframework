@@ -9,9 +9,10 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
-namespace jFramework\MVC;
+namespace jFramework\MVC\View;
 
 use jFramework\MVC\View\AbstractView;
+use jFramework\Core\Registry;
 
 /**
  * Generate view
@@ -25,24 +26,40 @@ use jFramework\MVC\View\AbstractView;
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
-class View extends AbstractView
-{        
+class Layout extends AbstractView
+{    
     /**
-     * Set View file
+     * Get view contents
+     * @return string
+     */
+    public function getView()
+    {
+        // Return view contents
+        return $this->view;
+    }
+     
+    /**
+     * Define Layout file
      * @param string $file
      */
     public function setFile($file)
     {
-        $this->file = $file;
+        $this->file = Registry::get('FOLDER.layout') . '/' . $file . $this->fileExt;
     }
     
     /**
-     * To Parse View
-     * @return string	
+     * To Parse Layout
+     * @param string $view
      */
-    public function render()
-    {    
-        // Return view rendered
+    public function render($view)
+    {   
+        // Define View
+        $this->view = $view;
+
+        // Define baseDir
+        $this->baseDir = dirname($_REQUEST['REQUEST_URI']);
+
+        // Return rendered layout
         return parent::render($this->file);
     }
 }

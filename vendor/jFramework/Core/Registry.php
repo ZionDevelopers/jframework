@@ -88,12 +88,13 @@ class Registry
     /**
      * Get a variable from Registry
      * @param string $var
+     * @param mixed $failsafe
      * @return mixed
      */
-    public static function get($var)
+    public static function get($var, $failsafe = null)
     {
         // Define failsafe result
-        $result = null;
+        $result = $failsafe;
         
         // Check if array key separator exists
         if (strpos($var, '.') !== false) {
@@ -119,7 +120,15 @@ class Registry
      * @param string $contents
      */
     public static function set($var, $contents) {
-        self::$registry [$var] = $contents;
+         // Check if array key separator exists
+        if (strpos($var, '.') !== false) {
+            // Explode Array key separator
+            $var = explode('.', $var);
+
+            self::$registry [ $var[0] ][ $var[1] ] = $contents;
+        }else{
+            self::$registry [$var] = $contents;
+        }        
     }
 
     /**

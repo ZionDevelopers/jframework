@@ -12,6 +12,7 @@
 namespace jFramework\MVC;
 
 use jFramework\Core\Registry;
+use jFramework\MVC\View\XHTML;
 
 /**
  * jFramework Router
@@ -53,13 +54,15 @@ class Router
         Registry::set('Request', $request);
         
         // Handle the Request
-        $this->handleRequest($request);
+        $view = $this->handleRequest($request);
+        
+        // Format XHTML
+        return XHTML::format($view);
     }
     
     /**
      * Handle the Request
      * @param array $request
-     * @throws \Exception
      */
     protected function handleRequest($request)
     {
@@ -67,9 +70,9 @@ class Router
         $contents = '';
         
         // Controller Class
-        $class = $request['controller'] . 'Controller';
+        $class = ucfirst($request['controller']) . 'Controller';
         // Action Mathod
-        $method = $request['action'] . 'Action';
+        $method = strtolower($request['action']) . 'Action';
         
         // Get controllers folder
         $file = Registry::get('FOLDER.controller');
@@ -92,19 +95,27 @@ class Router
                 // Check if Action exists
                 if(method_exists($controller, $method)){      
                     // Call Action
-                    $contents = call_user_func_array(array($controller, $method), array($_POST,$_GET));
+                    $contents = call_user_func_array(array($controller, $method), array($_GET, $_POST));
                 }else{
                     // Run 404 Error Page
                     $contents = $controller->notFoundAction();
                 }
-            }else{
-                throw new \Exception('Controller ' . $request['controller'] . ' do not exists!', 404);
             }
-        }else{
-            throw new \Exception('Controller ' . $request['controller'] . ' do not exists!', 404);
         }
         
-        echo $controller->layout($contents);        
+        // Check if controller was successfully spawned
+        if(!is_object($controller)){     
+            // Spawn new Error Controller
+            $controller = new \jFramework\MVC\Controller\ErrorController();
+            // Run NotFound Action
+            $contents = $controller->notFoundAction();            
+        }
+        
+        // Check if controller was successfully spawned
+        if(is_object($controller)){
+            // Render layout
+            return $controller->layout($contents);        
+        }
     }
     
     /**

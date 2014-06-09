@@ -11,11 +11,8 @@
 
 namespace jFramework;
 
-use jFramework\Core\Tools;
 use jFramework\Core\Registry;
 use jFramework\MVC\Router;
-
-// Use
 
 /**
  * jFramework Core Operations Handler
@@ -108,6 +105,6 @@ class Core
         $Router->getCustomRoutes();
         
         // Bootstrap
-        $Router->bootstrap();
+        echo $Router->bootstrap();
     }
 }
