@@ -11,6 +11,8 @@
 
 namespace jFramework\MVC\Controller;
 
+use jFramework\MVC\View;
+
 /**
  * Base Action Controller who will Controllers will extend to
  * 
@@ -25,13 +27,29 @@ namespace jFramework\MVC\Controller;
  */
 abstract class AbstractActionController extends AbstractController
 {
-    public $request_data = '';
-    
     public function indexAction ()
     {
         
     }
     
+    /**
+     * Render Layout
+     * @param string $viewContents
+     * @return string
+     */
+    public function layout($viewContents)
+    {
+        $view = new View();
+        $view->setLayout('default');
+        $view->title = 'Welcome to jFramework!';
+        
+        return $view->renderLayout($viewContents);
+    }
+    
+    /**
+     * Page not found Action
+     * @return string
+     */
     public function notFoundAction()
     {
         return '<h1>Page Not found</h1>';

@@ -104,7 +104,7 @@ class Router
             throw new \Exception('Controller ' . $request['controller'] . ' do not exists!', 404);
         }
         
-        echo $contents;
+        echo $controller->layout($contents);        
     }
     
     /**
@@ -128,6 +128,7 @@ class Router
         if(isset($this->customRoutes[$route])){
             // Split Controller Separator
             $result = explode(':', $this->customRoutes[$route]);
+            
             // Format route array
             $result['route'] = $route;
             $result['controller'] = $result[0];

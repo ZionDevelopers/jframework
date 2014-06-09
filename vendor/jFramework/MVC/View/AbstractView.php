@@ -28,6 +28,7 @@ use jFramework\Core\Registry;
 abstract class AbstractView 
 {
     protected $viewFile = '';
+    protected $layoutFile = '';
     
     /**
      * Constructor
@@ -66,5 +67,10 @@ abstract class AbstractView
         if (isset($_SESSION ['SYSTEM'] ['MESSAGE'])) {
             $_SESSION ['SYSTEM'] ['MESSAGE'] = null;
         }
+    }
+    
+    public function setLayout($layout)
+    {
+        $this->layoutFile = $layout;
     }
 }

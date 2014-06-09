@@ -37,24 +37,62 @@ class View extends AbstractView
     
     public function __get($name)
     {
-        return $this->vars[$name];
+        $result = null;
+        
+        if(isset($this->$name)){
+            $result = $this->$name;
+        }
+        
+        if(isset($this->vars[$name])){
+            $result = $this->vars[$name];        
+        }
+        
+        return $result;
     }
     
     /**
      * To Parse View
-     *     
-     * @param string $file 
-     * @param boolean $forceRender   	
+     * 	
      */
     public function render()
     {        
         $file = Registry::get('FOLDER.view') . '/' . $this->viewFile. '.phtml';
 
         ob_start();
-        require ($file);
+        require $file;
         $contents = ob_get_contents();
         ob_end_clean();
         
+        return $contents;
+    }
+
+    public function getView()
+    {
+        return $this->view;
+    }
+    
+    /**
+     * To Parse Layout
+     */
+    public function renderlayout($view)
+    {   
+        // Define View
+        $this->view = $view;
+        
+        // Get layout file
+        $file = Registry::get('FOLDER.layout') . '/' . $this->layoutFile. '.phtml';
+        
+        // Start Buffer obtainer
+        ob_start();
+        $this->baseDir = dirname($_REQUEST['REQUEST_URI']);
+        // Request View
+        require $file;
+        // Get Buffs
+        $contents = ob_get_contents();
+        // Clear buff and end buffer obtainer
+        ob_end_clean();
+        
+        // Return view contents
         return $contents;
     }
 }
