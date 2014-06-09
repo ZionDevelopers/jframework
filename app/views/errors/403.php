@@ -9,9 +9,6 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
-// Use Tools
-use \jFramework\Core\Tools;
-
 ?>
 <div id="pageTitle">Error 403</div><br />
 Failure on sending form, try again.

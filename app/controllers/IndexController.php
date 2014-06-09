@@ -11,7 +11,6 @@
 
 namespace App\Controller;
 
-// Use Abstract Action Controller
 use jFramework\MVC\Controller\AbstractActionController;
 use jFramework\MVC\View;
 

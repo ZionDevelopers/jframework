@@ -11,7 +11,6 @@
 
 namespace jFramework\Database;
 
-// Use Tools 
 use \jFramework\Core\Tools;
 
 /**

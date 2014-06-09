@@ -9,7 +9,4 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
-// Use Tools
-use \jFramework\Core\Tools;
-
 echo 'Hello there!', Tools::debug($data);

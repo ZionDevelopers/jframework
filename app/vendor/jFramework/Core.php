@@ -11,17 +11,11 @@
 
 namespace jFramework;
 
-// Use Database Manager
-use jFramework\Database\Drivers\MySQL as Database;
-
-// Use Tools
 use jFramework\Core\Tools;
-
-// Use View
-use jFramework\Core\View;
-
-// Use Registry
 use jFramework\Core\Registry;
+use jFramework\MVC\Router;
+
+// Use
 
 /**
  * jFramework Core Operations Handler
@@ -98,9 +92,9 @@ class Core
     }
     
     /** 
-     * Bootstrap App
+     * Initialize jFramework
      */
-    public function bootstrap()
+    public function initialize()
     {        
         // Parse all .ini files
         $this->reloadData();
@@ -110,65 +104,12 @@ class Core
 
         // Define Bootstrap headers
         $this->headers();
-
-        // Check if the controller is private
-        if (substr(CONTROLLER, - 1) == '_') {
-            Tools::error(406);
-        }
-
-        // Creating new database manager OBJ
-        $db = new Database;
-
-        // Setting database settings
-        $db->setSettings(Registry::get('database'));
-
-        // Connecting to mysql database
-        $db->connect();
-
-        // Remove empty keys from get data
-        $_GET = array_filter($_GET);
-
-        // Require Controller
-        if (file_exists(CONTROLLERS_DIR . '/' . CONTROLLER . '.php')) {
-            // Require Controller
-            require CONTROLLERS_DIR . '/' . CONTROLLER . '.php';
-
-            // Defining Render Options
-            define('LAYOUT_PAGE', isset($layout) ? $layout : LAYOUT_DEFAULT );
-            define('VIEW_PAGE', isset($view) ? $view : CONTROLLER );
-
-            // Check out View
-            $contents = View::renderView(VIEW_PAGE);
-        } else {
-            // Generate a custom error page
-            Tools::error(404);
-        }
-
-        // Start Tidy Cache Getter
-        if (class_exists('tidy') && $contents != '' && LAYOUT_PAGE == LAYOUT_DEFAULT) {
-            ob_start();
-        }
-
-        // Request Layout controller
-        require CONTROLLERS_DIR . '/_layouts/' . LAYOUT_PAGE . '.php';
-
-        // Closing MySQL database connectiong
-        $db->close();
-
-        // Format XHTML with Tidy (If available)
-        if (class_exists('tidy') && $contents != '' && LAYOUT_PAGE == LAYOUT_DEFAULT) {
-            // Start Tidy
-            $tidy = new tidy ();
-            // Parse contents
-            $tidy->parseString(ob_get_contents(), array('indent' => true, 'output-xhtml' => true, 'wrap' => 200), 'utf8');
-            // Clear and Repair xHTML
-            $tidy->cleanRepair();
-
-            // End Buffering and Flush output
-            ob_end_clean();    
-
-            // Output Fixed, Formated xHTML
-            echo $tidy;
-        }
+        
+        // Spawn Router
+        $Router = new Router();
+        // Get Custom Routes
+        $Router->getCustomRoutes();
+        // Dispatcher
+        $Router->bootstrap();
     }
 }

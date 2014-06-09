@@ -9,13 +9,7 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
-// Use View
-use \jFramework\Core\View;
-
-// jSessCleaner
 use jFramework\Core\JSessCleaner;
-
-View::autoRender(false);
 
 if (defined('STDIN')) {
     echo "\r\nStarting PHP Session Cleaner for jFramework...\r\n";

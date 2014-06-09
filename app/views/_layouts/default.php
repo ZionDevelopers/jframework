@@ -9,9 +9,6 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
-// Use View
-use \jFramework\Core\View;
-
 $flashMessage = View::getFlash();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

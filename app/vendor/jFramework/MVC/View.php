@@ -11,7 +11,6 @@
 
 namespace jFramework\MVC;
 
-// Use AbstractView
 use jFramework\MVC\View\AbstractView;
 
 /**

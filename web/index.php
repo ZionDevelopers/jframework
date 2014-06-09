@@ -21,5 +21,5 @@ autoload::register(true);
 
 // Start jFramework Core
 $jFramework = new \jFramework\Core($root);
-// Bootstrap jFramework
-$jFramework->bootstrap();
+// Initialize jFramework
+$jFramework->initialize();
