@@ -46,7 +46,7 @@ class Router
     public function bootstrap()
     {
         // Define base path
-        $this->basepath = dirname($_SERVER['SCRIPT_NAME']);
+        $this->basepath = dirname($this->core->server('SCRIPT_NAME'));
         
         /// Detect request
         $request = $this->detectRequest();        
@@ -166,7 +166,7 @@ class Router
         // Check if PHP is running on WebServer
         if (PHP_SAPI != 'cli') {
             // Get URI
-            $uri = $_SERVER['REQUEST_URI'];
+            $uri = $this->core->server('REQUEST_URI');
 
             // Remove index.php from URI
             $uri = preg_replace($this->basepath . '(index.php)?/', '', $uri);
