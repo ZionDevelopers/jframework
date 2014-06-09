@@ -15,8 +15,8 @@ namespace jFramework\MVC\Controller;
  * Base Controller who Controllers will extend to
  * 
  * Created: 2014-06-08 08:06 PM (GMT -03:00)
- * Updated: 2014-06-08 08:06 PM (GMT -03:00)
- * @version 0.0.1
+ * Updated: 2014-06-09 04:50 PM (GMT -03:00)
+ * @version 0.0.2
  
  * @package jFramework
  * @subpackage MVC
@@ -26,5 +26,5 @@ namespace jFramework\MVC\Controller;
  */
 abstract class AbstractController
 {
-    //@TODO: TODO Something
+    public $core = null;
 }

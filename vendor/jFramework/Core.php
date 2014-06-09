@@ -13,6 +13,8 @@ namespace jFramework;
 
 use jFramework\Core\Registry;
 use jFramework\MVC\Router;
+use jFramework\Database\Drivers\MySQL;
+use jFramework\Core\Tools;
 
 /**
  * jFramework Core Operations Handler
@@ -33,6 +35,7 @@ class Core
      */
     public $rootDir = '';
     public $args = array();
+    public $db = null;
     
     /**
      * Constructor
@@ -46,6 +49,41 @@ class Core
         
         $this->rootDir = $rootDir;
         $this->args = $args;
+    }
+    
+    /**
+     * Pass registry to Core
+     * @param string $var
+     * @param mixed $value
+     * @return mixed
+     */
+    public function registry($var, $value = null)
+    {
+        if(is_null($value)){
+            return Registry::get($var);
+        }else{
+            Registry::set($var, $value);
+        }
+    }
+    
+    /**
+     * Get Database Driver OBJ
+     * @return \jFramework\Database\Drivers\MySQL
+     */
+    public function db()
+    {
+        // Get 
+        $settings = $this->registry('DATABASE');
+        
+        if(!empty($settings)){
+            if(is_null($this->db)){
+                $this->db = new MySQL();
+                $this->db->setSettings($settings);
+                $this->db->connect();
+            }
+        }
+        
+        return $this->db;
     }
     
     /**

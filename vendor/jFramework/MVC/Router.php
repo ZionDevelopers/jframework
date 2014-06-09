@@ -92,6 +92,8 @@ class Router
             if(in_array($class, get_declared_classes())){  
                 // Spawn new Controller
                 $controller = new $class;
+                // Pass Core OBJ
+                $controller->core = $this->core;
                  
                 // Check if Action exists
                 if(method_exists($controller, $method)){      
@@ -111,8 +113,16 @@ class Router
         if(!isset($controller)){     
             // Spawn new Error Controller
             $controller = new \jFramework\MVC\Controller\ErrorController();
+            // Pass Core OBJ
+            $controller->core = $this->core;
             // Run NotFound Action
             $contents = $controller->notFoundAction();            
+        }
+                        
+        // Check if database driver was created
+        if(!is_null($this->core->db)){
+            // Close connection
+            $this->core->db->close();
         }
         
         // Check if controller was successfully spawned and PHP is running on a WebServer

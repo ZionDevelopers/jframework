@@ -11,7 +11,8 @@
 
 namespace jFramework\Database\Drivers;
 
-use \jFramework\Core\Tools;
+use jFramework\Core\Tools;
+use jFramework\Core\Registry;
 
 /**
  * Class to manage MySQL database data
@@ -60,17 +61,9 @@ class MySQL extends \mysqli
 
     /**
      *
-     * @var array
-     
-     */
-    public $sqlHistory = array();
-
-    /**
-     *
      * @var boolean     
      */
     public $removeHtml = true;
-    public $sqlArchive = false;
 
     /**
      * Set Settings
@@ -95,16 +88,10 @@ class MySQL extends \mysqli
         if (!$this->testCon()) {
             // Throw Connection error
             $this->error($this->connect_error);
-        }
-
-        // Check if cache dir was set
-        if (!defined('CACHE_DIR')) {
-            // Set one if not exists
-            define('CACHE_DIR', $_SERVER ["TEMP"]);
-        }
+        }        
 
         // Cache File
-        $this->cacheFile = CACHE_DIR . '/' . $this->settings ['host'] . '@' . $this->settings ['base'] . '.dat';
+        $this->cacheFile = Registry::get('FOLDER.cache') . '/' . $this->settings ['host'] . '@' . $this->settings ['base'] . '.dat';
 
         // Set Connection Charset
         $this->set_charset($this->settings ['charset']);
@@ -140,14 +127,8 @@ class MySQL extends \mysqli
      */
     public function cacheRefresh()
     {
-        // Check if cache folder not exits
-        if (!file_exists(CACHE_DIR)) {
-            // Create folders
-            mkdir(CACHE_DIR, 0755, true);
-        }
-
         // Check if cache folder is not writeable
-        if (!is_writable(CACHE_DIR)) {
+        if (!is_writable(Registry::get('FOLDER.cache'))) {
             chmod($this->cacheFile, 0755);
         }
 
@@ -159,16 +140,6 @@ class MySQL extends \mysqli
 
         // Set Initial Cache Table
         $this->cacheTable = unserialize(file_get_contents($this->cacheFile));
-
-        // Check
-        if (!isset($_SESSION ['SQL_HISTORY']) && $this->sqlArchive && defined('CONTROLLER')) {
-            // Reset Arrays
-            $_SESSION ['SQL_HISTORY'] = array();
-            $_SESSION ['SQL_LASTCONTROLLER'] = CONTROLLER;
-
-            $this->sqlHistory = array();
-            $this->sqlHistory [CONTROLLER] = array();
-        }
     }
 
     /**

@@ -19,8 +19,8 @@ use jFramework\Core\Registry;
  * Base Action Controller who will Controllers will extend to
  * 
  * Created: 2014-06-08 08:06 PM (GMT -03:00)
- * Updated: 2014-06-08 08:06 PM (GMT -03:00)
- * @version 0.0.1 
+ * Updated: 2014-06-09 04:50 PM (GMT -03:00)
+ * @version 0.0.5 
  * @package jFramework
  * @subpackage MVC
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
@@ -73,7 +73,9 @@ abstract class AbstractActionController extends AbstractController
         Registry::set('APP.title', Registry::get('APP.title') . ' :: Page not found!');
         
         $view->title = 'Error 404';
-        $view->message = 'The page you requested was not found!';        
+        $view->message = 'The page you requested was not found!';  
+        
+        // Render view
         return $view->render();
     }
 }
