@@ -31,30 +31,128 @@ class Router
     protected $customRoutes = array();
     protected $basepath = '';
 
-
+    /**
+     * Get Custom Routes
+     */
     public function getCustomRoutes()
     {
         $this->customRoutes = Registry::get('CUSTOM_ROUTES');
     }
     
+    /**
+     * Start Bootstrap
+     */
     public function bootstrap()
     {
+        // Define base path
         $this->basepath = dirname($_SERVER['SCRIPT_NAME']);
-        $this->detectRequest();
+        /// Detect request
+        $request = $this->detectRequest();
+        // Handle the Request
+        $this->handleRequest($request);
     }
     
+    /**
+     * Handle the Request
+     * @param array $request
+     * @throws \Exception
+     */
+    protected function handleRequest($request)
+    {
+        // Default view contents
+        $contents = 'NADA';
+        // Controller Class
+        $class = $request['controller'] . 'Controller';
+        // Action Mathod
+        $method = $request['action'] . 'Action';
+        
+        // Get controllers folder
+        $file = Registry::get('FOLDER.controllers');
+        // Set Class
+        $file .= '/' . $class . '.php';
+        
+        if(is_readable($file)){
+            require $file;
+            
+            // Define class with namespace
+            $class = 'App\Controller\\'.$class;
+            
+            if(in_array($class, get_declared_classes())){                
+                $controller = new $class;
+                
+                if(method_exists($controller, $method)){
+                    $contents = call_user_func_array(array($controller, $method), array($_POST,$_GET));
+                }else{
+                    $contents = $controller->notFoundAction();
+                }
+            }else{
+                throw new \Exception('Controller ' . $request['controller'] . ' do not exists!', 404);
+            }
+        }else{
+            throw new \Exception('Controller ' . $request['controller'] . ' do not exists!', 404);
+        }
+        
+        exit('SUCCESS:'.$contents);
+    }
+    
+    /**
+     * Search for a match in the custom routes
+     * @param string $route
+     * @param string $method
+     * @return type
+     */
     protected function match($route, $method)
     {
+        // Format failsafe route
+        $result = array(
+            'route' => $route,
+            'controller' => null, 
+            'action' => null, 
+            'method' => $method,
+            'data' => array()
+        );
         
+        // Check if a custom route was found
+        if(isset($this->customRoutes[$route])){
+            // Split Controller Separator
+            $result = explode(':', $this->customRoutes[$route]);
+            // Format route array
+            $result['route'] = $route;
+            $result['controller'] = $result[0];
+            $result['action'] = $result[1];
+        }
+        
+        // Return route
+        return $result;
     }
     
+    /**
+     * Detect the current Request
+     * @return array
+     */
     protected function detectRequest()
     {
-        $controller = 'Index';
+        // Get URI
         $uri = $_SERVER['REQUEST_URI'];
-        $uri = preg_replace('#^'.$this->basepath.'(?:index\.php/)?#i', '/', $uri);
+        
+        // Remove index.php from URI
+        $uri = preg_replace('#^' . $this->basepath . '(?:index\.php/)?#i', '/', $uri);
+        // Parse URI Request
         $request = parse_url($_SERVER['REQUEST_URI']);
         
-        exit($controller);
+        // Detect a match for custom route
+        $route = $this->match($request['path'], $_SERVER['REQUEST_METHOD']);
+        
+        // If not found a custom route
+        if(is_null($route['controller'])){
+            // Split controller spearator
+            $path = explode('/', $request['path']);
+            // Define Controller
+            $route['controller'] = !empty($path [1]) ? $path[1] : 'Index';
+            // Define Action
+            $route['action'] = !empty($path[2]) ? $path[2] : 'index';
+        }
+        
+        return $route;
     }
 }
