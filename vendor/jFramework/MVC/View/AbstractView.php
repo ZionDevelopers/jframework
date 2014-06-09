@@ -33,9 +33,9 @@ abstract class AbstractView
     
     /**
      * Constructor
-     * @param string $layout
      */
-    public function __construct(){
+    public function __construct()
+    {
         // Get Request
         $request = Registry::get('Request');
         
@@ -43,6 +43,17 @@ abstract class AbstractView
         $this->file = Registry::get('FOLDER.view');
         $this->file .= '/' . strtolower($request['controller']);
         $this->file .= '/' . strtolower($request['action']) . $this->fileExt;
+    }
+    
+    /**
+     * Get registry data
+     * @param string $var
+     * @return mixed
+     */
+    public function registry($var)
+    {
+        // Return data from registry
+        return Registry::get($var);
     }
     
     /**

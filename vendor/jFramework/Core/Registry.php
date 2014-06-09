@@ -108,9 +108,11 @@ class Registry
             }
         // Check if variable exists
         }elseif (isset(self::$registry[$var])) {
+            // Get Registry var
             $result = self::$registry [$var];
         }
 
+        // Return Registry data
         return $result;
     }
 
@@ -119,14 +121,17 @@ class Registry
      * @param string $var
      * @param string $contents
      */
-    public static function set($var, $contents) {
+    public static function set($var, $contents)
+    {
          // Check if array key separator exists
         if (strpos($var, '.') !== false) {
             // Explode Array key separator
             $var = explode('.', $var);
 
+            // Set Registry Key
             self::$registry [ $var[0] ][ $var[1] ] = $contents;
         }else{
+            // Set Registry var
             self::$registry [$var] = $contents;
         }        
     }
@@ -135,14 +140,17 @@ class Registry
      * Return all the registry
      * @return array
      */
-    public static function dump() {
+    public static function dump()
+    {
+        // Return the whole registry
         return self::$registry;
     }
 
     /**
      * Parse all .ini files from self::$dir
      */
-    public static function parseDir(){
+    public static function parseDir()
+    {
         // List all files .ini from the configs dir
         foreach(glob(self::$dir . '*' . self::$ext) as $file){
             // Parse .ini file
