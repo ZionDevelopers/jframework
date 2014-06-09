@@ -58,9 +58,9 @@ class SessCleaner
 
                 // Check if was Deleted
                 if (!file_exists($file)) {
-                    echo 'Deleted!';
+                    echo 'OK!';
                 } else {
-                    echo 'Not Deleted!';
+                    echo 'ERR!';
                 }
             }
         } else {
