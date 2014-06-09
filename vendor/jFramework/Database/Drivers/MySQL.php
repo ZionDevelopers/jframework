@@ -9,7 +9,7 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
-namespace jFramework\Database;
+namespace jFramework\Database\Drivers;
 
 use \jFramework\Core\Tools;
 
