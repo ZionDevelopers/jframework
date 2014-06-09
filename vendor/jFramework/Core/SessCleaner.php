@@ -11,6 +11,8 @@
 
 namespace jFramework\Core;
 
+use jFramework\Core\Registry;
+
 /**
  * Session Cleaner for PHP
  * 
@@ -77,7 +79,7 @@ class SessCleaner
         // Mount List
         $toClean = array();
         // Scan file file on Session Folder
-        $files = scandir(SESSION_DIR);
+        $files = scandir(Registry::get('FOLDER.session'));
         // Get All Files
         foreach ($files as $file) {
             // Check if is not Scan parent Folders

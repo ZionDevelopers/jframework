@@ -18,8 +18,8 @@ use jFramework\MVC\View\XHTML;
  * jFramework Router
  * 
  * Created: 2014-06-08 08:53 PM (GMT -03:00)
- * Updated: 2014-06-08 08:53 PM (GMT -03:00)
- * @version 0.0.1 
+ * Updated: 2014-06-09 15:59 PM (GMT -03:00)
+ * @version 0.0.5 
  * @package jFramework
  * @subpackage MVC
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
@@ -30,6 +30,7 @@ class Router
 {
     protected $customRoutes = array();
     protected $basepath = '';
+    public $core = null;
 
     /**
      * Get Custom Routes
@@ -95,7 +96,10 @@ class Router
                 // Check if Action exists
                 if(method_exists($controller, $method)){      
                     // Call Action
-                    $contents = call_user_func_array(array($controller, $method), array($_GET, $_POST));
+                    $contents = call_user_func_array(
+                        array($controller, $method),
+                        array($_GET, $_POST, $_SERVER, $_COOKIE)
+                    );
                 }else{
                     // Run 404 Error Page
                     $contents = $controller->notFoundAction();
@@ -111,10 +115,13 @@ class Router
             $contents = $controller->notFoundAction();            
         }
         
-        // Check if controller was successfully spawned
-        if(is_object($controller)){
+        // Check if controller was successfully spawned and PHP is running on a WebServer
+        if(is_object($controller) && PHP_SAPI != 'cli'){
             // Render layout
             return $controller->layout($contents);        
+        }else{
+            // Return view contents when php is running from Console
+            return $contents;
         }
     }
     
@@ -156,13 +163,19 @@ class Router
      */
     protected function detectRequest()
     {
-        // Get URI
-        $uri = $_SERVER['REQUEST_URI'];
+        // Check if PHP is running on WebServer
+        if (PHP_SAPI != 'cli') {
+            // Get URI
+            $uri = $_SERVER['REQUEST_URI'];
+
+            // Remove index.php from URI
+            $uri = preg_replace($this->basepath . '(index.php)?/', '', $uri);
+        }else{
+            $uri = isset ($this->core->args[1]) ? '/' . $this->core->args[1] : '/';
+        }
         
-        // Remove index.php from URI
-        $uri = preg_replace('#^' . $this->basepath . '(?:index\.php/)?#i', '/', $uri);
         // Parse URI Request
-        $request = parse_url($_SERVER['REQUEST_URI']);
+        $request = parse_url($uri);
         
         // Detect a match for custom route
         $route = $this->match($request['path'], $_SERVER['REQUEST_METHOD']);

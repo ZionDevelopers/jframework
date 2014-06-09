@@ -20,6 +20,6 @@ autoload::addPath ($root . '/vendor/');
 autoload::register(true);
 
 // Start jFramework Core
-$jFramework = new \jFramework\Core($root);
+$jFramework = new \jFramework\Core($root, $argv);
 // Initialize jFramework
 $jFramework->initialize();

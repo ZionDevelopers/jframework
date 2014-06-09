@@ -32,8 +32,8 @@ class XHTML
         // Define result failsafe
         $result = $xhtml;
         
-        // Detect if Tidy exists
-        if(class_exists('tidy')){
+        // Detect if Tidy exists and php is running on a WebServer
+        if(class_exists('tidy') && PHP_SAPI != 'cli'){
             // Spawn Tidy
             $tidy = new \tidy();
             // Parse xhtml
@@ -42,6 +42,8 @@ class XHTML
             $tidy->cleanRepair();
             
             $result = $tidy;
+        }elseif(PHP_SAPI == 'cli'){
+            $result = strip_tags($xhtml);
         }
         
         return $result;

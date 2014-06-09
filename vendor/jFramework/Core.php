@@ -32,14 +32,84 @@ class Core
      * @var string
      */
     public $rootDir = '';
+    public $args = array();
     
     /**
      * Constructor
      * @param string $rootDir
      */
-    public function __construct($rootDir)
-    {
+    public function __construct($rootDir, $args)
+    {       
+        if(PHP_SAPI == 'cli'){
+            unset($args[0]);
+        }
+        
         $this->rootDir = $rootDir;
+        $this->args = $args;
+    }
+    
+    /**
+     * Get variable from $_GET
+     * @param string $var
+     * @return mixed
+     */
+    public function get($var)
+    {
+        $result = null;
+        
+        if(isset($_GET[$var])){
+            $result = $_GET[$var];
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Get variable from $_POST
+     * @param string $var
+     * @return mixed
+     */
+    public function post($var)
+    {
+        $result = null;
+        
+        if(isset($_POST[$var])){
+            $result = $_POST[$var];
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Get variable from $_SERVER
+     * @param string $var
+     * @return mixed
+     */
+    public function server($var)
+    {
+        $result = null;
+        
+        if(isset($_SERVER[$var])){
+            $result = $_SERVER[$var];
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Get variable from $_COOKIE
+     * @param string $var
+     * @return mixed
+     */
+    public function cookie($var)
+    {
+        $result = null;
+        
+        if(isset($_COOKIE[$var])){
+            $result = $_COOKIE[$var];
+        }
+        
+        return $result;
     }
     
     /**
@@ -52,7 +122,7 @@ class Core
         // Define rootDir variable
         Registry::set('rootDir', $this->rootDir);
         // Define serverName variable
-        Registry::set('serverName', $_SERVER['SERVER_NAME']);
+        Registry::set('serverName', $this->server('SERVER_NAME'));
         // Parse the whole configs directory
         Registry::parseDir();        
     }
@@ -74,14 +144,17 @@ class Core
      */
     private function headers()
     {
-        // Start Session on Dispatcher
-        session_start ();
+        // Check if PHP is not running on Console
+        if(PHP_SAPI != 'cli') {
+            // Start Session on Dispatcher
+            session_start ();
 
-        // Signature
-        header('X-Powered-By: jFramework ' . Registry::get('jFramework.version'), true);
+            // Signature
+            header('X-Powered-By: jFramework ' . Registry::get('jFramework.version'), true);
 
-        // Setting content Type and Charset
-        header('Content-Type: text/html; charset=' . Registry::get('APP.charset'), true);
+            // Setting content Type and Charset
+            header('Content-Type: text/html; charset=' . Registry::get('APP.charset'), true);
+        }
     }
     
     /** 
@@ -100,6 +173,9 @@ class Core
         
         // Spawn Router
         $Router = new Router();
+        
+        // Define core OBJ
+        $Router->core = $this;
         
         // Get Custom Routes
         $Router->getCustomRoutes();
