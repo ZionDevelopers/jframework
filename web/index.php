@@ -9,6 +9,12 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
+// PHP 5.4 Emulator
+if(version_compare(PHP_VERSION, '5.4.0', '<')){
+    // Emulate Request TIME FLOAT
+    $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
+}
+
 // Define root directory
 $root = dirname(__DIR__);
 
