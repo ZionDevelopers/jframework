@@ -98,7 +98,7 @@ class Router
                     // Call Action
                     $contents = call_user_func_array(
                         array($controller, $method),
-                        array($_GET, $_POST, $_SERVER, $_COOKIE)
+                        array(array_merge($this->core->get(), $request ['data']))
                     );
                 }else{
                     // Run 404 Error Page

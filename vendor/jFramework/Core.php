@@ -53,12 +53,14 @@ class Core
      * @param string $var
      * @return mixed
      */
-    public function get($var)
+    public function get($var = null)
     {
         $result = null;
         
         if(isset($_GET[$var])){
             $result = $_GET[$var];
+        }elseif(is_null($var)){
+            $result = $_GET;
         }
         
         return $result;
@@ -69,12 +71,14 @@ class Core
      * @param string $var
      * @return mixed
      */
-    public function post($var)
+    public function post($var = null)
     {
         $result = null;
         
         if(isset($_POST[$var])){
             $result = $_POST[$var];
+        }elseif(is_null($var)){
+            $result = $_POST;
         }
         
         return $result;
@@ -85,12 +89,14 @@ class Core
      * @param string $var
      * @return mixed
      */
-    public function server($var)
+    public function server($var = null)
     {
         $result = null;
         
         if(isset($_SERVER[$var])){
             $result = $_SERVER[$var];
+        }elseif(is_null($var)){
+            $result = $_SERVER;
         }
         
         return $result;
@@ -101,12 +107,14 @@ class Core
      * @param string $var
      * @return mixed
      */
-    public function cookie($var)
+    public function cookie($var = null)
     {
         $result = null;
         
         if(isset($_COOKIE[$var])){
             $result = $_COOKIE[$var];
+        }elseif(is_null($var)){
+            $result = $_COOKIE;
         }
         
         return $result;
