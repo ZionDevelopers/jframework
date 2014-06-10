@@ -176,7 +176,7 @@ class Core
     /**
      * Update php.ini settings from app/configs/php.ini
      */
-    private function ini_update()
+    private function iniUpdate()
     {
         // Loop all PHP.ini values
         foreach(Registry::get('PHP') as $key => $value){
@@ -212,7 +212,7 @@ class Core
         $this->reloadData();
         
         // Update php.ini settings from app/configs/php.ini
-        $this->ini_update();
+        $this->iniUpdate();
 
         // Define Bootstrap headers
         $this->headers();
