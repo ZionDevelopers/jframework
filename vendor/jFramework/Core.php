@@ -95,10 +95,10 @@ class Core
     {
         $result = null;
         
-        if(isset($_GET[$var])){
-            $result = $_GET[$var];
-        }elseif(is_null($var)){
+        if(is_null($var)){
             $result = $_GET;
+        }elseif(isset($_GET[$var])){
+            $result = $_GET[$var];
         }
         
         return $result;
@@ -113,10 +113,10 @@ class Core
     {
         $result = null;
         
-        if(isset($_POST[$var])){
-            $result = $_POST[$var];
-        }elseif(is_null($var)){
+        if(is_null($var)){
             $result = $_POST;
+        }elseif(isset($_POST[$var])){
+            $result = $_POST[$var];
         }
         
         return $result;
@@ -131,10 +131,10 @@ class Core
     {
         $result = null;
         
-        if(isset($_SERVER[$var])){
-            $result = $_SERVER[$var];
-        }elseif(is_null($var)){
+        if(is_null($var)){
             $result = $_SERVER;
+        }elseif(isset($_SERVER[$var])){
+            $result = $_SERVER[$var];
         }
         
         return $result;
@@ -149,10 +149,10 @@ class Core
     {
         $result = null;
         
-        if(isset($_COOKIE[$var])){
-            $result = $_COOKIE[$var];
-        }elseif(is_null($var)){
+        if(is_null($var)){
             $result = $_COOKIE;
+        }elseif(isset($_COOKIE[$var])){
+            $result = $_COOKIE[$var];
         }
         
         return $result;
