@@ -36,21 +36,38 @@ class XHTML
         if(class_exists('tidy') && PHP_SAPI != 'cli'){
             // Spawn Tidy
             $tidy = new \tidy();
+            
+            // Tidy Config
+            $config = array(
+                'indent' => true,
+                'alt-text' => '',
+                'clean' => true,
+                'output-xhtml' => true,
+                'wrap' => 20000000,
+                'indent-spaces' => 0
+            );
+            
             // Parse xhtml
-            $tidy->parseString($result, array('indent' => true, 'alt-text' => '', 'clean' => true, 'output-xhtml' => true, 'wrap' => 20000000, 'indent-spaces' => 0), Registry::get('APP.xhtml-charset'));
+            $tidy->parseString($result, $config, Registry::get('APP.xhtml-charset'));
+            
             // Clear and Repair XHTML
             $tidy->cleanRepair();
             
-            $result = (string)$tidy;
-            
+            // Convert Tidy OBJ to string
+            $result = (string)$tidy;      
+        }elseif(PHP_SAPI == 'cli'){
+            // Strip XHTML
+            $result = strip_tags($result);
+        }
+        
+        // XHTML BaseRef fixer and SEO Optimizations
+        if(PHP_SAPI != 'cli'){
             // BaseRef Fixer
             $result = preg_replace('/href="/i', 'href="' . Registry::get('baseDir') . '$1', $result);
             $result = preg_replace('/src="/i', 'src="' . Registry::get('baseDir') . '$1', $result);
-            
+
             // SEO Optimizations
             $result = preg_replace("/\n|\r\n|\r|\t/", '', $result);
-        }elseif(PHP_SAPI == 'cli'){
-            $result = strip_tags($xhtml);
         }
         
         return $result;
