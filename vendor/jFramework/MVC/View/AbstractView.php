@@ -134,6 +134,16 @@ abstract class AbstractView
     }
     
     /**
+     * Check layout
+     * @param string $file
+     * @return boolean
+     */
+    public function layoutCheck($file)
+    {
+        return is_readable($file);
+    }
+    
+    /**
      * Render a view/layout
      * @param string $file
      * @return string

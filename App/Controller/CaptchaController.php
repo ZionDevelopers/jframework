@@ -9,21 +9,25 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
+
 namespace App\Controller;
 
-use jFramework\Core\SessCleaner;
 use jFramework\MVC\Controller\AbstractActionController;
+use jFramework\Image\Captcha;
 
-class SessCleanerController extends AbstractActionController
+
+class CaptchaController extends AbstractActionController
 {
-    public function indexAction(){ 
-        echo "\r\nStarting PHP Session Cleaner for jFramework...\r\n";
-
-        // Starts Session Cleaner
-        $sc = new SessCleaner ();
-        // Get Old Session Files
-        $files = $sc->getOldSessFiles();
-        // Clean and Show
-        $sc->cleanupAndShow($files);
+    public function indexAction()
+    {
+        $captcha = new Captcha();
+        $captcha->generate('main');
+        
+        return '';
+    }
+    
+    public function layout($view)
+    {
+        return '';
     }
 }

@@ -55,11 +55,18 @@ class Layout extends AbstractView
     {   
         // Define View
         $this->view = $view;
+        
+        $result = false;
 
         // Define baseDir
         $this->baseDir = dirname($_SERVER['REQUEST_URI']);
 
-        // Return rendered layout
-        return parent::render($this->file);
+        // Check if there is a layout
+        if($this->layoutCheck($this->file)){
+            // Return rendered layout
+            $result = parent::render($this->file);
+        }
+        
+        return $result;
     }
 }

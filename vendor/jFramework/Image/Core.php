@@ -1,4 +1,5 @@
 <?php
+
 /**
  * jFramework
  *
@@ -9,21 +10,23 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
-namespace jFramework\Core;
+namespace jFramework\Image;
+
+use jFramework\Core\Registry;
 
 /**
- * Class to Manage images: Resize, AddText and add Water mark
+ * Image Core
  * 
  * Created: 2010-07-30 08:50 AM
- * Updated: 2014-06-03 09:37 AM 
- * @version 1.9.0 
+ * Updated: 2014-06-13 11:44 PM 
+ * @version 2.0.0 
  * @package jFramework
  * @subpackage Core
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
-class Image
+class Core
 {
     /**
      * Private vars
@@ -64,11 +67,11 @@ class Image
         if (file_exists($imgName)) {
             $this->imgName = $imgName;
         }
-        
+
         $this->trans = $trans;
         $this->setType();
     }
-        
+
     /**
      * internal function to make a New Image Size
      *
@@ -77,16 +80,13 @@ class Image
      */
     protected function resize()
     {
-        try {
-            if ($this->trans && $this->ext == 'png') {
-                imagealphablending($this->newImgRc, false);
-                imagesavealpha($this->newImgRc, true);
-            }
-            $result = imagecopyresampled($this->newImgRc, $this->fontRcImg, 0, 0, 0, 0, $this->finalSize ['width'], $this->finalSize ['height'], $this->originalSize ['width'], $this->originalSize ['height']);
-        } catch (Exception $e) {
-            $result = false;
-            throw new Exception($e->getMessage());
+        if ($this->trans && $this->ext == 'png') {
+            imagealphablending($this->newImgRc, false);
+            imagesavealpha($this->newImgRc, true);
         }
+
+        $result = imagecopyresampled($this->newImgRc, $this->fontRcImg, 0, 0, 0, 0, $this->finalSize ['width'], $this->finalSize ['height'], $this->originalSize ['width'], $this->originalSize ['height']);
+
         return $result;
     }
 
@@ -102,7 +102,7 @@ class Image
         $this->forceScale = $forceScale;
         $this->wishedSize = array('width' => $w, 'height' => $h);
 
-        $this->_size();
+        $this->size();
 
         //If will force Scale
         if (!$forceScale) {
@@ -121,7 +121,7 @@ class Image
         $this->resize();
     }
 
-    protected function needScale() 
+    protected function needScale()
     {
         return ($this->originalSize ['width'] > $this->wishedSize ['width'] || $this->originalSize ['height'] > $this->wishedSize ['height']);
     }
@@ -184,24 +184,20 @@ class Image
             $ext = 'jpeg';
         }
 
-        try {
-            $waterMark = getimagesize($image);
-            $width = $waterMark [0];
-            $height = $waterMark [1];
+        $waterMark = getimagesize($image);
+        $width = $waterMark [0];
+        $height = $waterMark [1];
 
-            if ($ext == 'png') {
-                $waterMark = imagecreatefrompng($image);
-            } elseif ($ext == 'jpg') {
-                $waterMark = imagecreatefromjpeg($image);
-            }
-
-            $x = ($this->finalSize ['width'] - $width);
-            $y = ($this->finalSize ['height'] - $height);
-            $result = imagecopyresampled($this->newImgRc, $waterMark, $x, $y, 0, 0, $width, $height, $width, $height);
-        } catch (Exception $e) {
-            $result = false;
-            throw new Exception($e->getMessage());
+        if ($ext == 'png') {
+            $waterMark = imagecreatefrompng($image);
+        } elseif ($ext == 'jpg') {
+            $waterMark = imagecreatefromjpeg($image);
         }
+
+        $x = ($this->finalSize ['width'] - $width);
+        $y = ($this->finalSize ['height'] - $height);
+        $result = imagecopyresampled($this->newImgRc, $waterMark, $x, $y, 0, 0, $width, $height, $width, $height);
+
         return $result;
     }
 
@@ -212,22 +208,18 @@ class Image
      */
     public function addImage($image, $x, $y, $type = 'png')
     {
-        try {
-            $waterMark = getimagesize($image);
-            $width = $waterMark [0];
-            $height = $waterMark [1];
+        $waterMark = getimagesize($image);
+        $width = $waterMark [0];
+        $height = $waterMark [1];
 
-            if ($type == 'png') {
-                $waterMark = imagecreatefrompng($image);
-            } elseif ($type == 'jpg') {
-                $waterMark = imagecreatefromjpeg($image);
-            }
-
-            $result = imagecopyresampled($this->newImgRc, $waterMark, $x, $y, 0, 0, $width, $height, $width, $height);
-        } catch (Exception $e) {
-            $result = false;
-            throw new Exception($e->getMessage());
+        if ($type == 'png') {
+            $waterMark = imagecreatefrompng($image);
+        } elseif ($type == 'jpg') {
+            $waterMark = imagecreatefromjpeg($image);
         }
+
+        $result = imagecopyresampled($this->newImgRc, $waterMark, $x, $y, 0, 0, $width, $height, $width, $height);
+
         return $result;
     }
 
@@ -240,14 +232,10 @@ class Image
      */
     protected function import($imgName)
     {
-        try {
-            $func = 'imagecreatefrom' . $this->ext;
-            $this->fontRcImg = $func($imgName);
-            $result = $this->fontRcImg;
-        } catch (Exception $e) {
-            $result = false;
-            throw new Exception($e->getMessage());
-        }
+        $func = 'imagecreatefrom' . $this->ext;
+        $this->fontRcImg = $func($imgName);
+        $result = $this->fontRcImg;
+
         return $result;
     }
 
@@ -259,12 +247,8 @@ class Image
      */
     protected function newImage()
     {
-        try {
-            $this->newImgRc = imagecreatetruecolor($this->finalSize ['width'], $this->finalSize ['height']);
-        } catch (Exception $e) {
-            $this->newImgRc = false;
-            throw new Exception($e->getMessage());
-        }
+        $this->newImgRc = imagecreatetruecolor($this->finalSize ['width'], $this->finalSize ['height']);
+
         return $this->newImgRc;
     }
 
@@ -276,18 +260,15 @@ class Image
      */
     protected function setType()
     {
-        try {
-            $ext = pathinfo($this->imgName);
-            $ext = strtolower($ext ['extension']);
-            if ($this->isJPG($ext)) {
-                $this->ext = 'jpeg';
-            } else {
-                $this->ext = $ext;
-            }
-        } catch (Exception $e) {
-            $ext = false;
-            throw new Exception($e->getMessage());
+        $ext = pathinfo($this->imgName);
+
+        $ext = strtolower($ext ['extension']);
+        if ($this->isJPG($ext)) {
+            $this->ext = 'jpeg';
+        } else {
+            $this->ext = $ext;
         }
+
         return $ext;
     }
 
@@ -299,14 +280,10 @@ class Image
      */
     protected function size()
     {
-        try {
-            list ( $width, $height, $type, $attr ) = getimagesize($this->imgName);
-            $this->originalSize = array('width' => $width, 'height' => $height, 'type' => $type, 'attr' => $attr);
-            $result = $this->originalSize;
-        } catch (Exception $e) {
-            $result = false;
-            throw new Exception($e->getMessage());
-        }
+        list ( $width, $height, $type, $attr ) = getimagesize($this->imgName);
+        $this->originalSize = array('width' => $width, 'height' => $height, 'type' => $type, 'attr' => $attr);
+        $result = $this->originalSize;
+
         return $result;
     }
 
@@ -331,19 +308,16 @@ class Image
      */
     public function save($imgName, $quality = 80)
     {
-        try {
-            if (isset($this->ext)) {
-                if ($this->isJPG()) {
-                    $result = imagejpeg($this->newImgRc, $imgName, $quality);
-                } else {
-                    $func = 'image' . $this->ext;
-                    $result = $func($this->newImgRc, $imgName);
-                }
+
+        if (isset($this->ext)) {
+            if ($this->isJPG()) {
+                $result = imagejpeg($this->newImgRc, $imgName, $quality);
+            } else {
+                $func = 'image' . $this->ext;
+                $result = $func($this->newImgRc, $imgName);
             }
-        } catch (Exception $e) {
-            $result = false;
-            throw new Exception($e->getMessage());
         }
+
         return $result;
     }
 
@@ -400,7 +374,7 @@ class Image
         }
 
         $color = imagecolorallocate($this->newImgRc, $color [0], $color [1], $color [2]);
-        imagettftext($this->newImgRc, $size, 0, $x, $y, $color, WEBROOT_DIR . '/fonts/' . $font . '.ttf', $text);
+        imagettftext($this->newImgRc, $size, 0, $x, $y, $color, Registry::get('webroot') . '/fonts/' . $font . '.ttf', $text);
     }
 
     /**
@@ -410,31 +384,27 @@ class Image
     public function destroy()
     {
         if (is_resource($this->fontRcImg) && is_resource($this->newImgRc)) {
-            try {
-                //Destroing image Memory Resources
-                imagedestroy($this->fontRcImg);
-                imagedestroy($this->newImgRc);
+            //Destroing image Memory Resources
+            imagedestroy($this->fontRcImg);
+            imagedestroy($this->newImgRc);
 
-                $this->ext = null;
-                $this->fontRcImg = null;
-                $this->trans = false;
-                $this->newImgRc = null;
-                $this->originalSize = null;
-                $this->finalSize = null;
-                $this->wishedSize = null;
-                $this->imgName = null;
-                $this->photoX = 0;
-                $this->photoY = 0;
-                $this->forceScale = false;
-            } catch (Exception $e) {
-                throw new Exception($e->getMessage());
-            }
+            $this->ext = null;
+            $this->fontRcImg = null;
+            $this->trans = false;
+            $this->newImgRc = null;
+            $this->originalSize = null;
+            $this->finalSize = null;
+            $this->wishedSize = null;
+            $this->imgName = null;
+            $this->photoX = 0;
+            $this->photoY = 0;
+            $this->forceScale = false;
         }
     }
 
     public function clearBuff()
     {
-        while (@ob_end_clean());
+        ob_end_clean();
     }
 
     /**
@@ -445,4 +415,5 @@ class Image
     {
         $this->destroy();
     }
+
 }

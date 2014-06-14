@@ -11,8 +11,8 @@
 
 namespace App\Controller;
 
-use jFramework\MVC\Controller\AbstractActionController;
 use jFramework\MVC\View;
+use jFramework\MVC\Controller\AbstractActionController;
 
 class IndexController extends AbstractActionController
 {

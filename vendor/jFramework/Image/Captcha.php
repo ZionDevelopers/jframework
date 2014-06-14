@@ -9,7 +9,11 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
-namespace jFramework\Core;
+namespace jFramework\Image;
+
+use jFramework\Image\Core;
+use jFramework\Core\Registry;
+use jFramework\Core\Tools;
 
 /**
  * Class to manage Captchas
@@ -26,6 +30,13 @@ namespace jFramework\Core;
 class Captcha
 {
 
+    private $enforcer_file = null;
+    
+    public function __construct()
+    {
+        $this->enforcer_file = Registry::get('FOLDER.logs') . '/enforcer.log';
+    }
+    
     /**
      * Auto Detect File
      *
@@ -34,9 +45,8 @@ class Captcha
      */
     private function check()
     {
-        if (!file_exists(CAPTCHA_ENFORCER_FILE)) {
-            chmod(TMP_DIR, '0755');
-            file_put_contents(CAPTCHA_ENFORCER_FILE, "");
+        if (!file_exists($this->enforcer_file)) {
+            file_put_contents($this->enforcer_file, "");
         }
     }
 
@@ -48,7 +58,7 @@ class Captcha
     public function isEnforced()
     {
         self::check();
-        return find(CLIENT_IP, file_get_contents(CAPTCHA_ENFORCER_FILE));
+        return find(CLIENT_IP, file_get_contents($this->enforcer_file));
     }
 
     /**
@@ -63,15 +73,15 @@ class Captcha
         // Generate Text
         $text = str_shuffle('CDFHJKNPRTUVXY49');
         $text = substr($text, - 4);
-        $showText = tools::addSpaceText($text);
+        $showText = Tools::addSpaceText($text);
         $text = strtolower($text);
 
         if (!empty($referer)) {
             // Add Captcha to Session
             $_SESSION ['SYSTEM'] ['CAPTCHA'] [$referer] = $text;
-
+ 
             // Generate Captcha Image
-            $captcha = new \jFramework\Core\Image(WEBROOT_DIR . '/img/captcha.jpg');
+            $captcha = new Core(Registry::get('webroot') . '/img/captcha.jpg');
             $captcha->newSize(125, 40);
             $captcha->text($showText, 20, 10, 30, array(160, 160, 160), 'ITCKRIST');
             // Show Captcha and Destroy memory Resources
@@ -89,7 +99,7 @@ class Captcha
      */
     public function enforce($add = true)
     {
-        $enforced = file_get_contents(CAPTCHA_ENFORCER_FILE);
+        $enforced = file_get_contents($this->enforcer_file);
         
         if (!$add) {
             if (self::isEnforced()) {
@@ -101,7 +111,7 @@ class Captcha
             }
         }
 
-        file_put_contents(CAPTCHA_ENFORCER_FILE, $enforced);
+        file_put_contents($this->enforcer_file, $enforced);
     }
 
     /**

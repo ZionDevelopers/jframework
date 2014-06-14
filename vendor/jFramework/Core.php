@@ -14,7 +14,6 @@ namespace jFramework;
 use jFramework\Core\Registry;
 use jFramework\MVC\Router;
 use jFramework\Database\Drivers\MySQL;
-use jFramework\Core\Tools;
 
 /**
  * jFramework Core Operations Handler
@@ -47,7 +46,10 @@ class Core
             unset($args[0]);
         }
         
-        $this->rootDir = $rootDir;
+        // Define WebRoot
+        Registry::set('webroot', $rootDir);
+        
+        $this->rootDir = dirname($rootDir);
         $this->args = $args;
     }
     
