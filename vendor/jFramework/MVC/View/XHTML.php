@@ -27,6 +27,11 @@ use jFramework\Core\Registry;
  */
 class XHTML
 {    
+    /**
+     * Format XHTML
+     * @param string $xhtml
+     * @return string
+     */
     public static function format($xhtml)
     {
         // Define result failsafe
