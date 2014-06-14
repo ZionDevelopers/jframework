@@ -29,6 +29,9 @@ use jFramework\Core\Registry;
 class Captcha
 {
 
+    public $width = 195;
+    public $height = 50;
+    
     private $enforcer_file = null;
     
     public function __construct()
@@ -101,7 +104,7 @@ class Captcha
         
         // Generate Text
         $text = str_shuffle('CDFHJKNPRTUVXY49');
-        $text = substr($text, - 4);
+        $text = substr($text, - 6);
         $showText = $this->addSpaceText($text);
         $text = strtolower($text);
 
@@ -111,8 +114,8 @@ class Captcha
  
             // Generate Captcha Image
             $captcha = new Core(Registry::get('webroot') . '/img/captcha.jpg');
-            $captcha->newSize(125, 40);
-            $captcha->text($showText, 20, 10, 30, array(160, 160, 160), 'ITCKRIST');
+            $captcha->newSize($this->width, $this->height, true);
+            $captcha->text($showText, 25, 10, 35, array(160, 160, 160), 'AnkeCall');
             
             // Show Captcha and Destroy memory Resources
             $captcha->show();

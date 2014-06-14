@@ -382,7 +382,7 @@ class Core
         }
 
         $color = imagecolorallocate($this->newImgRc, $color [0], $color [1], $color [2]);
-        imagettftext($this->newImgRc, $size, 0, $x, $y, $color, Registry::get('webroot') . '/fonts/' . $font . '.ttf', $text);
+        imagettftext($this->newImgRc, $size, 0, $x, $y, $color, Registry::get('FOLDER.temp') . '/fonts/' . $font . '.ttf', $text);
     }
 
     /**
