@@ -37,7 +37,7 @@ class CaptchaController extends AbstractActionController
         return $view->render();
     }
     
-    public function generateAction($get)
+    public function generateAction($get, $post, $data)
     {
         $from = isset($get['from']) ? $get['from'] : 'default';
         
