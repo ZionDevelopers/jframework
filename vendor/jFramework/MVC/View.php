@@ -40,7 +40,7 @@ class View extends AbstractView
      * To Parse View
      * @return string	
      */
-    public function render()
+    public function render($file = '')
     {    
         // Return view rendered
         return parent::render($this->file);

@@ -15,6 +15,10 @@ if(version_compare(PHP_VERSION, '5.4.0', '<')){
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 
+if(PHP_SAPI != 'cli'){
+    $argv = array();
+}
+
 // Define root directory
 $root = dirname(__DIR__);
 
