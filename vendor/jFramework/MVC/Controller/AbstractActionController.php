@@ -31,8 +31,12 @@ abstract class AbstractActionController extends AbstractController
 {
     /**
      * Default Action
+     * 
+     * @param array $get
+     * @param array $post
+     * @param array $data
      */
-    public function indexAction ()
+    public function indexAction ($get, $post, $data)
     {
         
     }

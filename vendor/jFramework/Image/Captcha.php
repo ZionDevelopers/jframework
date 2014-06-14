@@ -115,7 +115,7 @@ class Captcha
             // Generate Captcha Image
             $captcha = new Core(Registry::get('webroot') . '/img/captcha.jpg');
             $captcha->newSize($this->width, $this->height, true);
-            $captcha->text($showText, 25, 10, 35, array(160, 160, 160), 'AnkeCall');
+            $captcha->text($showText, 25, 10, 35, array(255, 0, 0), 'AnkeCall');
             
             // Show Captcha and Destroy memory Resources
             $captcha->show();
@@ -153,8 +153,19 @@ class Captcha
      * @param string $from        	
      * @return string
      */
-    public function generateHTML($from)
+    public static function generateHTML($from)
     {
-        return '<img src="' . BASE_DIR . '/captcha?from=' . $from . '&_=' . mt_rand(111, 999) . '" rel="' . $from . '" title="Trocar Imagem" style="cursor:pointer" onclick="this.src=\'' . BASE_DIR . '/captcha?from=' . $from . '&_=\'+Math.random()" />';
+        return '<img src="captcha/generate?from=' . $from . '&' . mt_rand(1000, 9999) . '" rel="' . $from . '" title="Reload captcha" style="cursor:pointer" onclick="this.src=\'captcha/generate?from=' . $from . '&\'+Math.random()" />';
+    }
+    
+    /**
+     * Verify captcha
+     * @param string $text
+     * @param string $from
+     * @return boolean
+     */
+    public static function verify($text, $from)
+    {
+        return $_SESSION ['SYSTEM'] ['CAPTCHA'] [$from] == $text;
     }
 }

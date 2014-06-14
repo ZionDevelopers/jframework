@@ -100,7 +100,7 @@ class Router
                     // Call Action
                     $contents = call_user_func_array(
                         array($controller, $method),
-                        array(array_merge($this->core->get(), $request ['data']))
+                        array($this->core->get(), $this->core->post(), $request ['data'])
                     );
                 }else{
                     // Run 404 Error Page
