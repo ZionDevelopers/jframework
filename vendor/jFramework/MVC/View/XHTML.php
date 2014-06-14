@@ -37,11 +37,18 @@ class XHTML
             // Spawn Tidy
             $tidy = new \tidy();
             // Parse xhtml
-            $tidy->parseString($xhtml, array('indent' => true, 'output-xhtml' => true, 'wrap' => 200), Registry::get('APP.xhtml-charset'));
+            $tidy->parseString($result, array('indent' => true, 'alt-text' => '', 'clean' => true, 'output-xhtml' => true, 'wrap' => 20000000, 'indent-spaces' => 0), Registry::get('APP.xhtml-charset'));
             // Clear and Repair XHTML
             $tidy->cleanRepair();
             
-            $result = $tidy;
+            $result = (string)$tidy;
+            
+            // BaseRef Fixer
+            $result = preg_replace('/href="/i', 'href="' . Registry::get('baseDir') . '$1', $result);
+            $result = preg_replace('/src="/i', 'src="' . Registry::get('baseDir') . '$1', $result);
+            
+            // SEO Optimizations
+            $result = preg_replace("/\n|\r\n|\r|\t/", '', $result);
         }elseif(PHP_SAPI == 'cli'){
             $result = strip_tags($xhtml);
         }

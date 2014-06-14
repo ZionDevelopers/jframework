@@ -208,6 +208,9 @@ class Core
      */
     public function initialize()
     {        
+        // Registry baseDir
+        Registry::set('baseDir', dirname($_SERVER['PHP_SELF']));
+        
         // Parse all .ini files
         $this->reloadData();
         

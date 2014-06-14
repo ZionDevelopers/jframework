@@ -15,8 +15,15 @@ if(version_compare(PHP_VERSION, '5.4.0', '<')){
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 
+// CLI Compatibility mode
 if(PHP_SAPI != 'cli'){
     $argv = array();
+}
+
+// PHP Info
+if(stripos($_SERVER['QUERY_STRING'],'phpinfo') !== false){
+    phpinfo();
+    exit();
 }
 
 // Define root directory

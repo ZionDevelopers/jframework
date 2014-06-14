@@ -5,12 +5,13 @@
     RewriteRule ^(.*)$ index.php [QSA,L]
 </IfModule>
 
-# NGINX Configuration
-
+# === NGINX Configuration ===
 #location / {
-#   index index.html index.htm index.php;
-#		
-#   if (!-e $request_filename){
-#       rewrite ^(.*)$ /index.php last;
-#   }
+#  index index.html index.htm index.php;
+#
+#  try_files $uri =404;
+#
+#  if (!-e $request_filename){
+#    rewrite ^(.*)$ /index.php last;
+#  }
 #}
