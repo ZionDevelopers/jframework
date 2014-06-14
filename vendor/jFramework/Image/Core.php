@@ -59,14 +59,17 @@ class Core
     /**
      * Function to define image type
      * 
-     * @param string $imageName
+     * @param string $file
      * @param boolean $trans
+     * @throws Exception
      */
-    public function __construct($imgName, $trans = false)
+    public function __construct($file, $trans = false)
     {
-        if (file_exists($imgName)) {
-            $this->imgName = $imgName;
-        }
+        if (!is_readable($file)) {
+            throw new \Exception('jFramework Image Core: Image "'.$file."' does not exists!");
+        }    
+        
+        $this->imgName = $file;        
 
         $this->trans = $trans;
         $this->setType();
@@ -173,25 +176,30 @@ class Core
     /**
      * Function to generate Image Water Mark
      *
-     * @param string $image
+     * @param string $file
+     * @throws Exception
      */
-    public function waterMark($image)
+    public function waterMark($file)
     {
-        $ext = pathinfo($image);
+        if (!is_readable($file)) {
+            throw new \Exception('jFramework Image Core: Watermark Image "'.$file."' does not exists!");
+        }    
+        
+        $ext = pathinfo($file);
         $ext = strtolower($ext ['extension']);
 
         if ($this->isJPG($ext)) {
             $ext = 'jpeg';
         }
 
-        $waterMark = getimagesize($image);
+        $waterMark = getimagesize($file);
         $width = $waterMark [0];
         $height = $waterMark [1];
 
         if ($ext == 'png') {
-            $waterMark = imagecreatefrompng($image);
+            $waterMark = imagecreatefrompng($file);
         } elseif ($ext == 'jpg') {
-            $waterMark = imagecreatefromjpeg($image);
+            $waterMark = imagecreatefromjpeg($file);
         }
 
         $x = ($this->finalSize ['width'] - $width);

@@ -13,7 +13,6 @@ namespace jFramework\Image;
 
 use jFramework\Image\Core;
 use jFramework\Core\Registry;
-use jFramework\Core\Tools;
 
 /**
  * Class to manage Captchas
@@ -45,8 +44,16 @@ class Captcha
      */
     private function check()
     {
-        if (!file_exists($this->enforcer_file)) {
-            file_put_contents($this->enforcer_file, "");
+        // Check if folder is writeable
+        if(!is_writeable(dirname($this->enforcer_file))){
+            // Try to fix permissions
+            chmod(dirname($this->enforcer_file), 0755);
+        }
+        
+        // Check if captcha enforcer file exists
+        if(!file_exists($this->enforcer_file)){
+            // Create a captcha enforcer empty file
+            file_put_contents($this->enforcer_file, '');
         }
     }
 
@@ -57,8 +64,28 @@ class Captcha
      */
     public function isEnforced()
     {
+        // Enforcer file check
         self::check();
         return find(CLIENT_IP, file_get_contents($this->enforcer_file));
+    }
+    
+        /**
+     * Add Space Between Text
+     *     
+     * @param string $text       	
+     * @return string
+     * @static
+     */
+    public function addSpaceText($text)
+    {
+        $newText = '';
+        $n = strlen($text);
+        
+        for ($i = 0; $i < $n; $i ++) {
+            $newText .= $text {$i} . ' ';
+        }
+        
+        return $newText;
     }
 
     /**
@@ -69,11 +96,13 @@ class Captcha
      */
     public function generate($referer)
     {
+        // Enforcer file check
         self::check();
+        
         // Generate Text
         $text = str_shuffle('CDFHJKNPRTUVXY49');
         $text = substr($text, - 4);
-        $showText = Tools::addSpaceText($text);
+        $showText = $this->addSpaceText($text);
         $text = strtolower($text);
 
         if (!empty($referer)) {
@@ -84,6 +113,7 @@ class Captcha
             $captcha = new Core(Registry::get('webroot') . '/img/captcha.jpg');
             $captcha->newSize(125, 40);
             $captcha->text($showText, 20, 10, 30, array(160, 160, 160), 'ITCKRIST');
+            
             // Show Captcha and Destroy memory Resources
             $captcha->show();
             $captcha->destroy();

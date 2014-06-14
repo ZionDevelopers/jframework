@@ -26,17 +26,23 @@ if(stripos($_SERVER['QUERY_STRING'],'phpinfo') !== false){
     exit();
 }
 
+// Define client ip
+define('CLIENT_IP', $_SERVER['REMOTE_ADDR']);
+
 // Define root directory
 $root = dirname(__DIR__);
 
 // Require autoloader
 require $root . '/vendor/autoload.php';
+
 // Add path to autoloader
 autoload::addPath ($root . '/vendor/');
+
 // Register autoloader
 autoload::register(true);
 
 // Start jFramework Core
 $jFramework = new \jFramework\Core(__DIR__, $argv);
+
 // Initialize jFramework
 $jFramework->initialize();
