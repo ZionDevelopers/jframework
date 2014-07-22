@@ -1,1 +1,3 @@
-$('div#flashMessage').fadeOut();
+$('div#flashMessage').click(function (){
+    $(this).fadeToggle();
+});

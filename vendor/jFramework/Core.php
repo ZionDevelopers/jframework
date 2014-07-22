@@ -13,7 +13,7 @@ namespace jFramework;
 
 use jFramework\Core\Registry;
 use jFramework\MVC\Router;
-use jFramework\Database\Drivers\MySQL;
+use jFramework\Database\Drivers\MySQLi;
 
 /**
  * jFramework Core Operations Handler
@@ -70,7 +70,7 @@ class Core
     
     /**
      * Get Database Driver OBJ
-     * @return \jFramework\Database\Drivers\MySQL
+     * @return \jFramework\Database\Drivers\MySQLi
      */
     public function db()
     {
@@ -214,7 +214,7 @@ class Core
     public function initialize()
     {        
         // Registry baseDir
-        Registry::set('baseDir', str_replace("\\",'/',dirname('/')));
+        Registry::set('baseDir', str_replace("\\", '/', dirname('/')));
         
         // Parse all .ini files
         $this->reloadData();

@@ -71,9 +71,12 @@ class XHTML
             $result = preg_replace('/href="/i', 'href="' . Registry::get('baseDir') . '$1', $result);
             $result = preg_replace('/src="/i', 'src="' . Registry::get('baseDir') . '$1', $result);
             $result = preg_replace("/this.src='/i", "this.src='" . Registry::get('baseDir') . '$1', $result);
-
-            // SEO Optimizations
-           $result = preg_replace("/\n|\r\n|\r|\t/", '', $result);
+            
+            // SEO Optimizations with Tidy
+            if(class_exists('tidy') && PHP_SAPI != 'cli'){
+               // SEO Optimizations
+               $result = preg_replace("/\n|\r\n|\r|\t/", '', $result);
+            }
         }
         
         return $result;

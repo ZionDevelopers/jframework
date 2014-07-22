@@ -13,7 +13,4 @@ namespace jFramework\MVC\Controller;
 
 use jFramework\MVC\Controller\AbstractActionController;
 
-class ErrorController extends AbstractActionController
-{     
-
-}
+class ErrorController extends AbstractActionController {}
