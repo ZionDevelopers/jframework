@@ -18,9 +18,17 @@ $flashMessage = $this->getFlash();
         <title><?php echo $this->title ?></title>
         <link rel="icon" type="image/png" href="img/favicon.png" />
         <link href="css/default.css" rel="stylesheet" type="text/css" media="screen" />
+        <script type="text/javascript" src="js/jquery-1.7.2.min.js" />
+        <script type="text/javascript" src="js/scripts.js" />
     </head>
     <body>
         <div id="mainContainer">
+            <h1><?php 
+            if(!empty($this->message)) {
+                echo htmlentities($this->action);
+            }
+            ?></h1>
+            
             <div id="contents">
                 <?php if (!empty($flashMessage)) {
                     echo '<div id="flashMessage">', $flashMessage, '</div>';
@@ -29,7 +37,7 @@ $flashMessage = $this->getFlash();
                 echo $this->getView();
                 ?>
             </div>
-        </div>
+        </div>        
         <?php
         if (!empty($flashMessage)) {
             $this->delFlash();

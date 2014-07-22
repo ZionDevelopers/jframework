@@ -76,13 +76,13 @@ class Core
     {
         // Get 
         $settings = $this->registry('DATABASE');
-        
+
         if(!empty($settings)){
             if(is_null($this->db)){
-                $this->db = new MySQL();
+                $this->db = new MySQLi();
                 $this->db->setSettings($settings);
                 $this->db->connect();
-            }
+           }
         }
         
         return $this->db;
@@ -167,10 +167,13 @@ class Core
     {
         // Define .ini files directory
         Registry::setDir($this->rootDir . '/config/');  
+        
         // Define rootDir variable
         Registry::set('rootDir', $this->rootDir);
+        
         // Define serverName variable
         Registry::set('serverName', $this->server('SERVER_NAME'));
+        
         // Parse the whole configs directory
         Registry::parseDir();        
     }
@@ -211,7 +214,7 @@ class Core
     public function initialize()
     {        
         // Registry baseDir
-        Registry::set('baseDir', dirname($_SERVER['PHP_SELF']));
+        Registry::set('baseDir', str_replace("\\",'/',dirname('/')));
         
         // Parse all .ini files
         $this->reloadData();

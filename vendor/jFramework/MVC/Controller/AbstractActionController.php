@@ -50,8 +50,10 @@ abstract class AbstractActionController extends AbstractController
     {
         // Spawn new Layout
         $layout = new Layout();
+        
         // Set layout
         $layout->setFile('default');
+        
         // Set Page title
         $layout->title = Registry::get('APP.title');
         
@@ -63,20 +65,20 @@ abstract class AbstractActionController extends AbstractController
      * Page not found Action
      * @return string
      */
-    public function notFoundAction()
+    public function notFoundAction($etc = '')
     {      
-        // Spawn new View
         $view = new View();
         
         // Get view file
         $file = Registry::get('FOLDER.error-view') . '/notFound' . $view->fileExt;
+        
         // Set view file
         $view->setFile($file);
         
         // Set App title
         Registry::set('APP.title', Registry::get('APP.title') . ' :: Page not found!');
         
-        $view->title = 'Error 404';
+        $view->title = 'Error 404 :: Page not found';
         $view->message = 'The page you requested was not found!';  
         
         // Render view

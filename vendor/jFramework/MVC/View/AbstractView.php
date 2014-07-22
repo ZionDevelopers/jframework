@@ -30,6 +30,8 @@ abstract class AbstractView
     protected $file = '';
     protected $view = '';
     public $fileExt = '.phtml';
+    public $viewRequest = 'none';
+    public $action = 'none';
     
     /**
      * Constructor
@@ -43,6 +45,8 @@ abstract class AbstractView
         $this->file = Registry::get('FOLDER.view');
         $this->file .= '/' . strtolower($request['controller']);
         $this->file .= '/' . strtolower($request['action']) . $this->fileExt;
+        $this->viewRequest = '/' . strtolower($request['controller']) . '/' . strtolower($request['action']) . $this->fileExt;
+        $this->action = strtolower($request['controller'].'/'.$request['action']);
     }
     
     /**

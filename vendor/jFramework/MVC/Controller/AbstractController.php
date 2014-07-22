@@ -27,4 +27,5 @@ namespace jFramework\MVC\Controller;
 abstract class AbstractController
 {
     public $core = null;
+    public $db = null;
 }

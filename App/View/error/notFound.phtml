@@ -10,4 +10,5 @@
  */
 ?>
 <div id="pageTitle">Error 404</div><br />
-Page not found
+<h1><?php echo htmlentities($this->action);?></h1>
+<div><?php echo htmlentities($this->message);?></div>

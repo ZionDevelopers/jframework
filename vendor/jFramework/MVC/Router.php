@@ -94,6 +94,7 @@ class Router
                 $controller = new $class;
                 // Pass Core OBJ
                 $controller->core = $this->core;
+                $controller->db = $this->core->db;
                  
                 // Check if Action exists
                 if(method_exists($controller, $method)){      
@@ -113,10 +114,12 @@ class Router
         if(!isset($controller)){     
             // Spawn new Error Controller
             $controller = new \jFramework\MVC\Controller\ErrorController();
+            
             // Pass Core OBJ
             $controller->core = $this->core;
+            
             // Run NotFound Action
-            $contents = $controller->notFoundAction();            
+            $contents = $controller->notFoundAction($request);            
         }
                         
         // Check if database driver was created
@@ -185,6 +188,7 @@ class Router
             $uri = isset ($this->core->args[1]) ? '/' . $this->core->args[1] : '/';
         }        
         
+        $uri = str_replace('index.php','',$uri);
         
         // Parse URI Request
         $request = parse_url($uri);

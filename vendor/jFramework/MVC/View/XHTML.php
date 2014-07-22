@@ -73,7 +73,7 @@ class XHTML
             $result = preg_replace("/this.src='/i", "this.src='" . Registry::get('baseDir') . '$1', $result);
 
             // SEO Optimizations
-            $result = preg_replace("/\n|\r\n|\r|\t/", '', $result);
+           $result = preg_replace("/\n|\r\n|\r|\t/", '', $result);
         }
         
         return $result;
