@@ -33,7 +33,7 @@ define('CLIENT_IP', $_SERVER['REMOTE_ADDR']);
 $root = dirname(__DIR__);
 
 // Require autoloader
-require $root . '/vendor/autoload.php';
+require $root . '/vendor/jFramework/autoload.php';
 
 // Add path to autoloader
 autoload::addPath ($root . '/vendor/');

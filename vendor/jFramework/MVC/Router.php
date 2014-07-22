@@ -179,11 +179,12 @@ class Router
             $uri = $this->core->server('REQUEST_URI');
 
             // Remove index.php from URI
-            $uri = preg_replace($this->basepath . '(index.php)?/', '', $uri);
+            $uri = preg_replace('/'.preg_quote($this->basepath) . '([index.php]+)?/i', '', $uri);
         }else{
             // Format a Request URI for Console
             $uri = isset ($this->core->args[1]) ? '/' . $this->core->args[1] : '/';
-        }
+        }        
+        
         
         // Parse URI Request
         $request = parse_url($uri);
