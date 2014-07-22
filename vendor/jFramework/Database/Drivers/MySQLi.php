@@ -50,6 +50,7 @@ class MySQLi extends \mysqli
         'base' => 'test',
         'charset' => 'utf8'
     );
+    
     private $cacheTable = array();
 
     /**

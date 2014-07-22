@@ -188,7 +188,7 @@ class Router
             $uri = isset ($this->core->args[1]) ? '/' . $this->core->args[1] : '/';
         }        
         
-        $uri = str_replace('index.php','',$uri);
+        $uri = str_replace('index.php', '', $uri);
         
         // Parse URI Request
         $request = parse_url($uri);

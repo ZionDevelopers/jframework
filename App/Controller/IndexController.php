@@ -15,13 +15,4 @@ use jFramework\MVC\View;
 use jFramework\MVC\Controller\AbstractActionController;
 use jFramework\Core\Registry;
 
-class IndexController extends AbstractActionController
-{
-    public function indexAction($get, $post, $data)
-    { 
-        $view = new View();
-
-        $view->version = Registry::get('jFramework.version');
-        return $view->render();
-    }
-}
+class IndexController extends AbstractActionController {}
