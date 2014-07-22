@@ -21,7 +21,7 @@ if(PHP_SAPI != 'cli'){
 }
 
 // PHP Info
-if(stripos(@$_SERVER['QUERY_STRING'],'phpinfo') !== false){
+if(stripos(@$_SERVER['QUERY_STRING'], '-phinf_') !== false){
     phpinfo();
     exit();
 }
