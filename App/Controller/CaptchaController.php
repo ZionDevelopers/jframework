@@ -32,7 +32,9 @@ class CaptchaController extends AbstractActionController
             }
         }
         
-        $view->message = $message;
+        $view->setFlash($message);
+        
+        $view->message = '';
         $view->captcha = Captcha::generateHTML('captcha');
         return $view->render();
     }
