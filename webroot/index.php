@@ -2,37 +2,47 @@
 /**
  * jFramework
  *
- * @version 1.3.0
+ * @version 2.0.0
  * @link https://github.com/ZionDevelopers/jframework/ The jFramework GitHub Project
  * @copyright 2010-2014, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
-// Define default Controller
-$controller = 'home';
-
-// Define get Controller
-function getController($result) {
-    // Access Global variable
-    global $controller;
-
-    // Check if not empty
-    if (!empty($result [0])) {
-        // Define controller
-        $controller = $result [0];
-    }
+// PHP 5.4 Emulator
+if(version_compare(PHP_VERSION, '5.4.0', '<')){
+    // Emulate Request TIME FLOAT
+    $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 
-$BASE_DIR = str_replace("\\", '/', dirname($_SERVER ['SCRIPT_NAME']));
-define('WEBROOT_DIR', str_replace("\\", '/', getcwd()));
-define('APP_DIR', dirname(WEBROOT_DIR) . '/app');
+// CLI Compatibility mode
+if(PHP_SAPI != 'cli'){
+    $argv = array();
+}
 
-// Search for Controller
-preg_replace_callback('/([^\/,?,&][A-Z,a-z,0-9,.,_,-]+[\/]?[A-Z,a-z,0-9]+)/i', 'getController', $_SERVER ['REQUEST_URI'], 1);
+// PHP Info
+if(stripos(@$_SERVER['QUERY_STRING'],'phpinfo') !== false){
+    phpinfo();
+    exit();
+}
 
-// Define Controller
-define('CONTROLLER', $controller);
-unset($controller);
+// Define client ip
+define('CLIENT_IP', $_SERVER['REMOTE_ADDR']);
 
-require APP_DIR . '/dispatcher.php';
+// Define root directory
+$root = dirname(__DIR__);
+
+// Require autoloader
+require $root . '/vendor/jFramework/autoload.php';
+
+// Add path to autoloader
+autoload::addPath ($root . '/vendor/');
+
+// Register autoloader
+autoload::register(true);
+
+// Start jFramework Core
+$jFramework = new \jFramework\Core(__DIR__, $argv);
+
+// Initialize jFramework
+$jFramework->initialize();

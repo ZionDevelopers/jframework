@@ -1,0 +1,48 @@
+<?php
+/**
+ * jFramework
+ *
+ * @version 2.0.0
+ * @link https://github.com/ZionDevelopers/jframework/ The jFramework GitHub Project
+ * @copyright 2010-2014, Júlio César de Oliveira
+ * @author Júlio César de Oliveira <talk@juliocesar.me>
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
+ */
+$flashMessage = $this->getFlash();
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=<?php echo $this->registry('APP.chatset');?>" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /> 
+        <title><?php echo $this->title ?></title>
+        <link rel="icon" type="image/png" href="img/favicon.png" />
+        <link href="css/default.css" rel="stylesheet" type="text/css" media="screen" />
+        <script type="text/javascript" src="js/jquery-1.7.2.min.js" />
+        <script type="text/javascript" src="js/scripts.js" />
+    </head>
+    <body>
+        <div id="mainContainer">
+            <h1><?php 
+            if(!empty($this->message)) {
+                echo htmlentities($this->action);
+            }
+            ?></h1>
+            
+            <div id="contents">
+                <?php if (!empty($flashMessage)) {
+                    echo '<div id="flashMessage">', $flashMessage, '</div>';
+                } 
+                
+                echo $this->getView();
+                ?>
+            </div>
+        </div>        
+        <?php
+        if (!empty($flashMessage)) {
+            $this->delFlash();
+        }
+        ?> 
+        <br /><div align="center"><i>Page generated in</i> <b><?php echo round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 4); ?></b> <i>seconds, consumed <b><?php echo round(memory_get_peak_usage(true) / 1024, 2); ?></b> kb.</i></div>
+    </body>
+</html>
