@@ -13,6 +13,7 @@ namespace jFramework\Database\Drivers;
 
 use jFramework\Core\Tools;
 use jFramework\Core\Registry;
+use jFramework\Database\AbstractDBManager;
 
 /**
  * Class to manage MySQL database data
@@ -26,76 +27,35 @@ use jFramework\Core\Registry;
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
-class MySQLi extends \mysqli
-{
+class MySQLi extends AbstractDBManager
+{    
     /**
-     *
-     * @var integer
-     
+     * Spawn mysqli driver
      */
-    public $nRecords = 0;
-    public $currentPage = 0;
-    public $tRecords = 0;
-    public $nPages = 0;
-
-    /**
-     *
-     * @var array
-     * @access private
-     */
-    private $settings = array(
-        'host' => 'localhost',
-        'user' => 'root',
-        'password' => '',
-        'base' => 'test',
-        'charset' => 'utf8'
-    );
-    
-    private $cacheTable = array();
-
-    /**
-     *
-     * @var string
-     * @access private
-     */
-    private $cacheFile = '';
-
-    /**
-     *
-     * @var boolean     
-     */
-    public $removeHtml = true;
-
-    /**
-     * Set Settings
-     *
-     * @param array $data  
-           	
-     */
-    public function setSettings(array $data)
+    public function __construct()
     {
-        $this->settings = array_merge($this->settings, $data);
+        $this->driverLink = new \mysqli();
     }
 
     /**
      * Connect to Database Server
      */
-    public function connect($host = 'localhost', $user = 'root', $password = '', $database = 'test', $port = 3306, $socket = '')
+    public function connect()
     {
         // Talk back to the Driver
-        parent::connect($this->settings ['host'], $this->settings ['user'], $this->settings ['password'], $this->settings ['base']);
+        $this->driverLink->connect($this->settings ['host'], $this->settings ['user'], $this->settings ['password'], $this->settings ['base']);
 
         // Test Connecton
         if (!$this->testCon()) {
             // Throw Connection error
-            $this->error($this->connect_error);
+            $this->error($this->driverLink->connect_error);
         }        
 
         // Cache File
         $this->cacheFile = Registry::get('FOLDER.cache') . '/' . $this->settings ['host'] . '@' . $this->settings ['base'] . '.dat';
 
         // Set Connection Charset
-        $this->set_charset($this->settings ['charset']);
+        $this->driverLink->set_charset($this->settings ['charset']);
 
         // Refresh Cache
         $this->cacheRefresh();
@@ -108,39 +68,7 @@ class MySQLi extends \mysqli
      */
     public function testCon()
     {
-        return !($this->connect_error);
-    }
-
-    /**
-     * Get Cache
-     *
-     
-     * @return array
-     */
-    public function cacheGet()
-    {
-        return $this->cacheTable;
-    }
-
-    /**
-     * Refresh Session Table Cache to var inside object
-     *      
-     */
-    public function cacheRefresh()
-    {
-        // Check if cache folder is not writeable
-        if (!is_writable(Registry::get('FOLDER.cache'))) {
-            chmod($this->cacheFile, 0755);
-        }
-
-        // Check if Cache file not exists
-        if (!file_exists($this->cacheFile)) {
-            // Create an empty cache file
-            file_put_contents($this->cacheFile, serialize(array()));
-        }
-
-        // Set Initial Cache Table
-        $this->cacheTable = unserialize(file_get_contents($this->cacheFile));
+        return !($this->driverLink->connect_error);
     }
 
     /**
@@ -164,17 +92,6 @@ class MySQLi extends \mysqli
     }
 
     /**
-     * Report error
-     *     
-     * @param string $text        	
-     * @throws Exception
-     */
-    public function error($text)
-    {
-        throw new \Exception('Database Manager Exception: ' . $text . "\r\nDetails: " . $this->driver->error);
-    }
-
-    /**
      * (non-PHPdoc)
      *
      * @see mysqli::query()
@@ -182,10 +99,12 @@ class MySQLi extends \mysqli
     public function query($sql, $autoFetch = true)
     {
         $result = false;
+        
         // Test Connection
         if ($this->testCon()) {
             // Execute query
-            $result = parent::query($sql);
+            $result = $this->driverLink->query($sql);
+            
             // If no result
             if (!$result) {
                 $this->error('Fail commiting: ' . $sql);
@@ -199,9 +118,7 @@ class MySQLi extends \mysqli
 
             // Add sql to history
             if ($this->sqlArchive) {
-                $this->sqlHistory [CONTROLLER] [] = date('H:i:s') . ': ' . $sql;
-                $_SESSION ['SQL_HISTORY'] [CONTROLLER] = $this->sqlHistory [CONTROLLER];
-                $_SESSION ['SQL_LASTCONTROLLER'] = CONTROLLER;
+                $this->sqlHistory [] = date('H:i:s') . ': ' . $sql;
             }
         } else {
             $this->error('Can\'t process query, no database connection available');
@@ -261,7 +178,7 @@ class MySQLi extends \mysqli
         // Test Connection
         if ($this->testCon()) {
             // Escape string with real escape string
-            $string = $this->real_escape_string($string);
+            $string = $this->driverLink->real_escape_string($string);
         }
 
         $string = trim($string);
@@ -291,10 +208,13 @@ class MySQLi extends \mysqli
 
         // Generete Where SQL
         $this->where($table, $where, $sql);
+        
         // Generate Group SQL
         $this->group($table, $group, $sql);
+        
         // Generate Order SQL
         $this->order($table, $order, $sql);
+        
         // Generate Limit SQL
         $this->limit($limit, $sql);
 
@@ -473,21 +393,6 @@ class MySQLi extends \mysqli
         }
 
         return $result;
-    }
-
-    /**
-     * To Normalize New Lines from Windows, Mac and Linux Plataforms to Uniform
-     *     
-     * @param string $string        	
-     * @return string
-     */
-    public function normalizeNewLines($string)
-    {
-        // Replace all know new lines with Unix default new line
-        $string = str_replace(array("\r\n", "\r", "\n"), "\n", $string);
-
-        // Fix Duplicated Backslash of New Lines
-        return str_replace(array("\\r\\n", "\\r", "\\n"), "\n", $string);
     }
 
     /**
@@ -865,6 +770,15 @@ class MySQLi extends \mysqli
 
         return $result;
     }
+    
+    /**
+     * Close Connection
+     * @return boolean
+     */
+    public function close()
+    {
+        return $this->driverLink->close();
+    }
 
     /**
      * To Realize reConnect
@@ -882,6 +796,6 @@ class MySQLi extends \mysqli
      */
     public function getLastID()
     {
-        return $this->insert_id;
+        return $this->driverLink->insert_id;
     }
 }

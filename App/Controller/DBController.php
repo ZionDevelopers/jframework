@@ -11,24 +11,21 @@
 
 namespace App\Controller;
 
-use jFramework\MVC\Controller\AbstractActionController;
 use jFramework\MVC\View;
-use jFramework\Core\Registry;
+use jFramework\MVC\Controller\AbstractActionController;
 
-class IndexController extends AbstractActionController
+class DBController extends AbstractActionController
 {
-     /**
-     * Default Action
-     * 
+    /**
+     * Index Action
      * @param array $get
      * @param array $post
      * @param array $data
+     * @return string
      */
-    public function indexAction ($get, $post, $data)
-    {
-        $view = new View();
-
-        $view->version = Registry::get('jFramework.version');
+    public function indexAction($get, $post, $data)
+    {       
+        $view = new View();        
         return $view->render();
-    } 
+    }
 }

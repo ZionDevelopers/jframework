@@ -79,7 +79,8 @@ class Core
 
         if(!empty($settings)){
             if(is_null($this->db)){
-                $this->db = new MySQLi();
+                $driver = $settings['driver'];
+                $this->db = new $driver();
                 $this->db->setSettings($settings);
                 $this->db->connect();
            }

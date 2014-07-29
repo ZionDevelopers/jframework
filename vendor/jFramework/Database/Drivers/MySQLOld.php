@@ -9,10 +9,12 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 
+/*
 namespace jFramework\Database\Drivers;
 
 use jFramework\Core\Tools;
 use jFramework\Core\Registry;
+*/
 
 /**
  * Class to manage MySQL database data
@@ -26,7 +28,7 @@ use jFramework\Core\Registry;
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
-class MySQL extends \mysqli
+class MySQLOld extends \mysqli
 {
     /**
      *

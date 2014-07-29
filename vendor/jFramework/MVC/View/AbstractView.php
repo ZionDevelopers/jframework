@@ -32,6 +32,7 @@ abstract class AbstractView
     public $fileExt = '.phtml';
     public $viewRequest = 'none';
     public $action = 'none';
+    public $db = null;
     
     /**
      * Constructor

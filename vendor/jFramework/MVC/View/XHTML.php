@@ -37,45 +37,50 @@ class XHTML
         // Define result failsafe
         $result = $xhtml;
         
-        // Detect if Tidy exists and php is running on a WebServer
-        if(class_exists('tidy') && PHP_SAPI != 'cli'){
-            // Spawn Tidy
-            $tidy = new \tidy();
-            
-            // Tidy Config
-            $config = array(
-                'indent' => true,
-                'alt-text' => '',
-                'clean' => true,
-                'output-xhtml' => true,
-                'wrap' => 20000000,
-                'indent-spaces' => 0
-            );
-            
-            // Parse xhtml
-            $tidy->parseString($result, $config, Registry::get('APP.xhtml-charset'));
-            
-            // Clear and Repair XHTML
-            $tidy->cleanRepair();
-            
-            // Convert Tidy OBJ to string
-            $result = (string)$tidy;      
-        }elseif(PHP_SAPI == 'cli'){
-            // Strip XHTML
-            $result = strip_tags($result);
-        }
+        $settings = Registry::get('APP');
         
-        // XHTML BaseRef fixer and SEO Optimizations
-        if(PHP_SAPI != 'cli'){
-            // BaseRef Fixer
-            $result = preg_replace('/href="/i', 'href="' . Registry::get('baseDir') . '$1', $result);
-            $result = preg_replace('/src="/i', 'src="' . Registry::get('baseDir') . '$1', $result);
-            $result = preg_replace("/this.src='/i", "this.src='" . Registry::get('baseDir') . '$1', $result);
-            
-            // SEO Optimizations with Tidy
+        // XHTML Optimization Check
+        if((int)$settings['xhtml-optimization'] === 1) {        
+            // Detect if Tidy exists and php is running on a WebServer
             if(class_exists('tidy') && PHP_SAPI != 'cli'){
-               // SEO Optimizations
-               $result = preg_replace("/\n|\r\n|\r|\t/", '', $result);
+                // Spawn Tidy
+                $tidy = new \tidy();
+
+                // Tidy Config
+                $config = array(
+                    'indent' => true,
+                    'alt-text' => '',
+                    'clean' => true,
+                    'output-xhtml' => true,
+                    'wrap' => 20000000,
+                    'indent-spaces' => 0
+                );
+
+                // Parse xhtml
+                $tidy->parseString($result, $config, Registry::get('APP.xhtml-charset'));
+
+                // Clear and Repair XHTML
+                $tidy->cleanRepair();
+
+                // Convert Tidy OBJ to string
+                $result = (string)$tidy;      
+            }elseif(PHP_SAPI == 'cli'){
+                // Strip XHTML
+                $result = strip_tags($result);
+            }
+
+            // XHTML BaseRef fixer and SEO Optimizations
+            if(PHP_SAPI != 'cli'){
+                // BaseRef Fixer
+                $result = preg_replace('/href="/i', 'href="' . Registry::get('baseDir') . '$1', $result);
+                $result = preg_replace('/src="/i', 'src="' . Registry::get('baseDir') . '$1', $result);
+                $result = preg_replace("/this.src='/i", "this.src='" . Registry::get('baseDir') . '$1', $result);
+
+                // SEO Optimizations with Tidy
+                if(class_exists('tidy') && PHP_SAPI != 'cli'){
+                   // SEO Optimizations
+                   $result = preg_replace("/\n|\r\n|\r|\t/", '', $result);
+                }
             }
         }
         

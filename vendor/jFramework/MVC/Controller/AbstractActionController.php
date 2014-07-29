@@ -29,6 +29,8 @@ use jFramework\Core\Registry;
  */
 abstract class AbstractActionController extends AbstractController
 {
+    public $db = null;
+    
     /**
      * Default Action
      * 
@@ -36,9 +38,9 @@ abstract class AbstractActionController extends AbstractController
      * @param array $post
      * @param array $data
      */
-    public function indexAction ($get, $post, $data) {
+    public function indexAction ($get, $post, $data)
+    {
         $view = new View();
-
         $view->version = Registry::get('jFramework.version');
         return $view->render();
     }  
