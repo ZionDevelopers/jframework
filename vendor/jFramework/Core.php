@@ -13,7 +13,6 @@ namespace jFramework;
 
 use jFramework\Core\Registry;
 use jFramework\MVC\Router;
-use jFramework\Database\Drivers\MySQLi;
 
 /**
  * jFramework Core Operations Handler
@@ -79,7 +78,7 @@ class Core
 
         if (!empty($settings)) {
             if (is_null($this->db)) {
-                $driver = $settings['driver'];
+                $driver = '\jFramework\Database\Drivers\\'.$settings['driver'];
                 $this->db = new $driver();
                 $this->db->setSettings($settings);
                 $this->db->connect();

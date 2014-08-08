@@ -29,6 +29,7 @@ use jFramework\Database\AbstractDBManager;
  */
 class MySQLi extends AbstractDBManager
 {    
+    
     /**
      * Spawn mysqli driver
      */
@@ -92,9 +93,10 @@ class MySQLi extends AbstractDBManager
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see mysqli::query()
+     * Query SQL
+     * @param string $sql
+     * @param boolean $autoFetch
+     * @return array|mysqli_result
      */
     public function query($sql, $autoFetch = true)
     {
@@ -130,10 +132,10 @@ class MySQLi extends AbstractDBManager
     /**
      * Fetch query result
      *     
-     * @param mysqli_result $res        	
+     * @param resource $res        	
      * @return array
      */
-    public function fetch(\mysqli_result $res)
+    public function fetch($res)
     {
         $result = array();
         $data = null;
@@ -380,10 +382,10 @@ class MySQLi extends AbstractDBManager
     /**
      * Return number of rows
      *     
-     * @param mysqli_result $res        	
+     * @param resource $res        	
      * @return number
      */
-    public function numRows(\mysqli_result $res)
+    public function numRows($res)
     {
         $result = 0;
 

@@ -94,7 +94,7 @@ class Router
                 $controller = new $class;
                 // Pass Core OBJ
                 $controller->core = $this->core;
-                $controller->db = $this->core->db;
+                $controller->db = $this->core->db();                
                  
                 // Check if Action exists
                 if (method_exists($controller, $method)) {      

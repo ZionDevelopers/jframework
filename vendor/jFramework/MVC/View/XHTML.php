@@ -40,7 +40,7 @@ class XHTML
         $settings = Registry::get('APP');
         
         // XHTML Optimization Check
-        if ((int)$settings['xhtml-optimization'] === 1) {        
+        if ((bool)$settings['xhtml-optimization']) {        
             // Detect if Tidy exists and php is running on a WebServer
             if (class_exists('tidy') && PHP_SAPI != 'cli') {
                 // Spawn Tidy
@@ -77,7 +77,7 @@ class XHTML
                 $result = preg_replace("/this.src='/i", "this.src='" . Registry::get('baseDir') . '$1', $result);
 
                 // SEO Optimizations with Tidy
-                if (class_exists('tidy') && PHP_SAPI != 'cli') {
+                if (class_exists('tidy') && PHP_SAPI != 'cli' && (bool)$settings['seo-optimization']) {
                    // SEO Optimizations
                    $result = preg_replace("/\n|\r\n|\r|\t/", '', $result);
                 }

@@ -11,6 +11,8 @@
 
 namespace jFramework\Database;
 
+use jFramework\Core\Registry;
+
 /**
  * Class to manage MySQL database data
  * 
@@ -44,7 +46,7 @@ abstract class AbstractDBManager
      * @var array
      * @access private
      */
-    private $settings = array(
+    protected $settings = array(
         'host' => 'localhost',
         'user' => 'root',
         'password' => '',
@@ -52,20 +54,32 @@ abstract class AbstractDBManager
         'charset' => 'utf8'
     );
     
-    private $cacheTable = array();
+    protected $cacheTable = array();
 
     /**
      *
      * @var string
      * @access private
      */
-    private $cacheFile = '';
+    protected $cacheFile = '';
 
     /**
      *
      * @var boolean     
      */
     public $removeHtml = true;
+    
+    /**
+     *
+     * @var boolean
+     */
+    public $sqlArchive = false;
+    
+    /**
+     *
+     * @var array
+     */
+    public $sqlHistory = array();
     
     /**
      * Set Settings
@@ -125,7 +139,7 @@ abstract class AbstractDBManager
      *     
      * @param string $table        	
      */
-    public function cache() { }
+    public function cache($table) { }
     
     /**
      * Report error
@@ -135,7 +149,7 @@ abstract class AbstractDBManager
      */
     public function error($text)
     {
-        throw new \Exception('Database Manager Exception: ' . $text . "\r\nDetails: " . $this->driver->error);
+        throw new \Exception('Database Manager Exception: ' . $text . "\r\nDetails: " . $this->driverLink->error);
     }
 
     /**
@@ -143,15 +157,15 @@ abstract class AbstractDBManager
      *
      * @see mysqli::query()
      */
-    public function query() { }
+    public function query($sql) { }
     
     /**
      * Fetch query result
      *     
-     * @param mysqli_result $res        	
+     * @param resource $res        	
      * @return array
      */
-    public function fetch() { }
+    public function fetch($res) { }
 
     /**
      * Escape string for query
@@ -159,7 +173,7 @@ abstract class AbstractDBManager
      * @param string $string        	
      * @return string
      */
-    public function escape() { }
+    public function escape($string) { }
 
     /**
      * Find data in database
@@ -173,7 +187,7 @@ abstract class AbstractDBManager
      * @param string $autoFetch        	
      * @return array|boolean|mysqli_result
      */
-    public function find() { }
+    public function find($table, array $fields = array(), array $where = array(), array $order = array(), array $limit = array(), array $group = array(), $autoFetch = true) { }
 
     /**
      * Insert data in database
@@ -182,7 +196,7 @@ abstract class AbstractDBManager
      * @param string $table        	
      * @return boolean|mysqli_result
      */
-    public function insert() { }
+    public function insert(array $data, $table) { }
 
     /**
      * Insert data in database
@@ -192,7 +206,7 @@ abstract class AbstractDBManager
      * @param array $where        	
      * @return boolean|mysqli_result
      */
-    public function update() { }
+    public function update(array $data, $table, array $where) { }
 
     /**
      * To save data into database
@@ -202,7 +216,7 @@ abstract class AbstractDBManager
      * @param array $where        	
      * @return boolean|mysqli_result
      */
-    public function save() { }
+    public function save(array $data, $table, array $where = array()) { }
 
     /**
      * To delete records from table
@@ -211,7 +225,7 @@ abstract class AbstractDBManager
      * @param array $where        	
      * @return boolean|mysqli_result
      */
-    public function delete() { }
+    public function delete($table, array $where = array()) { }
 
     /**
      * To lock tables
@@ -220,7 +234,7 @@ abstract class AbstractDBManager
      * @param string $mod        	
      * @return boolean|mysqli_result
      */
-    public function lockTable() { }
+    public function lockTable($table, $mod = "WRITE") { }
 
     /**
      * To unlock locked tables to this connection
@@ -232,10 +246,10 @@ abstract class AbstractDBManager
     /**
      * Return number of rows
      *     
-     * @param mysqli_result $res        	
+     * @param resource $res        	
      * @return number
      */
-    public function numRows() { }
+    public function numRows($res) { }
 
     /**
      * To Normalize New Lines from Windows, Mac and Linux Plataforms to Uniform
@@ -261,7 +275,7 @@ abstract class AbstractDBManager
      * @param array $order
      * @return array
      */
-    public function paginator( ) { }
+    public function paginator($table, array $where = array(), $nRecords = 20, array $order = array()) { }
 
     /**
      * To Count all records from one table
@@ -270,7 +284,7 @@ abstract class AbstractDBManager
      * @param array $where
      * @return integer
      */
-    public function count() { }
+    public function count($table, array $where = array()) { }
 
     /**
      * Generete Where SQL
@@ -280,7 +294,7 @@ abstract class AbstractDBManager
      * @param $sql string        	
      * @param $recursive boolean        	
      */
-    public function where() { }
+    public function where($table, array $where, &$sql, $recursive = false) { }
 
     /**
      * Generate LIMIT SQL
@@ -288,7 +302,7 @@ abstract class AbstractDBManager
      * @param $limit array        	
      * @param $sql string        	
      */
-    public function limit() { }
+    public function limit(array $limit, &$sql) { }
 
     /**
      * Generete Order SQL
@@ -297,7 +311,7 @@ abstract class AbstractDBManager
      * @param $order array        	
      * @param $sql string        	
      */
-    public function order() { }
+    public function order($table, array $order, &$sql) { }
 
     /**
      * Generete Group By SQL
@@ -306,14 +320,14 @@ abstract class AbstractDBManager
      * @param $order array        	
      * @param $sql string        	
      */
-    public function group() { }
+    public function group($table, array $group, &$sql) { }
 
     /**
      * Show Pagination
      *     
      * @param $tipo string        	
      */
-    public function showPagination() { }
+    public function showPagination($type = "select", $ajaxFunc = "") { }
 
     /**
      * To Realize reConnect
