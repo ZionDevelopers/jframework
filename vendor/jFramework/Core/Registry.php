@@ -66,7 +66,7 @@ class Registry
         $var = str_replace('$', '', $var[0]);
 
         // Check if variable exists
-        if(self::get($var) !== null){
+        if (self::get($var) !== null) {
             // Return parsed variable
             return self::get($var);
         }
@@ -107,7 +107,7 @@ class Registry
                 $result = self::$registry[ $var[0] ][ $var[1] ];
             }
         // Check if variable exists
-        }elseif (isset(self::$registry[$var])) {
+        } elseif (isset(self::$registry[$var])) {
             // Get Registry var
             $result = self::$registry [$var];
         }
@@ -130,7 +130,7 @@ class Registry
 
             // Set Registry Key
             self::$registry [ $var[0] ][ $var[1] ] = $contents;
-        }else{
+        } else {
             // Set Registry var
             self::$registry [$var] = $contents;
         }        
@@ -152,7 +152,7 @@ class Registry
     public static function parseDir()
     {
         // List all files .ini from the configs dir
-        foreach(glob(self::$dir . '*' . self::$ext) as $file){
+        foreach (glob(self::$dir . '*' . self::$ext) as $file) {
             // Parse .ini file
             self::parse($file);
         }

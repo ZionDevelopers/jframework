@@ -62,7 +62,7 @@ class Layout extends AbstractView
         $this->baseDir = dirname($_SERVER['REQUEST_URI']);
 
         // Check if there is a layout
-        if($this->layoutCheck($this->file)){
+        if ($this->layoutCheck($this->file)) {
             // Return rendered layout
             $result = parent::render($this->file);
         }

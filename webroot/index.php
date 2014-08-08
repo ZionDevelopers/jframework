@@ -10,18 +10,18 @@
  */
 
 // PHP 5.4 Emulator
-if(version_compare(PHP_VERSION, '5.4.0', '<')){
+if (version_compare(PHP_VERSION, '5.4.0', '<')) {
     // Emulate Request TIME FLOAT
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 
 // CLI Compatibility mode
-if(PHP_SAPI != 'cli'){
+if (PHP_SAPI != 'cli') {
     $argv = array();
 }
 
 // PHP Info
-if(stripos(@$_SERVER['QUERY_STRING'], '-phinf_') !== false){
+if (stripos(@$_SERVER['QUERY_STRING'], '-phinf_') !== false) {
     phpinfo();
     exit();
 }

@@ -22,12 +22,12 @@ class CaptchaController extends AbstractActionController
         $view = new View();
         $message = '';
         
-        if(!empty($get['captcha'])){
+        if (!empty($get['captcha'])) {
             $pass = Captcha::verify($get['captcha'], 'captcha');
             
-            if($pass){
+            if ($pass) {
                 $message = '<span style="color: green"><b>Success:</b> You have confirmed to not be a robot!</span><br /><br />';
-            }else{
+            } else {
                 $message = '<span style="color: red"><b>Error:</b> You failed!</b><br /><br />';
             }
         }

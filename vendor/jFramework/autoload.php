@@ -34,7 +34,8 @@ class autoload
      * Add path to list
      * @param string $path
      */
-    public static function addPath($path){
+    public static function addPath($path)
+    {
         self::$paths[] = $path;
     }
     
@@ -42,7 +43,8 @@ class autoload
      * PSR-0 Autoloader
      * @param string $className
      */
-    public static function load($className) {
+    public static function load($className)
+    {
         $className = ltrim($className, '\\');
         $fileName = '';
         $namespace = '';
@@ -70,7 +72,8 @@ class autoload
      * 
      * @param boolean $prepend
      */
-    public static function register($prepend = false){
+    public static function register($prepend = false)
+    {
         spl_autoload_register('self::load', true, $prepend);
     }
     
@@ -79,7 +82,8 @@ class autoload
      * 
      * @param boolean $prepend
      */
-    public static function unregister(){
+    public static function unregister()
+    {
         spl_autoload_unregister('self::load');
     }
 }

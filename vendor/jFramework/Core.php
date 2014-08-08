@@ -42,7 +42,7 @@ class Core
      */
     public function __construct($rootDir, $args)
     {       
-        if(PHP_SAPI == 'cli'){
+        if (PHP_SAPI == 'cli') {
             unset($args[0]);
         }
         
@@ -61,9 +61,9 @@ class Core
      */
     public function registry($var, $value = null)
     {
-        if(is_null($value)){
+        if (is_null($value)) {
             return Registry::get($var);
-        }else{
+        } else {
             Registry::set($var, $value);
         }
     }
@@ -77,8 +77,8 @@ class Core
         // Get 
         $settings = $this->registry('DATABASE');
 
-        if(!empty($settings)){
-            if(is_null($this->db)){
+        if (!empty($settings)) {
+            if (is_null($this->db)) {
                 $driver = $settings['driver'];
                 $this->db = new $driver();
                 $this->db->setSettings($settings);
@@ -98,9 +98,9 @@ class Core
     {
         $result = null;
         
-        if(is_null($var)){
+        if (is_null($var)) {
             $result = $_GET;
-        }elseif(isset($_GET[$var])){
+        } elseif(isset($_GET[$var])) {
             $result = $_GET[$var];
         }
         
@@ -116,9 +116,9 @@ class Core
     {
         $result = null;
         
-        if(is_null($var)){
+        if (is_null($var)) {
             $result = $_POST;
-        }elseif(isset($_POST[$var])){
+        } elseif(isset($_POST[$var])) {
             $result = $_POST[$var];
         }
         
@@ -134,9 +134,9 @@ class Core
     {
         $result = null;
         
-        if(is_null($var)){
+        if (is_null($var)) {
             $result = $_SERVER;
-        }elseif(isset($_SERVER[$var])){
+        } elseif(isset($_SERVER[$var])) {
             $result = $_SERVER[$var];
         }
         
@@ -152,9 +152,9 @@ class Core
     {
         $result = null;
         
-        if(is_null($var)){
+        if (is_null($var)) {
             $result = $_COOKIE;
-        }elseif(isset($_COOKIE[$var])){
+        } elseif(isset($_COOKIE[$var])) {
             $result = $_COOKIE[$var];
         }
         
@@ -185,7 +185,7 @@ class Core
     private function iniUpdate()
     {
         // Loop all PHP.ini values
-        foreach(Registry::get('PHP') as $key => $value){
+        foreach (Registry::get('PHP') as $key => $value) {
             // Define new value
             ini_set($key, $value);
         }
@@ -197,7 +197,7 @@ class Core
     private function headers()
     {
         // Check if PHP is not running on Console
-        if(PHP_SAPI != 'cli') {
+        if (PHP_SAPI != 'cli') {
             // Start Session on Dispatcher
             session_start ();
 

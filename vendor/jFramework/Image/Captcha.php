@@ -48,13 +48,13 @@ class Captcha
     private function check()
     {
         // Check if folder is writeable
-        if(!is_writeable(dirname($this->enforcer_file))){
+        if (!is_writeable(dirname($this->enforcer_file))) {
             // Try to fix permissions
             chmod(dirname($this->enforcer_file), 0755);
         }
         
         // Check if captcha enforcer file exists
-        if(!file_exists($this->enforcer_file)){
+        if (!file_exists($this->enforcer_file)) {
             // Create a captcha enforcer empty file
             file_put_contents($this->enforcer_file, '');
         }

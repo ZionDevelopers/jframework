@@ -96,11 +96,11 @@ abstract class AbstractView
         
         $result = null;
         
-        if(isset($this->$name)){
+        if (isset($this->$name)) {
             $result = $this->$name;
         }
         
-        if(isset($registry[$name])){
+        if (isset($registry[$name])) {
             $result = $registry[$name];     
         }
         
@@ -159,7 +159,7 @@ abstract class AbstractView
         $result = '';
         
         // Check if file is readable
-        if(is_readable($file)){
+        if (is_readable($file)) {
             // Start Buff obtainer
             ob_start();
             

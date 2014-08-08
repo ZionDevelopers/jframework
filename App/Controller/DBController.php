@@ -25,7 +25,8 @@ class DBController extends AbstractActionController
      */
     public function indexAction($get, $post, $data)
     {       
-        $view = new View();        
+        $view = new View(); 
+        $view->db = $this->db;
         return $view->render();
     }
 }

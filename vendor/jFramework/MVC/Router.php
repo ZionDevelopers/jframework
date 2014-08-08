@@ -81,7 +81,7 @@ class Router
         $file .= '/' . $class . '.php';
         
         // Check if file is Readable
-        if(is_readable($file)){
+        if (is_readable($file)) {
             // Require controller
             require $file;
             
@@ -89,7 +89,7 @@ class Router
             $class = 'App\Controller\\'.$class;
             
             // Check if Controller was found on the declared classes
-            if(in_array($class, get_declared_classes())){  
+            if (in_array($class, get_declared_classes())) {  
                 // Spawn new Controller
                 $controller = new $class;
                 // Pass Core OBJ
@@ -97,13 +97,13 @@ class Router
                 $controller->db = $this->core->db;
                  
                 // Check if Action exists
-                if(method_exists($controller, $method)){      
+                if (method_exists($controller, $method)) {      
                     // Call Action
                     $contents = call_user_func_array(
                         array($controller, $method),
                         array($this->core->get(), $this->core->post(), $request ['data'])
                     );
-                }else{
+                } else {
                     // Run 404 Error Page
                     $contents = $controller->notFoundAction();
                 }
@@ -111,7 +111,7 @@ class Router
         }
         
         // Check if controller was successfully spawned
-        if(!isset($controller)){     
+        if (!isset($controller)) {     
             // Spawn new Error Controller
             $controller = new \jFramework\MVC\Controller\ErrorController();
             
@@ -123,16 +123,16 @@ class Router
         }
                         
         // Check if database driver was created
-        if(!is_null($this->core->db)){
+        if (!is_null($this->core->db)) {
             // Close connection
             $this->core->db->close();
         }
         
         // Check if controller was successfully spawned and PHP is running on a WebServer
-        if(is_object($controller) && PHP_SAPI != 'cli'){
+        if (is_object($controller) && PHP_SAPI != 'cli') {
             // Render layout
             return $controller->layout($contents);        
-        }else{
+        } else {
             // Return view contents when php is running from Console
             return $contents;
         }
@@ -156,7 +156,7 @@ class Router
         );
         
         // Check if a custom route was found
-        if(isset($this->customRoutes[$route])){
+        if (isset($this->customRoutes[$route])) {
             // Split Controller Separator
             $result = explode(':', $this->customRoutes[$route]);
             
@@ -183,7 +183,7 @@ class Router
 
             // Remove index.php from URI
             $uri = preg_replace('/'.preg_quote($this->basepath) . '([index.php]+)?/i', '', $uri);
-        }else{
+        } else {
             // Format a Request URI for Console
             $uri = isset ($this->core->args[1]) ? '/' . $this->core->args[1] : '/';
         }        
@@ -197,7 +197,7 @@ class Router
         $route = $this->match($request['path'], $this->core->server('REQUEST_METHOD'));
         
         // If not found a custom route
-        if(is_null($route['controller'])){
+        if (is_null($route['controller'])) {
             // Split controller spearator
             $path = explode('/', $request['path']);
             // Define Controller
