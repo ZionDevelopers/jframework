@@ -1,4 +1,5 @@
 <?php
+
 /**
  * jFramework
  *
@@ -23,10 +24,17 @@ class DBController extends AbstractActionController
      * @param array $data
      * @return string
      */
-    public function indexAction($get, $post, $data)
-    {       
-        $view = new View(); 
+    public function indexAction($get, $post, $data) 
+    {
+        $view = new View();   
+        
+        // Save Array to Database         
+        $this->db->save(array('name' => 'Mr. #' . mt_rand(1, 99999)), 'test');
+        
+        // List saved test records
         $view->tables = $this->db->find('test');
+        
         return $view->render();
     }
+
 }
