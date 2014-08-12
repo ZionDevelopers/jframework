@@ -40,9 +40,9 @@ div#mainContainer{
     margin-top: 10px;
 }
 
-div#flashMessage{
-    width:99%;
+div#flashMessage {
     background-color: #ff0;
     border: 1px solid #000;
-    padding: 20px;
+    padding: 20px 20px 5px;
+    width: 99%;
 }

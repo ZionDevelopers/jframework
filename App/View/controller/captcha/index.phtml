@@ -2,6 +2,6 @@
 <form action="" method="GET">
     <b>Security verification</b><br />
     <?php echo $this->captcha;?><br />
-    <input type="text" name="captcha" /><br />
+    <input type="text" name="captcha" maxlength="6" /><br />
     <input type="submit" value="Verify" />
 </form>
