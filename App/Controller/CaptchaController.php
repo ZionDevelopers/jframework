@@ -14,12 +14,17 @@ namespace App\Controller;
 use jFramework\MVC\Controller\AbstractActionController;
 use jFramework\MVC\View;
 use jFramework\Image\Captcha;
+use jFramework\Core\Registry;
 
 class CaptchaController extends AbstractActionController
 {
     public function indexAction($get, $post, $data)
     {       
         $view = new View();
+        
+        // Set Page title
+        Registry::set('APP.title', 'Captcha Example :: '.Registry::get('APP.title'));
+        
         $message = '';
         
         if (!empty($get['captcha'])) {

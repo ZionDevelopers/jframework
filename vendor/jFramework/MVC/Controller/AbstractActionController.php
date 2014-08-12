@@ -41,7 +41,6 @@ abstract class AbstractActionController extends AbstractController
     public function indexAction ($get, $post, $data)
     {
         $view = new View();
-        $view->version = Registry::get('jFramework.version');
         return $view->render();
     }  
     
@@ -60,6 +59,9 @@ abstract class AbstractActionController extends AbstractController
         
         // Set Page title
         $layout->title = Registry::get('APP.title');
+        
+        // Set jFramework version
+        $layout->jFrameworkVersion = Registry::get('jFramework.version');
         
         // Render Layout with view contents
         return $layout->render($viewContents);
@@ -80,7 +82,7 @@ abstract class AbstractActionController extends AbstractController
         $view->setFile($file);
         
         // Set App title
-        Registry::set('APP.title', Registry::get('APP.title') . ' :: Page not found!');
+        Registry::set('APP.title', 'Page not found! :: '.Registry::get('APP.title'));
         
         $view->title = 'Error 404 :: Page not found';
         $view->message = 'The page you requested was not found!';  

@@ -92,6 +92,7 @@ class Router
             if (in_array($class, get_declared_classes())) {  
                 // Spawn new Controller
                 $controller = new $class;
+                
                 // Pass Core OBJ
                 $controller->core = $this->core;
                 $controller->db = $this->core->db();                

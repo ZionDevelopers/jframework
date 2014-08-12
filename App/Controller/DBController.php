@@ -14,6 +14,7 @@ namespace App\Controller;
 
 use jFramework\MVC\View;
 use jFramework\MVC\Controller\AbstractActionController;
+use jFramework\Core\Registry;
 
 class DBController extends AbstractActionController
 {
@@ -26,13 +27,16 @@ class DBController extends AbstractActionController
      */
     public function indexAction($get, $post, $data) 
     {
-        $view = new View();   
+        $view = new View();  
+        
+        // Set Page title
+        Registry::set('APP.title', 'Database Example :: '.Registry::get('APP.title'));
         
         // Save Array to Database         
         $this->db->save(array('name' => 'Mr. #' . mt_rand(1, 99999)), 'test');
         
         // List saved test records
-        $view->tables = $this->db->find('test');
+        $view->dbResult = $this->db->find('test');
         
         return $view->render();
     }
