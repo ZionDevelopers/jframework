@@ -46,7 +46,16 @@ class Router
     public function bootstrap()
     {
         // Define base path
-        $this->basepath = dirname($this->core->server('SCRIPT_NAME'));
+        $basepath = dirname($this->core->server('SCRIPT_NAME'));       
+        
+        // Check for a missing slash
+        if(!preg_match('/\/$/', $basepath)) {
+            // Patch path
+            $basepath = $basepath . '/';
+        }
+
+        // Define final basepath
+        $this->basepath = $basepath;
         
         /// Detect request
         $request = $this->detectRequest();        
@@ -58,7 +67,7 @@ class Router
         $view = $this->handleRequest($request);
         
         // Format XHTML
-        return XHTML::format($view);
+        return XHTML::format($view, $basepath);
     }
     
     /**
@@ -181,9 +190,9 @@ class Router
         if (PHP_SAPI != 'cli') {
             // Get URI
             $uri = $this->core->server('REQUEST_URI');
+   
+            $uri = preg_replace('/'.preg_quote($this->basepath, '/') . '([index.php]+)?/i', '', $uri);
 
-            // Remove index.php from URI
-            $uri = preg_replace('/'.preg_quote($this->basepath) . '([index.php]+)?/i', '', $uri);
         } else {
             // Format a Request URI for Console
             $uri = isset ($this->core->args[1]) ? '/' . $this->core->args[1] : '/';

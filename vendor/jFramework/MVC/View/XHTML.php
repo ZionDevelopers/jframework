@@ -30,9 +30,10 @@ class XHTML
     /**
      * Format XHTML
      * @param string $xhtml
+     * @param string $basepath
      * @return string
      */
-    public static function format($xhtml)
+    public static function format($xhtml, $basepath)
     {
         // Define result failsafe
         $result = $xhtml;
@@ -72,9 +73,9 @@ class XHTML
             // XHTML BaseRef fixer and SEO Optimizations
             if (PHP_SAPI != 'cli') {
                 // BaseRef Fixer
-                $result = preg_replace('/href="/i', 'href="' . Registry::get('baseDir') . '$1', $result);
-                $result = preg_replace('/src="/i', 'src="' . Registry::get('baseDir') . '$1', $result);
-                $result = preg_replace("/this.src='/i", "this.src='" . Registry::get('baseDir') . '$1', $result);
+                $result = preg_replace('/href="/i', 'href="' . $basepath . '$1', $result);
+                $result = preg_replace('/src="/i', 'src="' . $basepath . '$1', $result);
+                $result = preg_replace("/this.src='/i", "this.src='" . $basepath . '$1', $result);
 
                 // SEO Optimizations with Tidy
                 if (class_exists('tidy') && PHP_SAPI != 'cli' && (bool)$settings['seo-optimization']) {
