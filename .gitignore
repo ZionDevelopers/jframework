@@ -39,3 +39,7 @@ Thumbs.db
 nbproject/
 sess_*
 *.yaml
+data/cache/
+data/session/
+data/logs/
+php.ini

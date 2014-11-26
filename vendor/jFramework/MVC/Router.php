@@ -46,17 +46,8 @@ class Router
     public function bootstrap()
     {
         // Define base path
-        $basepath = dirname($this->core->server('SCRIPT_NAME'));       
-        
-        // Check for a missing slash
-        if(!preg_match('/\/$/', $basepath)) {
-            // Patch path
-            $basepath = $basepath . '/';
-        }
-
-        // Define final basepath
-        $this->basepath = $basepath;
-        
+        $this->basepath = dirname($this->core->server('SCRIPT_NAME'));       
+         
         /// Detect request
         $request = $this->detectRequest();        
                         
@@ -67,7 +58,7 @@ class Router
         $view = $this->handleRequest($request);
         
         // Format XHTML
-        return XHTML::format($view, $basepath);
+        return XHTML::format($view, $this->basepath);
     }
     
     /**
