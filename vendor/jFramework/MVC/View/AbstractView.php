@@ -33,6 +33,7 @@ abstract class AbstractView
     public $viewRequest = 'none';
     public $action = 'none';
     public $db = null;
+    public $requestURL = '';
     
     /**
      * Constructor
@@ -41,13 +42,13 @@ abstract class AbstractView
     {
         // Get Request
         $request = Registry::get('Request');
-        
         // Get View folder
         $this->file = Registry::get('FOLDER.view');
-        $this->file .= '/' . strtolower($request['controller']);
-        $this->file .= '/' . strtolower($request['action']) . $this->fileExt;
-        $this->viewRequest = '/' . strtolower($request['controller']) . '/' . strtolower($request['action']) . $this->fileExt;
-        $this->action = strtolower($request['controller'].'/'.$request['action']);
+        $this->file .= '/' . $request['controller'];
+        $this->file .= '/' . $request['action'] . $this->fileExt;
+        $this->viewRequest = '/' . $request['controller'] . '/' . $request['action'] . $this->fileExt;
+        $this->action = $request['controller'] . '/' . $request['action'];
+        $this->requestURL = $request['route'];
     }
     
     /**
@@ -157,7 +158,7 @@ abstract class AbstractView
     {
         // Define result failsafe
         $result = '';
-        
+
         // Check if file is readable
         if (is_readable($file)) {
             // Start Buff obtainer

@@ -31,6 +31,7 @@ class Router
     protected $customRoutes = array();
     protected $basepath = '';
     public $core = null;
+    public $tools = null;
 
     /**
      * Get Custom Routes
@@ -46,7 +47,7 @@ class Router
     public function bootstrap()
     {
         // Define base path
-        $this->basepath = dirname($this->core->server('SCRIPT_NAME'));       
+        $this->basepath = str_replace('\\', '/', dirname($this->core->server('SCRIPT_NAME')));       
          
         /// Detect request
         $request = $this->detectRequest();        
@@ -78,8 +79,8 @@ class Router
         // Get controllers folder
         $file = Registry::get('FOLDER.controller');
         // Set Class
-        $file .= '/' . $class . '.php';
-        
+        $file .= '/' . $class . '.php';       
+
         // Check if file is Readable
         if (is_readable($file)) {
             // Require controller
@@ -87,23 +88,23 @@ class Router
             
             // Define class with namespace
             $class = 'App\Controller\\'.$class;
-            
+
             // Check if Controller was found on the declared classes
             if (in_array($class, get_declared_classes())) {  
                 // Spawn new Controller
-                $controller = new $class;
+                $controller = new $class;               
                 
                 // Pass Core OBJ
                 $controller->core = $this->core;
                 $controller->db = $this->core->db();                
                  
                 // Check if Action exists
-                if (method_exists($controller, $method)) {      
+                if (method_exists($controller, $method)) {
                     // Call Action
                     $contents = call_user_func_array(
                         array($controller, $method),
                         array($this->core->get(), $this->core->post(), $request ['data'])
-                    );
+                    );                   
                 } else {
                     // Run 404 Error Page
                     $contents = $controller->notFoundAction();
@@ -118,6 +119,9 @@ class Router
             
             // Pass Core OBJ
             $controller->core = $this->core;
+            
+            // Pass Tools OBJ
+            $controller->tools = $this->tools;
             
             // Run NotFound Action
             $contents = $controller->notFoundAction($request);            
@@ -165,7 +169,7 @@ class Router
             $result['route'] = $route;
             $result['controller'] = $result[0];
             $result['action'] = $result[1];
-        }
+        } 
         
         // Return route
         return $result;
@@ -177,34 +181,38 @@ class Router
      */
     protected function detectRequest()
     {
-        // Check if PHP is running on WebServer
-        if (PHP_SAPI != 'cli') {
-            // Get URI
-            $uri = $this->core->server('REQUEST_URI');
-   
-            $uri = preg_replace('/'.preg_quote($this->basepath, '/') . '([index.php]+)?/i', '', $uri);
+        // Get URI
+        $uri = $this->core->server('REQUEST_URI');
 
-        } else {
+        // Check if PHP is running on WebServer
+        if (PHP_SAPI == 'cli') {
             // Format a Request URI for Console
             $uri = isset ($this->core->args[1]) ? '/' . $this->core->args[1] : '/';
-        }        
+        }  
         
-        $uri = str_replace('index.php', '', $uri);
-        
+        // Remove first slash
+        $uri = preg_replace('/^\//', '', $uri);
+
         // Parse URI Request
         $request = parse_url($uri);
-        
+
         // Detect a match for custom route
         $route = $this->match($request['path'], $this->core->server('REQUEST_METHOD'));
-        
+
         // If not found a custom route
         if (is_null($route['controller'])) {
-            // Split controller spearator
-            $path = explode('/', $request['path']);
+            // Search for action
+            if (strstr($request['path'], '/') !== false) {
+                // Split controller spearator
+                $path = explode('/', $request['path']);
+            } else {
+                $path = array();
+                $path[0] = $request['path'];
+            }
             // Define Controller
-            $route['controller'] = !empty($path [1]) ? $path[1] : 'Index';
+            $route['controller'] = !empty($path [0]) ? $path[0] : 'Index';
             // Define Action
-            $route['action'] = !empty($path[2]) ? $path[2] : 'index';
+            $route['action'] = !empty($path[1]) ? $path[1] : 'index';
         }
         
         return $route;

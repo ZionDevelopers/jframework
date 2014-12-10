@@ -13,6 +13,7 @@ namespace jFramework;
 
 use jFramework\Core\Registry;
 use jFramework\MVC\Router;
+use jFramework\Core\Tools;
 
 /**
  * jFramework Core Operations Handler
@@ -34,6 +35,7 @@ class Core
     public $rootDir = '';
     public $args = array();
     public $db = null;
+    public $tools = null;
     
     /**
      * Constructor
@@ -84,7 +86,7 @@ class Core
                 $this->db->connect();
            }
         }
-        
+
         return $this->db;
     }
     
@@ -221,6 +223,21 @@ class Core
         
         // Update php.ini settings from app/configs/php.ini
         $this->iniUpdate();
+        
+        // Development environment
+        if (Registry::get('APP.runtime_mode') == 'DEV') {
+            // Report all errors
+            error_reporting(E_ALL);
+            ini_set('display_errors', 'On');   
+            ini_set('log_error', 'Off');
+        } elseif (Registry::get('APP.runtime_mode') == 'LIVE') {
+            error_reporting(E_ALL);
+            ini_set('display_errors', 'Off');     
+            ini_set('log_error', 'On');
+        }
+        
+        // Log errors
+        ini_set('error_log', Registry::get('FOLDER.logs'). 'errors.log');
 
         // Define Bootstrap headers
         $this->headers();
@@ -230,6 +247,8 @@ class Core
         
         // Define core OBJ
         $Router->core = $this;
+        // Define tools OBJ
+        $Router->tools = new Tools();
         
         // Get Custom Routes
         $Router->getCustomRoutes();

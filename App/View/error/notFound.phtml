@@ -9,6 +9,6 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 ?>
-<div id="pageTitle">Error 404</div><br />
-<h1><?php echo htmlentities($this->action);?></h1>
+<h1 id="pageTitle">Error 404</h1>
+<h2><?php echo htmlentities($this->requestURL);?></h1>
 <div><?php echo htmlentities($this->message);?></div>

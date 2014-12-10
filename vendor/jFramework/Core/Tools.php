@@ -11,6 +11,8 @@
 
 namespace jFramework\Core;
 
+use jFramework\Core\Registry;
+
 /**
  * Tools to do almost all things
  * 
@@ -33,7 +35,7 @@ class Tools
      */
     public static function debug()
     {
-        if (DEBUG) {
+        if (Registry::get('APP.runtime_mode') == 'DEV') {
             echo '<pre>';
             
             foreach (func_get_args() as $arg) {

@@ -28,9 +28,7 @@ use jFramework\Core\Registry;
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 abstract class AbstractActionController extends AbstractController
-{
-    public $db = null;
-    
+{   
     /**
      * Default Action
      * 
