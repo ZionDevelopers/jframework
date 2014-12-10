@@ -188,13 +188,17 @@ class Router
         if (PHP_SAPI == 'cli') {
             // Format a Request URI for Console
             $uri = isset ($this->core->args[1]) ? '/' . $this->core->args[1] : '/';
-        }  
+        }
         
         // Remove first slash
         $uri = preg_replace('/^\//', '', $uri);
-
+        
+        // Set default request path
+        $request = array();
+        $request['path'] = '';
+        
         // Parse URI Request
-        $request = parse_url($uri);
+        $request = array_merge($request, parse_url($uri));
 
         // Detect a match for custom route
         $route = $this->match($request['path'], $this->core->server('REQUEST_METHOD'));
