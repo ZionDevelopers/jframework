@@ -28,4 +28,5 @@ abstract class AbstractController
 {
     public $core = null;
     public $db = null;
+    public $basepath = '';
 }

@@ -33,10 +33,10 @@ class DBController extends AbstractActionController
         // Check for success or fail query        
         if (isset($get['success'])) {
             $view->setFlash('<b style="color:green">Success: </b>Test table Wiped!');
-            Tools::redir($this->core->basepath . '/DB');
+            Tools::redir($this->basepath . 'DB');
         } elseif (isset($get['fail'])) {
             $view->setFlash('<b style="color:red">Error: </b>Test table not Wiped!');
-            Tools::redir($this->core->basepath . '/DB');    
+            Tools::redir($this->basepath . 'DB');    
         }
 
         // Set Page title
@@ -58,12 +58,12 @@ class DBController extends AbstractActionController
      * @param array $data
      */
     public function wipeAction($get, $post, $data)
-    {
+    {   
         // Wipe test table and check if was successful
         if ($this->db->query('TRUNCATE TABLE test')) {
-            Tools::redir($this->core->basepath . '/DB?success');
+            Tools::redir($this->basepath . 'DB?success');
         } else {
-            Tools::redir($this->core->basepath . '/DB?fail');
+            Tools::redir($this->basepath . 'DB?fail');
         }
     } 
 

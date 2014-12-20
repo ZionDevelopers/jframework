@@ -35,6 +35,7 @@ class Core
     public $rootDir = '';
     public $args = array();
     public $db = null;
+    public $basepath = '';
     
     /**
      * Constructor
