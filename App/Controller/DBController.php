@@ -15,6 +15,7 @@ namespace App\Controller;
 use jFramework\MVC\View;
 use jFramework\MVC\Controller\AbstractActionController;
 use jFramework\Core\Registry;
+use jFramework\Core\Tools;
 
 class DBController extends AbstractActionController
 {
@@ -28,6 +29,15 @@ class DBController extends AbstractActionController
     public function indexAction($get, $post, $data) 
     {
         $view = new View();  
+        
+        // Check for success or fail query        
+        if (isset($get['success'])) {
+            $view->setFlash('<b style="color:green">Success: </b>Test table Wiped!');
+            Tools::redir($this->core->basepath . '/DB');
+        } elseif (isset($get['fail'])) {
+            $view->setFlash('<b style="color:red">Error: </b>Test table not Wiped!');
+            Tools::redir($this->core->basepath . '/DB');    
+        }
 
         // Set Page title
         Registry::set('APP.title', 'Database Example :: '.Registry::get('APP.title'));
@@ -36,9 +46,25 @@ class DBController extends AbstractActionController
         $this->db->save(array('name' => 'Mr. #' . mt_rand(1, 99999)), 'test');
         
         // List saved test records
-        $view->dbResult = $this->db->find('test');        
+        $view->dbResult = $this->db->find('test');   
         
         return $view->render();
     }
+    
+    /**
+     * Wipe Action
+     * @param array $get
+     * @param array $post
+     * @param array $data
+     */
+    public function wipeAction($get, $post, $data)
+    {
+        // Wipe test table and check if was successful
+        if ($this->db->query('TRUNCATE TABLE test')) {
+            Tools::redir($this->core->basepath . '/DB?success');
+        } else {
+            Tools::redir($this->core->basepath . '/DB?fail');
+        }
+    } 
 
 }

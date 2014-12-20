@@ -43,6 +43,7 @@ div#mainContainer{
 div#flashMessage {
     background-color: #ff0;
     border: 1px solid #000;
-    padding: 20px 20px 5px;
+    padding: 10px 10px 10px;
+    margin-bottom: 5px;
     width: 99%;
 }
