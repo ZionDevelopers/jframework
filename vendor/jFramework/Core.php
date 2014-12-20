@@ -35,7 +35,6 @@ class Core
     public $rootDir = '';
     public $args = array();
     public $db = null;
-    public $tools = null;
     
     /**
      * Constructor
@@ -237,7 +236,7 @@ class Core
         }
         
         // Log errors
-        ini_set('error_log', Registry::get('FOLDER.logs'). 'errors.log');
+        ini_set('error_log', Registry::get('FOLDER.logs'). '/errors.log');
 
         // Define Bootstrap headers
         $this->headers();
@@ -247,8 +246,6 @@ class Core
         
         // Define core OBJ
         $Router->core = $this;
-        // Define tools OBJ
-        $Router->tools = new Tools();
         
         // Get Custom Routes
         $Router->getCustomRoutes();

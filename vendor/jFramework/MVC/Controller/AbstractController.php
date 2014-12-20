@@ -28,5 +28,4 @@ abstract class AbstractController
 {
     public $core = null;
     public $db = null;
-    public $tools = null;
 }

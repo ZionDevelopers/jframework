@@ -31,7 +31,6 @@ class Router
     protected $customRoutes = array();
     protected $basepath = '';
     public $core = null;
-    public $tools = null;
 
     /**
      * Get Custom Routes
@@ -119,9 +118,6 @@ class Router
             
             // Pass Core OBJ
             $controller->core = $this->core;
-            
-            // Pass Tools OBJ
-            $controller->tools = $this->tools;
             
             // Run NotFound Action
             $contents = $controller->notFoundAction($request);            
