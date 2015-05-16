@@ -32,14 +32,8 @@ define('CLIENT_IP', $_SERVER['REMOTE_ADDR']);
 // Define root directory
 $root = dirname(__DIR__);
 
-// Require autoloader
-require $root . '/vendor/jFramework/autoload.php';
-
-// Add path to autoloader
-autoload::addPath ($root . '/vendor/');
-
-// Register autoloader
-autoload::register(true);
+// Require composer autoloader
+require $root . '/vendor/autoload.php';
 
 // Start jFramework Core
 $jFramework = new \jFramework\Core(__DIR__, $argv);
