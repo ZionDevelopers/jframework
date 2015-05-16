@@ -174,9 +174,6 @@ class MySQLi extends AbstractDBManager
             $string = strip_tags($string);
         }
 
-        // Fix New Lines
-        $string = $this->normalizeNewLines($string);
-
         // Test Connection
         if ($this->testCon()) {
             // Escape string with real escape string
@@ -184,6 +181,10 @@ class MySQLi extends AbstractDBManager
         }
 
         $string = trim($string);
+        
+
+        // Fix New Lines
+        $string = $this->normalizeNewLines($string);
 
         // Return
         return $string;
