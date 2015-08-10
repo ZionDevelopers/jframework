@@ -2,7 +2,7 @@
 /**
  * jFramework
  *
- * @version 2.0.0
+ * @version 2.1.0
  * @link https://github.com/ZionDevelopers/jframework/ The jFramework GitHub Project
  * @copyright 2010-2014, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
@@ -18,8 +18,8 @@ use jFramework\MVC\View\XHTML;
  * jFramework Router
  * 
  * Created: 2014-06-08 08:53 PM (GMT -03:00)
- * Updated: 2014-06-09 15:59 PM (GMT -03:00)
- * @version 0.0.5 
+ * Updated: 2015-08-10 10:15 AM (GMT -03:00)
+ * @version 0.0.6 
  * @package jFramework
  * @subpackage MVC
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
@@ -28,16 +28,24 @@ use jFramework\MVC\View\XHTML;
  */
 class Router
 {
-    protected $customRoutes = array();
+    protected $regexRoutes = array();
+    protected $redirRoutes = array();
     protected $basepath = '';
     public $core = null;
 
     /**
      * Get Custom Routes
      */
-    public function getCustomRoutes()
+    public function __construct()
     {
-        $this->customRoutes = Registry::get('CUSTOM_ROUTES');
+        // Loop by regex routes
+        foreach(Registry::get('REGEX_ROUTES') as $controllerAction => $pattern) {
+            $pattern = '/^' . str_replace('/', '\/', $pattern) . '$/';
+            $this->regexRoutes[$pattern] = explode('_', $controllerAction);
+        }
+        
+        // Loop by redir routes
+        $this->redirRoutes = Registry::get('REDIR_ROUTES');
     }
     
     /**
@@ -49,7 +57,7 @@ class Router
         $this->basepath = str_replace('\\', '/', dirname($this->core->server('SCRIPT_NAME')));       
          
         /// Detect request
-        $request = $this->detectRequest();        
+        $request = $this->detectRequest();   
                         
         // Define Request data
         Registry::set('Request', $request);
@@ -132,8 +140,11 @@ class Router
         
         // Check if controller was successfully spawned and PHP is running on a WebServer
         if (is_object($controller) && PHP_SAPI != 'cli') {
-            // Render layout
-            return $controller->layout($contents);        
+            // Check for layout function
+            if(method_exists($controller, 'layout') && !empty($contents)) {
+                // Render layout
+                return $controller->layout($contents);            
+            }
         } else {
             // Return view contents when php is running from Console
             return $contents;
@@ -149,7 +160,7 @@ class Router
     protected function match($route, $method)
     {
         // Format failsafe route
-        $result = array(
+        $match = array(
             'route' => $route,
             'controller' => null, 
             'action' => null, 
@@ -157,19 +168,34 @@ class Router
             'data' => array()
         );
         
+        // Loop by regex routes
+        foreach ($this->regexRoutes as $pattern => $_) {       
+            // Check if is there a match
+            if (preg_match($pattern, $route, $params) === 1) {
+                // Remove useless key
+                array_shift($params);
+                  
+                // Format route array
+                $match['route'] = $route;
+                $match['controller'] = $params[0];
+                $match['action'] = empty($params[1]) ? 'index' : $params[1];
+                $match['data'] = $params;
+            }
+        }
+
         // Check if a custom route was found
-        if (isset($this->customRoutes[$route])) {
+        if (isset($this->redirRoutes[$route])) {
             // Split Controller Separator
-            $result = explode(':', $this->customRoutes[$route]);
-            
-            // Format route array
-            $result['route'] = $route;
-            $result['controller'] = $result[0];
-            $result['action'] = $result[1];
-        } 
+            $result = explode(':', $this->redirRoutes[$route]);
         
+            // Format route array
+            $match['route'] = $route;
+            $match['controller'] = $result[0];
+            $match['action'] = $result[1];
+        }
+                
         // Return route
-        return $result;
+        return $match;
     }
     
     /**

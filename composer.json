@@ -1,11 +1,10 @@
 {
-    "require": {
-        "aws/aws-sdk-php": "2.*",
-        "phpmailer/phpmailer": "~5.2"
-    },
-    "autoload": {
-        "psr-4": {
-            "jFramework\\": "vendor/jFramework"
-        }
+  "require" : {
+    "phpmailer/phpmailer" : "~5.2"
+  },
+  "autoload" : {
+    "psr-4" : {
+      "jFramework\\" : "vendor/jFramework"
     }
+  }
 }
