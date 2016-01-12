@@ -6,5 +6,4 @@
     "psr-4" : {
       "jFramework\\" : "vendor/jFramework"
     }
-  }
-}
+} 

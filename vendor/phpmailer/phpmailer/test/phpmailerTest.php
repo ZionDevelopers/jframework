@@ -24,40 +24,40 @@ class PHPMailerTest extends PHPUnit_Framework_TestCase
     /**
      * Holds the default phpmailer instance.
      * @private
-     * @type PHPMailer
+     * @var PHPMailer
      */
     public $Mail;
 
     /**
      * Holds the SMTP mail host.
      * @public
-     * @type string
+     * @var string
      */
     public $Host = '';
 
     /**
      * Holds the change log.
      * @private
-     * @type string[]
+     * @var string[]
      */
     public $ChangeLog = array();
 
     /**
      * Holds the note log.
      * @private
-     * @type string[]
+     * @var string[]
      */
     public $NoteLog = array();
 
     /**
      * Default include path
-     * @type string
+     * @var string
      */
     public $INCLUDE_DIR = '../';
 
     /**
      * PIDs of any processes we need to kill
-     * @type array
+     * @var array
      * @access private
      */
     private $pids = array();
@@ -107,7 +107,6 @@ class PHPMailerTest extends PHPUnit_Framework_TestCase
             $this->Mail->Mailer = 'smtp';
         } else {
             $this->Mail->Mailer = 'mail';
-            $this->Mail->Sender = 'unit_test@phpmailer.example.com';
         }
         if (array_key_exists('mail_to', $_REQUEST)) {
             $this->setAddress($_REQUEST['mail_to'], 'Test User', 'to');
@@ -362,7 +361,6 @@ class PHPMailerTest extends PHPUnit_Framework_TestCase
             '"Fred\ Bloggs"@iana.org',
             '"Joe.\Blow"@iana.org',
             '"Abc@def"@iana.org',
-            '"Fred Bloggs"@iana.org',
             'user+mailbox@iana.org',
             'customer/department=shipping@iana.org',
             '$A12345@iana.org',
@@ -608,16 +606,28 @@ class PHPMailerTest extends PHPUnit_Framework_TestCase
             'first.last@[IPv6::a2::b4]',
             'first.last@[IPv6:a1:a2:a3:a4:b1:b2:b3:]',
             'first.last@[IPv6::a2:a3:a4:b1:b2:b3:b4]',
-            'first.last@[IPv6:a1:a2:a3:a4::b1:b2:b3:b4]'
+            'first.last@[IPv6:a1:a2:a3:a4::b1:b2:b3:b4]',
+            "(\r\n RCPT TO:websec02@d.mbsd.jp\r\n DATA \\\nSubject: spam10\\\n\r\n Hello,\r\n this is a spam mail.\\\n.\r\n QUIT\r\n ) a@gmail.com" //This is valid RCC5322, but we don't want to allow it
+        );
+        // IDNs in Unicode and ASCII forms.
+        $unicodeaddresses = array(
+            'first.last@bücher.ch',
+            'first.last@кто.рф',
+            'first.last@phplíst.com',
+        );
+        $asciiaddresses = array(
+            'first.last@xn--bcher-kva.ch',
+            'first.last@xn--j1ail.xn--p1ai',
+            'first.last@xn--phplst-6va.com',
         );
         $goodfails = array();
-        foreach ($validaddresses as $address) {
+        foreach (array_merge($validaddresses, $asciiaddresses) as $address) {
             if (!PHPMailer::validateAddress($address)) {
                 $goodfails[] = $address;
             }
         }
         $badpasses = array();
-        foreach ($invalidaddresses as $address) {
+        foreach (array_merge($invalidaddresses, $unicodeaddresses) as $address) {
             if (PHPMailer::validateAddress($address)) {
                 $badpasses[] = $address;
             }
@@ -761,6 +771,8 @@ class PHPMailerTest extends PHPUnit_Framework_TestCase
 
         //Check that a quoted printable encode and decode results in the same as went in
         $t = file_get_contents(__FILE__); //Use this file as test content
+        //Force line breaks to UNIX-style
+        $t = str_replace(array("\r\n", "\r"), "\n", $t);
         $this->assertEquals(
             $t,
             quoted_printable_decode($this->Mail->encodeQP($t)),
@@ -770,6 +782,13 @@ class PHPMailerTest extends PHPUnit_Framework_TestCase
             $this->Mail->encodeQP($t),
             $this->Mail->encodeQPphp($t),
             'Quoted-Printable BC wrapper failed'
+        );
+        //Force line breaks to Windows-style
+        $t = str_replace("\n", "\r\n", $t);
+        $this->assertEquals(
+            $t,
+            quoted_printable_decode($this->Mail->encodeQP($t)),
+            'Quoted-Printable encoding round-trip failed (Windows line breaks)'
         );
     }
 
@@ -961,6 +980,31 @@ EOT;
 
         //Make sure that trying to attach a nonexistent file fails
         $this->assertFalse($this->Mail->addAttachment(__FILE__ . md5(microtime()), 'nonexistent_file.txt'));
+
+        $this->buildBody();
+        $this->assertTrue($this->Mail->send(), $this->Mail->ErrorInfo);
+    }
+
+    /**
+     * Test embedded image without a name
+     */
+    public function testHTMLStringEmbedNoName()
+    {
+        $this->Mail->Body = 'This is the <strong>HTML</strong> part of the email.';
+        $this->Mail->Subject .= ': HTML + unnamed embedded image';
+        $this->Mail->isHTML(true);
+
+        if (!$this->Mail->addStringEmbeddedImage(
+            file_get_contents('../examples/images/phpmailer_mini.png'),
+            md5('phpmailer_mini.png').'@phpmailer.0',
+            '', //intentionally empty name
+            'base64',
+            'image/png',
+            'inline')
+        ) {
+            $this->assertTrue(false, $this->Mail->ErrorInfo);
+            return;
+        }
 
         $this->buildBody();
         $this->assertTrue($this->Mail->send(), $this->Mail->ErrorInfo);
@@ -1365,6 +1409,90 @@ EOT;
     }
 
     /**
+     * Test RFC822 address splitting.
+     */
+    public function testAddressSplitting()
+    {
+        //Test built-in address parser
+        $this->assertCount(
+            2,
+            $this->Mail->parseAddresses(
+                'Joe User <joe@example.com>, Jill User <jill@example.net>'
+            ),
+            'Failed to recognise address list (IMAP parser)'
+        );
+        //Test simple address parser
+        $this->assertCount(
+            2,
+            $this->Mail->parseAddresses(
+                'Joe User <joe@example.com>, Jill User <jill@example.net>',
+                false
+            ),
+            'Failed to recognise address list'
+        );
+        //Test single address
+        $this->assertNotEmpty(
+            $this->Mail->parseAddresses(
+                'Joe User <joe@example.com>',
+                false
+            ),
+            'Failed to recognise single address'
+        );
+        //Test quoted name IMAP
+        $this->assertNotEmpty(
+            $this->Mail->parseAddresses(
+                'Tim "The Book" O\'Reilly <foo@example.com>'
+            ),
+            'Failed to recognise quoted name (IMAP)'
+        );
+        //Test quoted name
+        $this->assertNotEmpty(
+            $this->Mail->parseAddresses(
+                'Tim "The Book" O\'Reilly <foo@example.com>',
+                false
+            ),
+            'Failed to recognise quoted name'
+        );
+        //Test single address IMAP
+        $this->assertNotEmpty(
+            $this->Mail->parseAddresses(
+                'Joe User <joe@example.com>'
+            ),
+            'Failed to recognise single address (IMAP)'
+        );
+        //Test unnamed address
+        $this->assertNotEmpty(
+            $this->Mail->parseAddresses(
+                'joe@example.com',
+                false
+            ),
+            'Failed to recognise unnamed address'
+        );
+        //Test unnamed address IMAP
+        $this->assertNotEmpty(
+            $this->Mail->parseAddresses(
+                'joe@example.com'
+            ),
+            'Failed to recognise unnamed address (IMAP)'
+        );
+        //Test invalid addresses
+        $this->assertEmpty(
+            $this->Mail->parseAddresses(
+                'Joe User <joe@example.com.>, Jill User <jill.@example.net>'
+            ),
+            'Failed to recognise invalid addresses (IMAP)'
+        );
+        //Test invalid addresses
+        $this->assertEmpty(
+            $this->Mail->parseAddresses(
+                'Joe User <joe@example.com.>, Jill User <jill.@example.net>',
+                false
+            ),
+            'Failed to recognise invalid addresses'
+        );
+    }
+
+    /**
      * Test address escaping.
      */
     public function testAddressEscaping()
@@ -1697,73 +1825,11 @@ EOT;
         $this->assertEquals($q['extension'], 'mp3', 'Windows extension not matched');
         $this->assertEquals($q['filename'], '飛兒樂 團光茫', 'Windows filename not matched');
     }
-
-    /**
-     * Use a fake POP3 server to test POP-before-SMTP auth.
-     * With a known-good login
-     */
-    public function testPopBeforeSmtpGood()
+    public function testBadSMTP()
     {
-        //Start a fake POP server
-        $pid = shell_exec('nohup ./runfakepopserver.sh >/dev/null 2>/dev/null & printf "%u" $!');
-        $this->pids[] = $pid;
-
-        sleep(2);
-        //Test a known-good login
-        $this->assertTrue(
-            POP3::popBeforeSmtp('localhost', 1100, 10, 'user', 'test', $this->Mail->SMTPDebug),
-            'POP before SMTP failed'
-        );
-        //Kill the fake server
-        shell_exec('kill -TERM '.escapeshellarg($pid));
-        sleep(2);
-    }
-
-    /**
-     * Use a fake POP3 server to test POP-before-SMTP auth.
-     * With a known-bad login
-     */
-    public function testPopBeforeSmtpBad()
-    {
-        //Start a fake POP server on a different port
-        //so we don't inadvertently connect to the previous instance
-        $pid = shell_exec('nohup ./runfakepopserver.sh 1101 >/dev/null 2>/dev/null & printf "%u" $!');
-        $this->pids[] = $pid;
-
-        sleep(2);
-        //Test a known-bad login
-        $this->assertFalse(
-            POP3::popBeforeSmtp('localhost', 1101, 10, 'user', 'xxx', $this->Mail->SMTPDebug),
-            'POP before SMTP should have failed'
-        );
-        shell_exec('kill -TERM '.escapeshellarg($pid));
-        sleep(2);
-    }
-
-    /**
-     * Test SMTP host connections.
-     * This test can take a long time, so run it last
-     */
-    public function testSmtpConnect()
-    {
-        $this->Mail->SMTPDebug = 4; //Show connection-level errors
-        $this->assertTrue($this->Mail->smtpConnect(), 'SMTP single connect failed');
-        $this->Mail->smtpClose();
-        $this->Mail->Host = "ssl://localhost:12345;tls://localhost:587;10.10.10.10:54321;localhost:12345;10.10.10.10";
-        $this->assertFalse($this->Mail->smtpConnect(), 'SMTP bad multi-connect succeeded');
-        $this->Mail->smtpClose();
-        $this->Mail->Host = "localhost:12345;10.10.10.10:54321;" . $_REQUEST['mail_host'];
-        $this->assertTrue($this->Mail->smtpConnect(), 'SMTP multi-connect failed');
-        $this->Mail->smtpClose();
-        $this->Mail->Host = " localhost:12345 ; " . $_REQUEST['mail_host'] . ' ';
-        $this->assertTrue($this->Mail->smtpConnect(), 'SMTP hosts with stray spaces failed');
-        $this->Mail->smtpClose();
-        $this->Mail->Host = $_REQUEST['mail_host'];
-        //Need to pick a harmless option so as not cause problems of its own! socket:bind doesn't work with Travis-CI
-        $this->assertTrue(
-            $this->Mail->smtpConnect(array('ssl' => array('verify_depth' => 10))),
-            'SMTP connect with options failed'
-        );
+        $this->Mail->smtpConnect();
+        $smtp = $this->Mail->getSMTPInstance();
+        $this->assertFalse($smtp->mail("somewhere\nbad"), 'Bad SMTP command containing breaks accepted');
     }
 
     /**
@@ -1792,11 +1858,201 @@ EOT;
             array('Content-Type', ' application/json')
         ), $this->Mail->getCustomHeaders());
     }
+
+    /**
+     * Tests setting and retrieving ConfirmReadingTo address, also known as "read receipt" address.
+     */
+    public function testConfirmReadingTo()
+    {
+        $this->Mail->CharSet = 'utf-8';
+        $this->buildBody();
+
+        $this->Mail->ConfirmReadingTo = 'test@example..com';  //Invalid address
+        $this->assertFalse($this->Mail->send(), $this->Mail->ErrorInfo);
+
+        $this->Mail->ConfirmReadingTo = ' test@example.com';  //Extra space to trim
+        $this->assertTrue($this->Mail->send(), $this->Mail->ErrorInfo);
+        $this->assertEquals(
+            'test@example.com',
+            $this->Mail->ConfirmReadingTo,
+            'Unexpected read receipt address');
+
+        $this->Mail->ConfirmReadingTo = 'test@françois.ch';  //Address with IDN
+        if ($this->Mail->idnSupported()) {
+            $this->assertTrue($this->Mail->send(), $this->Mail->ErrorInfo);
+            $this->assertEquals(
+                'test@xn--franois-xxa.ch',
+                $this->Mail->ConfirmReadingTo,
+                'IDN address not converted to punycode');
+        } else {
+            $this->assertFalse($this->Mail->send(), $this->Mail->ErrorInfo);
+        }
+    }
+
+    /**
+     * Tests CharSet and Unicode -> ASCII conversions for addresses with IDN.
+     */
+    public function testConvertEncoding()
+    {
+        if (!$this->Mail->idnSupported()) {
+            $this->markTestSkipped('intl and/or mbstring extensions are not available');
+        }
+
+        $this->Mail->clearAllRecipients();
+        $this->Mail->clearReplyTos();
+
+        // This file is UTF-8 encoded. Create a domain encoded in "iso-8859-1".
+        $domain = '@' . mb_convert_encoding('françois.ch', 'ISO-8859-1', 'UTF-8');
+        $this->Mail->addAddress('test' . $domain);
+        $this->Mail->addCC('test+cc' . $domain);
+        $this->Mail->addBCC('test+bcc' . $domain);
+        $this->Mail->addReplyTo('test+replyto' . $domain);
+
+        // Queued addresses are not returned by get*Addresses() before send() call.
+        $this->assertEmpty($this->Mail->getToAddresses(), 'Bad "to" recipients');
+        $this->assertEmpty($this->Mail->getCcAddresses(), 'Bad "cc" recipients');
+        $this->assertEmpty($this->Mail->getBccAddresses(), 'Bad "bcc" recipients');
+        $this->assertEmpty($this->Mail->getReplyToAddresses(), 'Bad "reply-to" recipients');
+
+        // Clear queued BCC recipient.
+        $this->Mail->clearBCCs();
+
+        $this->buildBody();
+        $this->assertTrue($this->Mail->send(), $this->Mail->ErrorInfo);
+
+        // Addresses with IDN are returned by get*Addresses() after send() call.
+        $domain = $this->Mail->punyencodeAddress($domain);
+        $this->assertEquals(
+            array(array('test' . $domain, '')),
+            $this->Mail->getToAddresses(),
+            'Bad "to" recipients');
+        $this->assertEquals(
+            array(array('test+cc' . $domain, '')),
+            $this->Mail->getCcAddresses(),
+            'Bad "cc" recipients');
+        $this->assertEmpty($this->Mail->getBccAddresses(), 'Bad "bcc" recipients');
+        $this->assertEquals(
+            array('test+replyto' . $domain => array('test+replyto' . $domain, '')),
+            $this->Mail->getReplyToAddresses(),
+            'Bad "reply-to" addresses');
+    }
+
+    /**
+     * Tests removal of duplicate recipients and reply-tos.
+     */
+    public function testDuplicateIDNRemoved()
+    {
+        if (!$this->Mail->idnSupported()) {
+            $this->markTestSkipped('intl and/or mbstring extensions are not available');
+        }
+
+        $this->Mail->clearAllRecipients();
+        $this->Mail->clearReplyTos();
+
+        $this->Mail->CharSet = 'utf-8';
+
+        $this->assertTrue($this->Mail->addAddress('test@françois.ch'));
+        $this->assertFalse($this->Mail->addAddress('test@françois.ch'));
+        $this->assertTrue($this->Mail->addAddress('test@FRANÇOIS.CH'));
+        $this->assertFalse($this->Mail->addAddress('test@FRANÇOIS.CH'));
+        $this->assertTrue($this->Mail->addAddress('test@xn--franois-xxa.ch'));
+        $this->assertFalse($this->Mail->addAddress('test@xn--franois-xxa.ch'));
+        $this->assertFalse($this->Mail->addAddress('test@XN--FRANOIS-XXA.CH'));
+
+        $this->assertTrue($this->Mail->addReplyTo('test+replyto@françois.ch'));
+        $this->assertFalse($this->Mail->addReplyTo('test+replyto@françois.ch'));
+        $this->assertTrue($this->Mail->addReplyTo('test+replyto@FRANÇOIS.CH'));
+        $this->assertFalse($this->Mail->addReplyTo('test+replyto@FRANÇOIS.CH'));
+        $this->assertTrue($this->Mail->addReplyTo('test+replyto@xn--franois-xxa.ch'));
+        $this->assertFalse($this->Mail->addReplyTo('test+replyto@xn--franois-xxa.ch'));
+        $this->assertFalse($this->Mail->addReplyTo('test+replyto@XN--FRANOIS-XXA.CH'));
+
+        $this->buildBody();
+        $this->assertTrue($this->Mail->send(), $this->Mail->ErrorInfo);
+
+        // There should be only one "To" address and one "Reply-To" address.
+        $this->assertEquals(
+            1,
+            count($this->Mail->getToAddresses()),
+            'Bad count of "to" recipients');
+        $this->assertEquals(
+            1,
+            count($this->Mail->getReplyToAddresses()),
+            'Bad count of "reply-to" addresses');
+    }
+
+    /**
+     * Use a fake POP3 server to test POP-before-SMTP auth.
+     * With a known-good login
+     */
+    public function testPopBeforeSmtpGood()
+    {
+        //Start a fake POP server
+        $pid = shell_exec('nohup ./runfakepopserver.sh >/dev/null 2>/dev/null & printf "%u" $!');
+        $this->pids[] = $pid;
+
+        sleep(2);
+        //Test a known-good login
+        $this->assertTrue(
+            POP3::popBeforeSmtp('localhost', 1100, 10, 'user', 'test', $this->Mail->SMTPDebug),
+            'POP before SMTP failed'
+        );
+        //Kill the fake server
+        shell_exec('kill -TERM ' . escapeshellarg($pid));
+        sleep(2);
+    }
+
+    /**
+     * Use a fake POP3 server to test POP-before-SMTP auth.
+     * With a known-bad login
+     */
+    public function testPopBeforeSmtpBad()
+    {
+        //Start a fake POP server on a different port
+        //so we don't inadvertently connect to the previous instance
+        $pid = shell_exec('nohup ./runfakepopserver.sh 1101 >/dev/null 2>/dev/null & printf "%u" $!');
+        $this->pids[] = $pid;
+
+        sleep(2);
+        //Test a known-bad login
+        $this->assertFalse(
+            POP3::popBeforeSmtp('localhost', 1101, 10, 'user', 'xxx', $this->Mail->SMTPDebug),
+            'POP before SMTP should have failed'
+        );
+        shell_exec('kill -TERM ' . escapeshellarg($pid));
+        sleep(2);
+    }
+
+    /**
+     * Test SMTP host connections.
+     * This test can take a long time, so run it last
+     */
+    public function testSmtpConnect()
+    {
+        $this->Mail->SMTPDebug = 4; //Show connection-level errors
+        $this->assertTrue($this->Mail->smtpConnect(), 'SMTP single connect failed');
+        $this->Mail->smtpClose();
+        $this->Mail->Host = "ssl://localhost:12345;tls://localhost:587;10.10.10.10:54321;localhost:12345;10.10.10.10";
+        $this->assertFalse($this->Mail->smtpConnect(), 'SMTP bad multi-connect succeeded');
+        $this->Mail->smtpClose();
+        $this->Mail->Host = "localhost:12345;10.10.10.10:54321;" . $_REQUEST['mail_host'];
+        $this->assertTrue($this->Mail->smtpConnect(), 'SMTP multi-connect failed');
+        $this->Mail->smtpClose();
+        $this->Mail->Host = " localhost:12345 ; " . $_REQUEST['mail_host'] . ' ';
+        $this->assertTrue($this->Mail->smtpConnect(), 'SMTP hosts with stray spaces failed');
+        $this->Mail->smtpClose();
+        $this->Mail->Host = $_REQUEST['mail_host'];
+        //Need to pick a harmless option so as not cause problems of its own! socket:bind doesn't work with Travis-CI
+        $this->assertTrue(
+            $this->Mail->smtpConnect(array('ssl' => array('verify_depth' => 10))),
+            'SMTP connect with options failed'
+        );
+    }
 }
 
 /**
  * This is a sample form for setting appropriate test values through a browser
- * These values can also be set using a file called testbootstrap.php (not in svn) in the same folder as this script
+ * These values can also be set using a file called testbootstrap.php (not in repo) in the same folder as this script
  * which is probably more useful if you run these tests a lot
  * <html>
  * <body>
