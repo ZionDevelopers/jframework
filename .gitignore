@@ -43,3 +43,4 @@ data/cache/
 data/session/
 data/logs/
 php.ini
+config/database.ini
