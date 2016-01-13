@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <package xmlns="http://www.zend.com/server/deployment-descriptor/1.0" version="1.0">
-  <name>jframework</name>
+  <name>jFramework</name>
+  <summary>jFramework, A PHP OOP MVC framework</summary>
+  <description>PHP 5.3+ Compatible&#13; Open-Source Project&#13; Documented using PHPDoc&#13; Object-oriented programming.&#13; MVC Framework&#13; PSR-0, 1, 2 Standards&#13; Database Manager&#13; Image Handler&#13; Exception Handler&#13; Captcha Generator&#13; Cron Job friendly (crontab / Windows Task Scheduler)&#13; Cielo (Brazilian Credit Card Gateway)&#13; BoletoPhp (Brazilian Billet Generator)&#13; PHPMAILER (Send mail using SMTP)&#13; Automatic Session Cleaner (Cronjob)&#13; Tools (tons of useful functions)&#13; Licensed under Apache 2.0 License</description>
     <version>
         <release>2.1.0</release>
         </version>
     <icon>webroot/img/favicon.png</icon>
     <eula>LICENSE.md</eula>
-    <appdir>/</appdir>
-    <docroot>//webroot</docroot>
-    <healthcheck>framework.juliocesar.me</healthcheck>
+    <docroot>webroot</docroot>
+    <scriptsdir>scripts</scriptsdir>
+    <healthcheck>http://framework.juliocesar.me</healthcheck>
+    <dependencies>
+    <required>
+      <php>
+        <min>5.3</min>
+        <max>7</max>
+        </php>
+      <extension>
+        <name>tidy</name>
+        </extension>
+    </required>
+  </dependencies>
     </package>
