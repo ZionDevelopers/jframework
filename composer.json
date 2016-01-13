@@ -1,4 +1,6 @@
 {
+  "name" : "jFramework",
+  "version" : "2.1.0",
   "require" : {
     "phpmailer/phpmailer" : "~5.2"
   },
@@ -6,5 +8,5 @@
     "psr-4" : {
       "jFramework\\" : "vendor/jFramework"
     }
-  } 
+  }
 }

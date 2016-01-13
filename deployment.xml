@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<package xmlns="http://www.zend.com/server/deployment-descriptor/1.0" version="1.0">
+  <name>jframework</name>
+    <version>
+        <release>2.1.0</release>
+        </version>
+    <icon>webroot/img/favicon.png</icon>
+    <eula>LICENSE.md</eula>
+    <appdir>/</appdir>
+    <docroot>//webroot</docroot>
+    <healthcheck>framework.juliocesar.me</healthcheck>
+    </package>
