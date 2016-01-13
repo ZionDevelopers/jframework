@@ -7,4 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'jFramework\\' => array($vendorDir . '/jFramework'),
+    'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
+    'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
 );

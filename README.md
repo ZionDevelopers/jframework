@@ -3,12 +3,12 @@ jFramework
 
 This is a Easy to use, lightweight PHP framework, have built-in:
 
-* PHP **5.3+** Compatible
+* PHP **5.3+** Compatible **(Compatible with PHP7!)**
 * Open-Source Project
-* Documented using PHPDoc 
+* Documented using PHPDoc
 * Object-oriented programming.
 * MVC Framework
-* [PSR-0, 1, 2][] Standards
+* [PSR-1, 2, 3, 4, 6, 7][] Standards
 * Database Manager
 * Image Handler
 * Exception Handler
@@ -21,4 +21,4 @@ This is a Easy to use, lightweight PHP framework, have built-in:
 * Tools (tons of useful functions)
 * Licensed under Apache 2.0 License
 
-[PSR-0, 1, 2]: <http://www.php-fig.org/psr/>
+[PSR-1, 2, 3, 4, 6, 7]: <http://www.php-fig.org/psr/>
