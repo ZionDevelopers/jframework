@@ -7,7 +7,7 @@ namespace \jFramework\Core\EmailTemplateParser;
  * 
  * @author Júlio Oliveira <talk@juliocesar.me>
  * @copyright (c) 2016, Júlio Oliveira
- * @version 1.0
+ * @version 1.1.1
  */
 class EmailTemplateParser
 {
@@ -15,7 +15,7 @@ class EmailTemplateParser
      * Regexes
      */
     CONST VAR_REGEX = '/\$([a-zA-Z\-_.]+)\$/';
-    CONST IF_ENDIF_REGEX = '/@IF\(\$([a-zA-Z\-_.]+)\$ ([=><!]+) [\'"]?([a-zA-Z0-9,.\s]+)[\'"]?\)@([^@END]+)@ENDIF@/';
+    CONST IF_ENDIF_REGEX = '/@IF\(\$([a-zA-Z\-_.]+)\$ ([=><!]+) [\'"]?([a-zA-Z0-9,.\s\-]+)[\'"]?\)@([^@END]+)@ENDIF@/';
     CONST IF_ENDIF_CHECK = '/@IF|@ENDIF@/';
     
     /**
@@ -115,7 +115,7 @@ class EmailTemplateParser
             $value = $matches[3];
             $code = $matches[4];            
             $result = $matches[1];
-            
+
             // Check if IF var exists and if operator is valid
             if (isset($this->vars[$var]) && ($op === '==' || $op === '>=' || $op === '<=' || $op === '>' || $op === '<' || $op === '!=')) {
                 // Traslate variable
@@ -123,12 +123,24 @@ class EmailTemplateParser
                 
                 // Operator equals to
                 if ($op === '=='){
-                    // Check if var is equal to value
-                    if ($var == $value) {
-                        // Parse variables
-                       $result = $this->parseVars($code); 
+                   // Check if value is -1, that equals to empty
+                    if($value == -1) {
+                        // Check if var is empty
+                        if (empty($var)) {
+                            // Parse variables
+                           $result = $this->parseVars($code); 
+                        } else {
+                            $result = '';
+                        }
+
                     } else {
-                        $result = '';
+                        // Check if var is equal to value
+                        if ($var == $value) {
+                            // Parse variables
+                           $result = $this->parseVars($code); 
+                        } else {
+                            $result = '';
+                        }
                     }
                 // Operator greater or equal
                 } elseif ($op === '>='){
@@ -168,12 +180,23 @@ class EmailTemplateParser
                     }
                 // Operator not equal thne
                 } elseif ($op === '!='){
-                    // Check if var is equal to value
-                    if ($var != $value) {
-                        // Parse variables
-                       $result = $this->parseVars($code); 
+                    // Check if value is -1, that equals to !empty
+                    if($value == -1) {
+                        // Check if var not empty
+                        if (!empty($var)) {
+                            // Parse variables
+                           $result = $this->parseVars($code); 
+                        } else {
+                            $result = '';
+                        }
                     } else {
-                        $result = '';
+                        // Check if var is equal to value
+                        if ($var != $value) {
+                            // Parse variables
+                           $result = $this->parseVars($code); 
+                        } else {
+                            $result = '';
+                        }
                     }
                 }
             }
