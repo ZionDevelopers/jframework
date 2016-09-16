@@ -164,7 +164,7 @@ class Captcha
      * @return boolean
      */
     public static function verify($text, $from)
-    {
-        return $_SESSION ['SYSTEM'] ['CAPTCHA'] [$from] == $text;
+    {         
+        return strtoupper($_SESSION ['SYSTEM'] ['CAPTCHA'] [$from]) === strtoupper($text);
     }
 }
