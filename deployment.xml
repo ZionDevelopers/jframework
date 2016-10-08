@@ -6,9 +6,9 @@
     <version>
         <release>2.1.0</release>
         </version>
-    <icon>webroot/img/favicon.png</icon>
+    <icon>public/img/favicon.png</icon>
     <eula>LICENSE.md</eula>
-    <docroot>webroot</docroot>
+    <docroot>public</docroot>
     <scriptsdir>scripts</scriptsdir>
     <healthcheck>http://framework.juliocesar.me</healthcheck>
     <dependencies>
