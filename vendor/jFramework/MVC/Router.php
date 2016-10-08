@@ -237,7 +237,7 @@ class Router
                 $path[0] = $request['path'];
             }
             // Define Controller
-            $route['controller'] = !empty($path [0]) ? $path[0] : 'Index';
+            $route['controller'] = !empty($path [0]) ? $path[0] : 'index';
             // Define Action
             $route['action'] = !empty($path[1]) ? $path[1] : 'index';
         }

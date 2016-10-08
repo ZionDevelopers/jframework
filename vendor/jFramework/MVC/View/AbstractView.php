@@ -43,8 +43,8 @@ abstract class AbstractView
         $request = Registry::get('Request');
         // Get View folder
         $this->file = Registry::get('FOLDER.view');
-        $this->file .= '/' . $request['controller'];
-        $this->file .= '/' . $request['action'] . $this->fileExt;
+        $this->file .= '/' . strtolower($request['controller']);
+        $this->file .= '/' . strtolower($request['action']) . $this->fileExt;
         $this->viewRequest = '/' . $request['controller'] . '/' . $request['action'] . $this->fileExt;
         $this->action = $request['controller'] . '/' . $request['action'];
         $this->requestURL = $request['route'];
@@ -171,6 +171,9 @@ abstract class AbstractView
             
             // Stop the buffering and clean
             ob_end_clean();
+        } else {
+            // Throw 404 not found view
+            throw new \Exception(sprintf('View: %s was not found.', $file), 404);
         }
         
         // Result buff
