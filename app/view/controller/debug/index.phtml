@@ -11,7 +11,11 @@
 use \jFramework\Core\Tools;
 ?>
 Let's Debug!
-<ul>
+<iframe src="debug/pi" width="100%" height="500" border="0"></iframe>
+<ul style="overflow: auto; width: 99%">
+    	<li><b>Request</b>
+		<?php Tools::debug($this->request); ?>
+	</li>
 	<li><b>Session Debug</b>
 		<?php Tools::debug($_SESSION); ?>
 	</li>
@@ -20,6 +24,18 @@ Let's Debug!
 	</li>
 	<li><b>Server</b>
 		<?php Tools::debug($_SERVER); ?>
+	</li>
+        <li><b>Get</b>
+		<?php Tools::debug($this->get); ?>
+	</li>
+        <li><b>Post</b>
+		<?php Tools::debug($this->post); ?>
+	</li>
+        <li><b>Data</b>
+		<?php Tools::debug($this->data); ?>
+	</li>
+        <li><b>Cookies (Hum hm)</b>
+		<?php Tools::debug($_COOKIE); ?>
 	</li>
 	<li><b>Cookies (Hum hm)</b>
 		<?php Tools::debug($_COOKIE); ?>

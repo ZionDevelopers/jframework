@@ -206,6 +206,10 @@ class Router
     {
         // Get URI
         $uri = $this->core->server('REQUEST_URI');
+        
+        // Define empty vars
+        $controller = $action = 'index';
+        $data = [];
 
         // Check if PHP is running on WebServer
         if (PHP_SAPI == 'cli') {
@@ -236,10 +240,27 @@ class Router
                 $path = array();
                 $path[0] = $request['path'];
             }
+                        
+            // Extract controller
+            $controller = array_shift($path);
+            // Extract action
+            $action = array_shift($path);
+            
+            // Run data extractor
+            for ($p = 0; $p < count($path); $p++) {                
+                // Check if p is multiple of 2
+                if ($p%2 === 1) {
+                    // Extract path /name/joe tags from get
+                    $data[$path[$p-1]] = $path[$p];
+                }                 
+            }
+            
             // Define Controller
-            $route['controller'] = !empty($path [0]) ? $path[0] : 'index';
+            $route['controller'] = !empty($controller) ? $controller : 'index';
             // Define Action
-            $route['action'] = !empty($path[1]) ? $path[1] : 'index';
+            $route['action'] = !empty($action) ? $action : 'index';
+            // Define data
+            $route['data'] = $data;
         }
         
         return $route;

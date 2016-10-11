@@ -30,8 +30,30 @@ class DebugController extends AbstractActionController
         // Set Page title
         Registry::set('APP.title', 'Home :: '.Registry::get('APP.title'));
         // Set cache
-        $view->cache = $this->db->cacheGet();               
+        $view->cache = $this->db->cacheGet();   
+        $view->get = $get;
+        $view->post = $post;
+        $view->data = $data;
+        $view->request = Registry::get('Request');        
         
         return $view->render();
     } 
+    
+    public function piAction($get, $post, $data)
+    {
+        // Define Visitor IP
+        $visitorIp = $this->core->server('REMOTE_ADDR');
+        // Define host IP
+        $hostIp = gethostbyname('dev.juliocesar.me');
+        
+        // Check if REMOTE api is dyndns
+        if ($hostIp === $visitorIp) {
+            // Run PHPINFO
+            phpinfo();
+        } else {
+            // Dump unauthorized warning
+            echo "You're not allowed to see this phpinfo().<br />".
+                 "Your ip: ". $visitorIp . ",  Expected ip: " . $hostIp;
+        }
+    }
 }
