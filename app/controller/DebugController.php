@@ -28,7 +28,8 @@ class DebugController extends AbstractActionController
         $view = new View();
         
         // Set Page title
-        Registry::set('APP.title', 'Home :: '.Registry::get('APP.title'));
+        Registry::set('APP.title', 'Home :: ' . Registry::get('APP.title'));
+        
         // Set cache
         $view->cache = $this->db->cacheGet();   
         $view->get = $get;
@@ -39,12 +40,20 @@ class DebugController extends AbstractActionController
         return $view->render();
     } 
     
+    /**
+     * PHPInfo() Action
+     * @param array $get
+     * @param array $post
+     * @param array $data
+     */
     public function piAction($get, $post, $data)
     {
+        // Define DynDNS
+        $dynDNS = Registry::get('APP.dyndns');        
         // Define Visitor IP
         $visitorIp = $this->core->server('REMOTE_ADDR');
         // Define host IP
-        $hostIp = gethostbyname('dev.juliocesar.me');
+        $hostIp = gethostbyname($dynDNS);
         
         // Check if REMOTE api is dyndns
         if ($hostIp === $visitorIp) {
@@ -52,8 +61,9 @@ class DebugController extends AbstractActionController
             phpinfo();
         } else {
             // Dump unauthorized warning
-            echo "You're not allowed to see this phpinfo().<br />".
-                 "Your ip: ". $visitorIp . ",  Expected ip: " . $hostIp;
+            echo "You're not allowed to see this phpinfo(). <br />" ,
+                 "Authorization by IP strictly to host <b>", $dynDNS, '</b><br />',
+                 "Your ip <b>", $visitorIp, "</b>,  Expected ip <b>", $hostIp, '</b>';
         }
     }
 }
