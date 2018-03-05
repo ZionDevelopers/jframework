@@ -21,7 +21,7 @@ use jFramework\Core\Tools;
  * Updated: 2014-06-08 07:10 PM (GMT -03:00)
  * @version 0.0.3
  * @package jFramework
- * @copyright Copyright (c) 2010-2016, Júlio César de Oliveira
+ * @copyright Copyright (c) 2010-2018, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
