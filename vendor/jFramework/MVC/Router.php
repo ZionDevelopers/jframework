@@ -16,10 +16,10 @@ use jFramework\MVC\View\XHTML;
 
 /**
  * jFramework Router
- * 
+ *
  * Created: 2014-06-08 08:53 PM (GMT -03:00)
  * Updated: 2015-08-10 10:15 AM (GMT -03:00)
- * @version 0.0.6 
+ * @version 0.0.6
  * @package jFramework
  * @subpackage MVC
  * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
@@ -43,114 +43,120 @@ class Router
             $pattern = '/^' . str_replace('/', '\/', $pattern) . '$/';
             $this->regexRoutes[$pattern] = explode('_', $controllerAction);
         }
-        
+
         // Loop by redir routes
         $this->redirRoutes = Registry::get('REDIR_ROUTES');
     }
-    
+
     /**
      * Start Bootstrap
      */
     public function bootstrap()
     {
         // Define base path
-        $this->basepath = str_replace('\\', '/', dirname($this->core->server('SCRIPT_NAME')));       
-         
+        $this->basepath = str_replace('\\', '/', dirname($this->core->server('SCRIPT_NAME')));
+
         /// Detect request
-        $request = $this->detectRequest();   
-                        
+        $request = $this->detectRequest();
+
         // Define Request data
         Registry::set('Request', $request);
-        
+
         // Handle the Request
         $view = $this->handleRequest($request);
-        
+
         // Format XHTML
         return XHTML::format($view, $this->basepath);
     }
-    
+
     /**
      * Handle the Request
      * @param array $request
+     * @global \mysqli $dbUniqueLink
      */
     protected function handleRequest($request)
     {
+        global $dbUniqueLink;
+
         // Default view contents
         $contents = '';
-        
+
         // Controller Class
         $class = ucfirst($request['controller']) . 'Controller';
         // Action Mathod
         $method = strtolower($request['action']) . 'Action';
-        
+
         // Get controllers folder
         $file = Registry::get('FOLDER.controller');
         // Set Class
-        $file .= '/' . $class . '.php';       
+        $file .= '/' . $class . '.php';
 
         // Check if file is Readable
         if (is_readable($file)) {
             // Require controller
             require $file;
-            
+
             // Define class with namespace
             $class = 'App\Controller\\'.$class;
 
             // Check if Controller was found on the declared classes
-            if (in_array($class, get_declared_classes())) {  
+            if (in_array($class, get_declared_classes())) {
                 // Spawn new Controller
-                $controller = new $class;               
-                
+                $controller = new $class;
+
                 // Pass Core OBJ
                 $controller->core = $this->core;
-                $controller->db = $this->core->db();  
+                // Pass by Reference the db connection to a global variable
+                $dbUniqueLink = $this->core->db();
+                $controller->db =& $dbUniqueLink;
                 $controller->basepath = $this->basepath;
-                 
+
+
                 // Check if Action exists
                 if (method_exists($controller, $method)) {
                     // Call Action
                     $contents = call_user_func_array(
                         array($controller, $method),
                         array($this->core->get(), $this->core->post(), $request ['data'])
-                    );                   
+                    );
                 } else {
                     // Run 404 Error Page
                     $contents = $controller->notFoundAction();
                 }
             }
         }
-        
+
         // Check if controller was successfully spawned
-        if (!isset($controller)) {     
+        if (!isset($controller)) {
             // Spawn new Error Controller
             $controller = new \jFramework\MVC\Controller\ErrorController();
-            
+
             // Pass Core OBJ
             $controller->core = $this->core;
-            
+
             // Run NotFound Action
-            $contents = $controller->notFoundAction($request);            
+            $contents = $controller->notFoundAction($request);
         }
-                        
+
         // Check if database driver was created
         if (!is_null($this->core->db)) {
             // Close connection
             $this->core->db->close();
         }
-        
+
         // Check if controller was successfully spawned and PHP is running on a WebServer
         if (is_object($controller) && PHP_SAPI != 'cli') {
             // Check for layout function
             if(method_exists($controller, 'layout') && !empty($contents)) {
                 // Render layout
-                return $controller->layout($contents);            
+                return $controller->layout($contents);
             }
         } else {
             // Return view contents when php is running from Console
             return $contents;
         }
     }
-    
+
     /**
      * Search for a match in the custom routes
      * @param string $route
@@ -162,19 +168,19 @@ class Router
         // Format failsafe route
         $match = array(
             'route' => $route,
-            'controller' => null, 
-            'action' => null, 
+            'controller' => null,
+            'action' => null,
             'method' => $method,
             'data' => array()
         );
-        
+
         // Loop by regex routes
-        foreach ($this->regexRoutes as $pattern => $_) {       
+        foreach ($this->regexRoutes as $pattern => $_) {
             // Check if is there a match
             if (preg_match($pattern, $route, $params) === 1) {
                 // Remove useless key
                 array_shift($params);
-                  
+
                 // Format route array
                 $match['route'] = $route;
                 $match['controller'] = $params[0];
@@ -187,17 +193,17 @@ class Router
         if (isset($this->redirRoutes[$route])) {
             // Split Controller Separator
             $result = explode(':', $this->redirRoutes[$route]);
-        
+
             // Format route array
             $match['route'] = $route;
             $match['controller'] = $result[0];
             $match['action'] = $result[1];
         }
-                
+
         // Return route
         return $match;
     }
-    
+
     /**
      * Detect the current Request
      * @return array
@@ -206,7 +212,7 @@ class Router
     {
         // Get URI
         $uri = $this->core->server('REQUEST_URI');
-        
+
         // Define empty vars
         $controller = $action = 'index';
         $data = [];
@@ -216,14 +222,14 @@ class Router
             // Format a Request URI for Console
             $uri = isset ($this->core->args[1]) ? '/' . $this->core->args[1] : '/';
         }
-        
+
         // Remove first slash
         $uri = preg_replace('/^\//', '', $uri);
-        
+
         // Set default request path
         $request = array();
         $request['path'] = '';
-        
+
         // Parse URI Request
         $request = array_merge($request, parse_url($uri));
 
@@ -240,21 +246,21 @@ class Router
                 $path = array();
                 $path[0] = $request['path'];
             }
-                        
+
             // Extract controller
             $controller = array_shift($path);
             // Extract action
             $action = array_shift($path);
-            
+
             // Run data extractor
-            for ($p = 0; $p < count($path); $p++) {                
+            for ($p = 0; $p < count($path); $p++) {
                 // Check if p is multiple of 2
                 if ($p%2 === 1) {
                     // Extract path /name/joe tags from get
                     $data[$path[$p-1]] = $path[$p];
-                }                 
+                }
             }
-            
+
             // Define Controller
             $route['controller'] = !empty($controller) ? $controller : 'index';
             // Define Action
@@ -262,7 +268,7 @@ class Router
             // Define data
             $route['data'] = $data;
         }
-        
+
         return $route;
     }
 }

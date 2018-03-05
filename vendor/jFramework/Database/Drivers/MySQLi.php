@@ -16,10 +16,10 @@ use jFramework\Database\AbstractDBManager;
 
 /**
  * Class to manage MySQL database data
- * 
+ *
  * Created: 2010-07-26 07:58 PM
  * Updated: 2014-06-03 10:04 AM
- * @version 2.3.0 
+ * @version 2.3.0
  * @package jFramework
  * @subpackage Core
  * @copyright Copyright (c) 2010-2018, Júlio César de Oliveira
@@ -27,8 +27,8 @@ use jFramework\Database\AbstractDBManager;
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
 class MySQLi extends AbstractDBManager
-{    
-    
+{
+
     /**
      * Spawn mysqli driver
      */
@@ -49,10 +49,7 @@ class MySQLi extends AbstractDBManager
         if (!$this->testCon()) {
             // Throw Connection error
             $this->error($this->driverLink->connect_error);
-        }        
-
-        // Cache File
-        $this->cacheFile = Registry::get('FOLDER.cache') . '/' . $this->settings ['host'] . '@' . $this->settings ['base'] . '.dat';
+        }
 
         // Set Connection Charset
         $this->driverLink->set_charset($this->settings ['charset']);
@@ -63,7 +60,7 @@ class MySQLi extends AbstractDBManager
 
     /**
      * To test the connection
-     *     
+     *
      * @return boolean
      */
     public function testCon()
@@ -73,8 +70,8 @@ class MySQLi extends AbstractDBManager
 
     /**
      * To list all the table colums
-     *     
-     * @param string $table        	
+     *
+     * @param string $table
      */
     public function cache($table)
     {
@@ -87,8 +84,6 @@ class MySQLi extends AbstractDBManager
                 }
             }
         }
-
-        file_put_contents($this->cacheFile, serialize($this->cacheTable));
     }
 
     /**
@@ -100,12 +95,12 @@ class MySQLi extends AbstractDBManager
     public function query($sql, $autoFetch = true)
     {
         $result = false;
-        
+
         // Test Connection
         if ($this->testCon()) {
             // Execute query
             $result = $this->driverLink->query($sql);
-            
+
             // If no result
             if (!$result) {
                 $this->error('Fail commiting: ' . $sql);
@@ -130,11 +125,11 @@ class MySQLi extends AbstractDBManager
 
     /**
      * Fetch query result
-     *     
-     * @param resource $res        	
+     *
+     * @param \mysqli_result $res
      * @return array
      */
-    public function fetch($res)
+    public function fetch(\mysqli_result $res)
     {
         $result = array();
         $data = null;
@@ -144,9 +139,7 @@ class MySQLi extends AbstractDBManager
             // Check if is a resource
             if (is_object($res)) {
                 // Rescue fetch data
-                while ($data = $res->fetch_assoc()) {
-                    $result [] = $data;
-                }
+								$result = $res->fetch_all(MYSQLI_ASSOC);              
 
                 // Free Result to free some bytes on memory
                 $res->free();
@@ -162,8 +155,8 @@ class MySQLi extends AbstractDBManager
 
     /**
      * Escape string for query
-     *     
-     * @param string $string        	
+     *
+     * @param string $string
      * @return string
      */
     public function escape($string)
@@ -180,7 +173,7 @@ class MySQLi extends AbstractDBManager
         }
 
         $string = trim($string);
-        
+
 
         // Fix New Lines
         $string = $this->normalizeNewLines($string);
@@ -191,14 +184,14 @@ class MySQLi extends AbstractDBManager
 
     /**
      * Find data in database
-     *     
-     * @param string $table        	
-     * @param array $fields        	
-     * @param array $where        	
-     * @param array $order        	
-     * @param array $limit        	
-     * @param array $group        	
-     * @param string $autoFetch        	
+     *
+     * @param string $table
+     * @param array $fields
+     * @param array $where
+     * @param array $order
+     * @param array $limit
+     * @param array $group
+     * @param string $autoFetch
      * @return array|boolean|mysqli_result
      */
     public function find($table, array $fields = array(), array $where = array(), array $order = array(), array $limit = array(), array $group = array(), $autoFetch = true)
@@ -210,13 +203,13 @@ class MySQLi extends AbstractDBManager
 
         // Generete Where SQL
         $this->where($table, $where, $sql);
-        
+
         // Generate Group SQL
         $this->group($table, $group, $sql);
-        
+
         // Generate Order SQL
         $this->order($table, $order, $sql);
-        
+
         // Generate Limit SQL
         $this->limit($limit, $sql);
 
@@ -225,9 +218,9 @@ class MySQLi extends AbstractDBManager
 
     /**
      * Insert data in database
-     *     
-     * @param array $data        	
-     * @param string $table        	
+     *
+     * @param array $data
+     * @param string $table
      * @return boolean|mysqli_result
      */
     public function insert(array $data, $table)
@@ -275,10 +268,10 @@ class MySQLi extends AbstractDBManager
 
     /**
      * Insert data in database
-     *     
-     * @param array $data        	
-     * @param string $table        	
-     * @param array $where        	
+     *
+     * @param array $data
+     * @param string $table
+     * @param array $where
      * @return boolean|mysqli_result
      */
     public function update(array $data, $table, array $where)
@@ -316,10 +309,10 @@ class MySQLi extends AbstractDBManager
 
     /**
      * To save data into database
-     *     
-     * @param array $data        	
-     * @param string $table        	
-     * @param array $where        	
+     *
+     * @param array $data
+     * @param string $table
+     * @param array $where
      * @return boolean|mysqli_result
      */
     public function save(array $data, $table, array $where = array())
@@ -338,9 +331,9 @@ class MySQLi extends AbstractDBManager
 
     /**
      * To delete records from table
-     *     
-     * @param string $table        	
-     * @param array $where        	
+     *
+     * @param string $table
+     * @param array $where
      * @return boolean|mysqli_result
      */
     public function delete($table, array $where = array())
@@ -358,9 +351,9 @@ class MySQLi extends AbstractDBManager
 
     /**
      * To lock tables
-     *     
-     * @param string $table        	
-     * @param string $mod        	
+     *
+     * @param string $table
+     * @param string $mod
      * @return boolean|mysqli_result
      */
     public function lockTable($table, $mod = "WRITE")
@@ -371,7 +364,7 @@ class MySQLi extends AbstractDBManager
     /**
      * To unlock locked tables to this connection
      *
-     
+
      * @return boolean|mysqli_result
      */
     public function unlockTables()
@@ -381,8 +374,8 @@ class MySQLi extends AbstractDBManager
 
     /**
      * Return number of rows
-     *     
-     * @param resource $res        	
+     *
+     * @param resource $res
      * @return number
      */
     public function numRows($res)
@@ -399,7 +392,7 @@ class MySQLi extends AbstractDBManager
 
     /**
      * Make all pagination process
-     *      
+     *
      * @param string $table
      * @param array $where
      * @param number $nRecords
@@ -419,7 +412,7 @@ class MySQLi extends AbstractDBManager
 
     /**
      * To Count all records from one table
-     *      
+     *
      * @param string $table
      * @param array $where
      * @return integer
@@ -432,11 +425,11 @@ class MySQLi extends AbstractDBManager
 
     /**
      * Generete Where SQL
-     *     
-     * @param $table string        	
-     * @param $where array        	
-     * @param $sql string        	
-     * @param $recursive boolean        	
+     *
+     * @param $table string
+     * @param $where array
+     * @param $sql string
+     * @param $recursive boolean
      */
     public function where($table, array $where, &$sql, $recursive = false)
     {
@@ -479,7 +472,7 @@ class MySQLi extends AbstractDBManager
                     // FUNCTION SEARCH
                     if (preg_match('/(sha1|md5)/', $key, $matches)) {
                         $func = $matches [0];
-                        if (!empty($func)) { 
+                        if (!empty($func)) {
                             Tools::debug($func);
                             exit();
                         }
@@ -610,9 +603,9 @@ class MySQLi extends AbstractDBManager
 
     /**
      * Generate LIMIT SQL
-     *     
-     * @param $limit array        	
-     * @param $sql string        	
+     *
+     * @param $limit array
+     * @param $sql string
      */
     public function limit(array $limit, &$sql)
     {
@@ -623,10 +616,10 @@ class MySQLi extends AbstractDBManager
 
     /**
      * Generete Order SQL
-     *     
-     * @param $table string        	
-     * @param $order array        	
-     * @param $sql string        	
+     *
+     * @param $table string
+     * @param $order array
+     * @param $sql string
      */
     public function order($table, array $order, &$sql)
     {
@@ -653,10 +646,10 @@ class MySQLi extends AbstractDBManager
 
     /**
      * Generete Group By SQL
-     *     
-     * @param $table string        	
-     * @param $order array        	
-     * @param $sql string        	
+     *
+     * @param $table string
+     * @param $order array
+     * @param $sql string
      */
     public function group($table, array $group, &$sql)
     {
@@ -679,8 +672,8 @@ class MySQLi extends AbstractDBManager
 
     /**
      * Show Pagination
-     *     
-     * @param $tipo string        	
+     *
+     * @param $tipo string
      */
     public function showPagination($type = "select", $ajaxFunc = "")
     {
@@ -708,7 +701,7 @@ class MySQLi extends AbstractDBManager
                 $this->tRecords ++;
             }
         }
-        
+
         if ($type == "select") {
             $result = "<br><br><br><center>";
             $result .= (($this->currentPage > 1) ? "&nbsp;<a href=\"" . str_replace("{PAG}", $prev, $url) . "\">&lt;&lt; Anterior</a>&nbsp;" : "<label disabled=\"disabled\">&lt;&lt; Anterior</label>");
@@ -772,7 +765,7 @@ class MySQLi extends AbstractDBManager
 
         return $result;
     }
-    
+
     /**
      * Close Connection
      * @return boolean
@@ -784,7 +777,7 @@ class MySQLi extends AbstractDBManager
 
     /**
      * To Realize reConnect
-     *      
+     *
      */
     public function reConnect()
     {
@@ -794,7 +787,7 @@ class MySQLi extends AbstractDBManager
 
     /**
      * To get Last ID
-     *      
+     *
      */
     public function getLastID()
     {
