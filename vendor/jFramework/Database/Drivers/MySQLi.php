@@ -74,6 +74,20 @@ class MySQLi extends AbstractDBManager
      */
     public function cache($table)
     {
+        // Write and close general session
+        session_write_close();
+        // Start Session on for cache
+        $previousSession = session_name('jFramework-cache');
+        session_start();
+        // Check if there is a cacheTable on session yet
+        if (!isset($_SESSION['cacheTable'])) {
+            // Copy cacheTable
+            $_SESSION['cacheTable'] =& $this->cacheTable;
+        } else {
+            // Copy cache table
+            $this->cacheTable =& $_SESSION['cacheTable'];
+        }
+        
         // Check if has table fields cache
         if (!isset($this->cacheTable [$table])) {
             $result = $this->query("SHOW COLUMNS FROM " . $table);
@@ -83,6 +97,12 @@ class MySQLi extends AbstractDBManager
                 }
             }
         }
+        
+        // Write and close cache session
+        session_write_close();
+        // Start Session on for previous session
+        session_name($previousSession);
+        session_start();
     }
 
     /**

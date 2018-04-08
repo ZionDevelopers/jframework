@@ -199,7 +199,8 @@ class Core
         // Check if PHP is not running on Console
         if (PHP_SAPI != 'cli') {
             // Start Session on Dispatcher
-            session_start ();
+            session_name('jFramework-general');
+            session_start();
 
             // Signature
             header('X-Powered-By: jFramework ' . Registry::get('jFramework.version'), true);
