@@ -109,6 +109,7 @@ class Router
                 $controller->core = $this->core;
                 // Pass by Reference the db connection to a global variable
                 $dbUniqueLink =& $this->core->db;
+                $GLOBALS['dbUniqueLink'] = $dbUniqueLink;
                 $controller->db =& $dbUniqueLink;
                 $controller->basepath = $this->basepath;
 

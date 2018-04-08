@@ -11,7 +11,6 @@
 namespace jFramework\Database\Drivers;
 
 use jFramework\Core\Tools;
-use jFramework\Core\Registry;
 use jFramework\Database\AbstractDBManager;
 
 /**

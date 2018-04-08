@@ -25,7 +25,7 @@ use jFramework\MVC\Model\AbstractModel;
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
-class Test implements AbstractModel
+class Test extends AbstractModel
 {
     protected $table = 'test';
 }

@@ -15,7 +15,6 @@ use jFramework\MVC\View;
 use jFramework\MVC\Controller\AbstractActionController;
 use jFramework\Core\Registry;
 use jFramework\Core\Tools;
-use jFramework\MVC\jFramework\MVC\Model\AbstractModel;
 use App\Model\Test;
 
 class DBController extends AbstractActionController
@@ -43,12 +42,12 @@ class DBController extends AbstractActionController
         // Set Page title
         Registry::set('APP.title', 'Database Example :: '.Registry::get('APP.title'));
 
-				// Create Test Object
-				$table = new Test();
+        // Create Test Object
+        $table = new Test($this->db);
 
         // Save Array to Database
         $table->set(['name' => 'Mr. #' . mt_rand(1, 99999)]);
-				$table->save();
+        $table->save();
 
         // List saved test records
         $view->dbResult = $table->get();

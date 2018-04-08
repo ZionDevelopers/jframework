@@ -35,8 +35,7 @@ abstract class AbstractModel
      */
     public function __construct()
     {
-        global $dbUniqueLink;
-        $this->db =& $dbUniqueLink;
+        $this->db =& $GLOBALS['dbUniqueLink'];
     }
 
     /**
@@ -57,10 +56,10 @@ abstract class AbstractModel
         $this->where = array_merge($where, $this->where);
     }
 
-		/**
-		 * Save data in database
-		 * @return array|boolean|\mysqli_result
-		 */
+    /**
+     * Save data in database
+     * @return array|boolean|\mysqli_result
+     */
     public function save()
     {
         // Check if where was set
@@ -68,22 +67,22 @@ abstract class AbstractModel
             // Insert data array into table
             return $this->db->insert($this->data, $this->table);
         } else {
-					return $this->db->update($this->data, $this->table, $this->where);
-				}
+            return $this->db->update($this->data, $this->table, $this->where);
+        }
     }
 
     /**
-		 * Get data from table
-		 * @param array $select
-		 * @param array $where
-		 * @param array $order
-		 * @param array $limit
-		 * @param array $group
-		 * @param boolean $authFetch
-		 * @return array|boolean|\mysqli_result 
-		 */
-		public function get(array $select = [], array $where = [], array $order = [], array $limit = [], array $group = [], $autoFetch = true)
-		{
+     * Get data from table
+     * @param array $select
+     * @param array $where
+     * @param array $order
+     * @param array $limit
+     * @param array $group
+     * @param boolean $authFetch
+     * @return array|boolean|\mysqli_result 
+     */
+    public function get(array $select = [], array $where = [], array $order = [], array $limit = [], array $group = [], $autoFetch = true)
+    {
         return $this->db->find($this->table, $select, $where, $order, $limit, $group, $autoFetch);
-		}
+    }
 }

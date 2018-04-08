@@ -22,9 +22,6 @@ if (PHP_SAPI != 'cli') {
 // Define root directory
 $root = dirname(__DIR__);
 
-// Database shared link
-$dbUniqueLink = null;
-
 // Require composer autoloader
 require $root . '/vendor/autoload.php';
 
