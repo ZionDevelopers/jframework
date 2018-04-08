@@ -72,12 +72,9 @@ class Router
     /**
      * Handle the Request
      * @param array $request
-     * @global \mysqli $dbUniqueLink
      */
     protected function handleRequest($request)
     {
-        global $dbUniqueLink;
-
         // Default view contents
         $contents = '';
         
@@ -108,9 +105,8 @@ class Router
                 // Pass Core OBJ
                 $controller->core = $this->core;
                 // Pass by Reference the db connection to a global variable
-                $dbUniqueLink =& $this->core->db;
-                $GLOBALS['dbUniqueLink'] = $dbUniqueLink;
-                $controller->db =& $dbUniqueLink;
+                $GLOBALS['dbUniqueLink'] =& $this->core->db;
+                $controller->db =& $GLOBALS['dbUniqueLink'];
                 $controller->basepath = $this->basepath;
 
                 // Check if Action exists

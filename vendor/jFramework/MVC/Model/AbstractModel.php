@@ -31,7 +31,6 @@ abstract class AbstractModel
 
     /**
      * Initialize
-     * @global \mysqli $dbUniqueLink;
      */
     public function __construct()
     {

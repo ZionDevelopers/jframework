@@ -77,8 +77,9 @@ class MySQLi extends AbstractDBManager
         // Write and close general session
         session_write_close();
         // Start Session on for cache
-        $previousSession = session_name('jFramework-cache');
+        $previousSession = session_id('jFramework-cache');
         session_start();
+        
         // Check if there is a cacheTable on session yet
         if (!isset($_SESSION['cacheTable'])) {
             // Copy cacheTable
@@ -101,7 +102,7 @@ class MySQLi extends AbstractDBManager
         // Write and close cache session
         session_write_close();
         // Start Session on for previous session
-        session_name($previousSession);
+        session_id($previousSession);
         session_start();
     }
 
