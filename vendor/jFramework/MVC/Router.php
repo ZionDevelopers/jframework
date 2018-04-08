@@ -202,7 +202,7 @@ class Router
 
         // Return route
         return $match;
-    }
+    } 
 
     /**
      * Detect the current Request

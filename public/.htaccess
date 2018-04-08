@@ -2,7 +2,7 @@
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^([A-Za-z0-9/_\-.]+)$ /index.php [QSA,L]
+    RewriteRule ^([A-Za-z0-9/_\-.]+)$ index.php [QSA,L]
 </IfModule>
 
 # === NGINX Configuration ===
@@ -11,6 +11,6 @@
 #        try_files $uri $uri/ =404;
 #
 #        if (!-e $request_filename){
-#                rewrite ^([A-Za-z0-9/_\-.]+)$ /index.php last;
+#                rewrite ^([A-Za-z0-9/_\-.]+)$ index.php last;
 #        }
 #}
