@@ -54,9 +54,9 @@ class Router
     public function bootstrap()
     {
         // Define base path
-        $this->basepath = str_replace('\\', '/', dirname($this->core->server('SCRIPT_NAME')));
-
-        /// Detect request
+        $this->basepath = str_replace('\\', '/', dirname($this->core->server('SCRIPT_NAME'))) . DIRECTORY_SEPARATOR;
+        
+        // Detect request
         $request = $this->detectRequest();
 
         // Define Request data
@@ -80,7 +80,7 @@ class Router
 
         // Default view contents
         $contents = '';
-
+        
         // Controller Class
         $class = ucfirst($request['controller']) . 'Controller';
         // Action Mathod
@@ -103,14 +103,14 @@ class Router
             if (in_array($class, get_declared_classes())) {
                 // Spawn new Controller
                 $controller = new $class;
-
+                // Initialize database connection
+                $this->core->db();
                 // Pass Core OBJ
                 $controller->core = $this->core;
                 // Pass by Reference the db connection to a global variable
-                $dbUniqueLink = $this->core->db();
+                $dbUniqueLink =& $this->core->db;
                 $controller->db =& $dbUniqueLink;
                 $controller->basepath = $this->basepath;
-
 
                 // Check if Action exists
                 if (method_exists($controller, $method)) {
@@ -212,7 +212,13 @@ class Router
     {
         // Get URI
         $uri = $this->core->server('REQUEST_URI');
-
+        
+        // Check if basepath is not DOCUMENT ROOT
+        if ($_SERVER['DOCUMENT_ROOT'] !== $this->basepath) {
+            // Remove the basepath from the URL
+            $uri = str_replace($this->basepath, '', $uri);
+        }
+        
         // Define empty vars
         $controller = $action = 'index';
         $data = [];
