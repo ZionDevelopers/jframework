@@ -43,14 +43,14 @@ class DBController extends AbstractActionController
         Registry::set('APP.title', 'Database Example :: '.Registry::get('APP.title'));
 
         // Create Test Object
-        $table = new Test($this->db);
+        $test = new Test();
 
         // Save Array to Database
-        $table->set(['name' => 'Mr. #' . mt_rand(1, 99999)]);
-        $table->save();
+        $test->set(['name' => 'Mr. #' . mt_rand(1, 99999)]);
+        $test->save();
 
         // List saved test records
-        $view->dbResult = $table->get();
+        $view->dbResult = $test->get();
 
         return $view->render();
     }
