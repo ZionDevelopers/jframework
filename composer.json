@@ -1,6 +1,6 @@
 {
   "name" : "jFramework",
-  "version" : "2.1.0",
+  "version" : "2.2.0",
   "require" : {
     "phpmailer/phpmailer": ">=6.0",
     "psr/log" : ">=1.0.0",
