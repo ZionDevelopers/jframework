@@ -14,8 +14,6 @@ This is a Easy to use, lightweight PHP framework, have built-in:
 * Exception Handler
 * Captcha Generator
 * Cron Job friendly _(crontab / Windows Task Scheduler)_
-* Cielo _(Brazilian Credit Card Gateway)_
-* BoletoPhp (Brazilian Billet Generator)
 * PHPMAILER (Send mail using SMTP)
 * Automatic Session Cleaner (Cronjob)
 * Tools (tons of useful functions)
