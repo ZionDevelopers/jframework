@@ -20,18 +20,13 @@ This is a Easy to use, lightweight PHP framework, have built-in:
 
 [PSR-1,2,3,4,6,7,11,13,15,16]: <http://www.php-fig.org/psr/>
 
-How it Works?
--
-<dl>
-	<dt>Folders</dt>
-    <dd>
-    	 1. config
-    	 ⋅⋅*app.ini: Configure the App by changing the parameters
-    	 ⋅⋅*core.ini: Internal use only!
-         ⋅⋅*database.ini: Define your database configuration like hostname, database, user and password.
-         ⋅⋅*folders.ini: Define the folder structure, If you don't like the default.
-	 ⋅⋅*mail.ini: Define the mail settings
-         ⋅⋅*php.ini: Define your custom PHP settings like the global php.ini, but set on runtime.
-         ⋅⋅*router.ini: Define custom routes.		
-    </dd>
-</dl>
+Folders
+---
+*config
+⋅⋅*app.ini: Configure the App by changing the parameters
+⋅⋅*core.ini: Internal use only
+⋅⋅*database.ini: Define your database configuration like hostname, database, user and password
+⋅⋅*folders.ini: Define the folder structure, If you don't like the default
+⋅⋅*mail.ini: Define the mail settings
+⋅⋅*php.ini: Define your custom PHP settings like the global php.ini, but set on runtime
+⋅⋅*router.ini: Define custom routes
