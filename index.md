@@ -26,7 +26,7 @@ Folder tree
   | :---:  |     :---      | :---                                                                           |
   | config | app.ini       | Configure the App by changing the parameters.                                  |
   | config | core.ini      | Internal use only!                                                             |
-  | config | database.ini  | Define your database configuration like hostname, database, user and password. |
+  | config | database.ini  | Define your database configuration like hostname, database, user and password  |
   | config | folders.ini   | Define the folder structure, If you don't like the default.                    |
   | config | mail.ini      | Define the mail settings.                                                      |
   | config | php.ini       | Define your custom PHP settings like the global php.ini, but set on runtime.   |
