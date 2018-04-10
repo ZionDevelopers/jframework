@@ -32,7 +32,7 @@ Folder tree
   | config | php.ini       | Define your custom PHP settings like the global php.ini, but set on runtime.   |
   | config | router.ini    | Define custom routes.                                                          |
   | app    | controller/   | Controllers here.                                                              |
-  | app    | model/        | Dtabase models(tables).                                                        |
+  | app    | model/        | Database models(tables).                                                        |
   | app    | view/         | Views / templates / layouts.                                                   |
   | data   | cache/        | Cache files about tables and etc.                                              |
   | data   | certificates/ | SSL/TLS certificates for curl and others.                                      |
