@@ -6,7 +6,6 @@ theme: jekyll-theme-tactile
 
 gems:
   - jekyll-mentions
-  - markdown_helper
 site:
   - github:  
     - zip_url: https://github.com/ZionDevelopers/jframework/archive/v2.2.zip
