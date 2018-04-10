@@ -20,7 +20,7 @@ This is a Easy to use, lightweight PHP framework, have built-in:
 
 [PSR-1,2,3,4,6,7,11,13,15,16]: <http://www.php-fig.org/psr/>
 
-Folder tree
+Skeleton
 ---
   | Folder | file / folder | description                                                                    |
   | :---:  |     :---      | :---                                                                           |
@@ -42,7 +42,7 @@ Folder tree
   | data   | sql/          | SQL files for setups and etc                                                   |
   | public | .htaccess     | Apache configuration file, Responsible for all rewrite, redirect and etc.      |
   | public | web.config    | IIS configuration file, Responsible for all rewrite, redirect and etc.         |
-  | public | index.php     | This is the only page that goes in public folder, It starts all the processes  |
+  | public | index.php     | This is the only page that goes in public folder, It starts all the processes. |
   | public | css/          | CSS files.                                                                     |
   | public | js/           | JavaScript files.                                                              |
   | public | img/          | Image files.                                                                   |
