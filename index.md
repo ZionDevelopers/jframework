@@ -22,12 +22,13 @@ This is a Easy to use, lightweight PHP framework, have built-in:
 
 Folders
 ---
-  *config:
-  ⋅⋅⋅app.ini: Configure the App by changing the parameters
-  ⋅⋅⋅core.ini: Internal use only
-  ⋅⋅⋅database.ini: Define your database configuration like hostname, database, user and password
-  ⋅⋅⋅folders.ini: Define the folder structure, If you don't like the default
-  ⋅⋅⋅mail.ini: Define the mail settings
-  ⋅⋅⋅php.ini: Define your custom PHP settings like the global php.ini, but set on runtime
-  ⋅⋅⋅router.ini: Define custom route
+  | Folder |     file     | description |
+  | ------ |:------------:| -----------------------------------------------------------------------------:|
+  | config | app.ini      | Configure the App by changing the parameters                                  |
+  | config | core.ini     | Internal use only                                                             |
+  | config | database.ini | Define your database configuration like hostname, database, user and password |
+  | config | folders.ini  | Define the folder structure, If you don't like the default                    |
+  | config | mail.ini     | Define the mail settings                                                      |
+  | config | php.ini      | Define your custom PHP settings like the global php.ini, but set on runtime   |
+  | config | router.ini   | Define custom routes                                                          |
  
