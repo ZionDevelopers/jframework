@@ -20,3 +20,11 @@ This is a Easy to use, lightweight PHP framework, have built-in:
 * Licensed under BSD 3-Clause License
 
 [PSR-1,2,3,4,6,7,11,13,15,16]: <http://www.php-fig.org/psr/>
+
+How to Use
+---------------
+*Download
+*Extract
+*Configure
+* ?? 
+* Profit!
