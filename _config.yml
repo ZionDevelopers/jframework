@@ -6,6 +6,8 @@ theme: jekyll-theme-tactile
 
 gems:
   - jekyll-mentions
-github:
-  zip_url: https://github.com/ZionDevelopers/jframework/archive/v2.2.zip
-  tar_url: https://github.com/ZionDevelopers/jframework/archive/v2.2.tar.gz
+site:
+  - github:  
+    - zip_url: https://github.com/ZionDevelopers/jframework/archive/v2.2.zip
+    - tar_url: https://github.com/ZionDevelopers/jframework/archive/v2.2.tar.gz
+    
