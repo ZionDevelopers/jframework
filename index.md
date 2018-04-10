@@ -23,8 +23,8 @@ This is a Easy to use, lightweight PHP framework, have built-in:
 
 How to Use
 ---------------
-*Download
-*Extract
-*Configure
+* Download
+* Extract
+* Configure
 * ?? 
 * Profit!
