@@ -23,7 +23,7 @@ This is a Easy to use, lightweight PHP framework, have built-in:
 Folders
 ---
   | Folder |     file     | description                                                                   |
-  | ------ |:------------:| -----------------------------------------------------------------------------:|
+  | :---   |     :---:    | :---                                                                          |
   | config | app.ini      | Configure the App by changing the parameters                                  |
   | config | core.ini     | Internal use only                                                             |
   | config | database.ini | Define your database configuration like hostname, database, user and password |
