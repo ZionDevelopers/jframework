@@ -40,3 +40,9 @@ Folder tree
   | data   | logs/         | All kinds of logs.                                                             |
   | data   | session/      | PHP Session files.                                                             |
   | data   | sql/          | SQL files for setups and etc                                                   |
+  | public | .htaccess     | Apache configuration file, Responsible for all rewrite, redirect and etc.      |
+  | public | web.config    | IIS configuration file, Responsible for all rewrite, redirect and etc.         |
+  | public | index.php     | This is the only page that goes in public folder, It starts all the processes  |
+  | public | css/          | CSS files.                                                                     |
+  | public | js/           | JavaScript files.                                                              |
+  | public | img/          | Image files.                                                                   |
