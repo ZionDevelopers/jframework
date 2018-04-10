@@ -35,8 +35,8 @@ Skeleton
   | app       | model/             | Database models(tables).                                                             |
   | app       | view/              | Views / templates / layouts.                                                         |
   | app/view/ | controller/        | Folders with the controller names.                                                   |
-  | app/view/ | controller/error/  | Error pages.                                                                         |
-  | app/view/ | controller/layout/ | Layout templates.                                                                    |
+  | app/view/ | error/             | Error pages.                                                                         |
+  | app/view/ | layout/            | Layout templates.                                                                    |
   | data      | cache/             | Cache files about tables and etc.                                                    |
   | data      | certificates/      | SSL/TLS certificates for curl and others.                                            |
   | data      | fonts/             | Fonts to be used on text on Image generation.                                        |
