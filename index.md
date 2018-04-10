@@ -20,7 +20,7 @@ This is a Easy to use, lightweight PHP framework, have built-in:
 
 [PSR-1,2,3,4,6,7,11,13,15,16]: <http://www.php-fig.org/psr/>
 
-Folders
+Setting definition
 ---
   | Folder |     file     | description                                                                    |
   | :---   |     :---:    | :---                                                                           |
