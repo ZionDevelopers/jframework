@@ -22,29 +22,31 @@ This is a Easy to use, lightweight PHP framework, have built-in:
 
 Skeleton
 ---
-  | Folder    | file / folder | description                                                                          |
-  | :---:     |     :---      | :---                                                                                 |
-  | config    | app.ini       | Configure the App by changing the parameters.                                        |
-  | config    | core.ini      | Internal use only!                                                                   |
-  | config    | database.ini  | Define your database configuration like hostname, database, user and password.       | 
-  | config    | folders.ini   | Define the folder structure, If you don't like the default.                          |
-  | config    | mail.ini      | Define the mail settings.                                                            |
-  | config    | php.ini       | Define your custom PHP settings like the global php.ini, but set on runtime.         |
-  | config    | router.ini    | Define custom routes.                                                                |
-  | app       | controller/   | Controllers (Pages).                                                                 |
-  | app       | model/        | Database models(tables).                                                             |
-  | app       | view/         | Views / templates / layouts.                                                         |
-  | app/view/ |
-  | data      | cache/        | Cache files about tables and etc.                                                    |
-  | data      | certificates/ | SSL/TLS certificates for curl and others.                                            |
-  | data      | fonts/        | Fonts to be used on text on Image generation.                                        |
-  | data      | logs/         | All kinds of logs.                                                                   |
-  | data      | session/      | PHP Session files.                                                                   |
-  | data      | sql/          | SQL files for setups and etc                                                         |
-  | public    | .htaccess     | Apache configuration file, Responsible for all rewrite, redirect and etc.            |
-  | public    | web.config    | IIS configuration file, Responsible for all rewrite, redirect and etc.               |
-  | public    | index.php     | This is the only page that goes in public folder, It starts all the processes.       |
-  | public    | css/          | CSS files.                                                                           |
-  | public    | js/           | JavaScript files.                                                                    |
-  | public    | img/          | Image files.                                                                         |
-  | vendor    | *             | Core files, Required files to make the framework to work, Additional composer files. |
+  | Folder    | file / folder     | description                                                                          |
+  | :---:     |     :---          | :---                                                                                 |
+  | config    | app.ini           | Configure the App by changing the parameters.                                        |
+  | config    | core.ini          | Internal use only!                                                                   |
+  | config    | database.ini      | Define your database configuration like hostname, database, user and password.       | 
+  | config    | folders.ini       | Define the folder structure, If you don't like the default.                          |
+  | config    | mail.ini          | Define the mail settings.                                                            |
+  | config    | php.ini           | Define your custom PHP settings like the global php.ini, but set on runtime.         |
+  | config    | router.ini        | Define custom routes.                                                                |
+  | app       | controller/       | Controllers (Pages).                                                                 |
+  | app       | model/            | Database models(tables).                                                             |
+  | app       | view/             | Views / templates / layouts.                                                         |
+  | app/view/ | controller/       | Folders with the controller names.                                                   |
+  | app/view/ | controller/error/ | Error pages.                                                                         |
+  | app/view/ | controller/layout | Layout templates.                                                                    |
+  | data      | cache/            | Cache files about tables and etc.                                                    |
+  | data      | certificates/     | SSL/TLS certificates for curl and others.                                            |
+  | data      | fonts/            | Fonts to be used on text on Image generation.                                        |
+  | data      | logs/             | All kinds of logs.                                                                   |
+  | data      | session/          | PHP Session files.                                                                   |
+  | data      | sql/              | SQL files for setups and etc                                                         |
+  | public    | .htaccess         | Apache configuration file, Responsible for all rewrite, redirect and etc.            |
+  | public    | web.config        | IIS configuration file, Responsible for all rewrite, redirect and etc.               |
+  | public    | index.php         | This is the only page that goes in public folder, It starts all the processes.       |
+  | public    | css/              | CSS files.                                                                           |
+  | public    | js/               | JavaScript files.                                                                    |
+  | public    | img/              | Image files.                                                                         |
+  | vendor    | *                 | Core files, Required files to make the framework to work, Additional composer files. |
