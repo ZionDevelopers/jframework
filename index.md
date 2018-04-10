@@ -31,8 +31,8 @@ Folder tree
   | config | mail.ini      | Define the mail settings.                                                      |
   | config | php.ini       | Define your custom PHP settings like the global php.ini, but set on runtime.   |
   | config | router.ini    | Define custom routes.                                                          |
-  | app    | controller/   | Controllers here.                                                              |
-  | app    | model/        | Database models(tables).                                                        |
+  | app    | controller/   | Controllers (Pages).                                                           |
+  | app    | model/        | Database models(tables).                                                       |
   | app    | view/         | Views / templates / layouts.                                                   |
   | data   | cache/        | Cache files about tables and etc.                                              |
   | data   | certificates/ | SSL/TLS certificates for curl and others.                                      |
