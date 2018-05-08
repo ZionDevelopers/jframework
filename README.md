@@ -19,4 +19,3 @@ This is a Easy to use, lightweight PHP framework, have built-in:
 * Licensed under BSD 3-Clause License
 
 [PSR]: <http://www.php-fig.org/psr/>
- 
