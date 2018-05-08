@@ -2,7 +2,7 @@ title: jFramework v2
 description: An OOP MVC PHP 5.3+ Framework that run on PSR standards
 google_analytics: UA-117356161-1
 show_downloads: true
-theme: jekyll-theme-tactile
+theme: jekyll-theme-modernist
 
 gems:
   - jekyll-mentions
