@@ -54,8 +54,11 @@ class Router
     public function bootstrap()
     {
         // Define base path
-        $this->basepath = str_replace('\\', '/', dirname($this->core->server('SCRIPT_NAME'))) . DIRECTORY_SEPARATOR;
-        
+        $this->basepath = dirname($this->core->server('SCRIPT_NAME'));
+        $this->basepath = $this->basepath . DIRECTORY_SEPARATOR;
+        $this->basepath = str_replace('\\', '/', $this->basepath);
+        $this->basepath = str_replace('//', '/', $this->basepath);
+
         // Detect request
         $request = $this->detectRequest();
 
@@ -209,18 +212,17 @@ class Router
     {
         // Get URI
         $uri = $this->core->server('REQUEST_URI');
-        
-        // Check if basepath is not DOCUMENT ROOT
-        if ($_SERVER['DOCUMENT_ROOT'] !== $this->basepath) {
-            // Remove the basepath from the URL
+        // Check if basepath is root = /
+        if ($this->basepath !== '/') {
+            // Remove basedir
             $uri = str_replace($this->basepath, '', $uri);
         }
-        
+
         // Define empty vars
         $controller = $action = 'index';
         $data = [];
 
-        // Check if PHP is running on WebServer
+        // Check if PHP is NOT running on WebServer
         if (PHP_SAPI == 'cli') {
             // Format a Request URI for Console
             $uri = isset ($this->core->args[1]) ? '/' . $this->core->args[1] : '/';
@@ -232,7 +234,7 @@ class Router
         // Set default request path
         $request = array();
         $request['path'] = '';
-
+                
         // Parse URI Request
         $request = array_merge($request, parse_url($uri));
 
