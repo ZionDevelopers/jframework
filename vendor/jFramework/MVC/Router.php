@@ -220,7 +220,7 @@ class Router
 
         // Define empty vars
         $controller = $action = 'index';
-        $data = [];
+        $data = array();
 
         // Check if PHP is NOT running on WebServer
         if (PHP_SAPI == 'cli') {
