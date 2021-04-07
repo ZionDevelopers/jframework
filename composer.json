@@ -2,10 +2,7 @@
   "name" : "ziondevelopers/jframework",
   "version" : "2.2.0",
   "require" : {
-    "phpmailer/phpmailer" : ">=5.2",
-    "psr/log" : ">=1.0.0",
-    "psr/cache" : ">=1.0.0",
-    "psr/http-message" : ">=1.0"
+    "phpmailer/phpmailer" : ">=5.2"
   },
   "autoload" : {
     "psr-4" : {
