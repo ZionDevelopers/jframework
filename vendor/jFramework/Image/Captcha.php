@@ -84,7 +84,7 @@ class Captcha
         $n = strlen($text);
         
         for ($i = 0; $i < $n; $i ++) {
-            $newText .= $text {$i} . ' ';
+            $newText .= $text [$i] . ' ';
         }
         
         return $newText;
