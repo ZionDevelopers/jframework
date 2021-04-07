@@ -44,3 +44,4 @@ data/session/
 data/logs/
 php.ini
 config/database.ini
+public/web.config
