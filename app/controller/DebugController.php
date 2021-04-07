@@ -13,6 +13,7 @@ namespace App\Controller;
 use jFramework\MVC\Controller\AbstractActionController;
 use jFramework\MVC\View;
 use jFramework\Core\Registry;
+use jFramework\Core\Tools;
 
 class DebugController extends AbstractActionController
 {
@@ -53,7 +54,7 @@ class DebugController extends AbstractActionController
         // Define Visitor IP
         $visitorIp = $this->core->server('REMOTE_ADDR');
         // Define host IP
-        $hostIp = gethostbyname($dynDNS);
+        $hostIp = Tools::gethostbynamev6($dynDNS);
         
         // Check if REMOTE api is dyndns
         if ($hostIp === $visitorIp) {
