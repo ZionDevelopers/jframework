@@ -42,6 +42,3 @@ sess_*
 Data/Cache/
 Data/Session/
 Data/Logs/
-php.ini
-Config/database.ini
-Public/web.config
