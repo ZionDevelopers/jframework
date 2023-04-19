@@ -39,9 +39,9 @@ Thumbs.db
 nbproject/
 sess_*
 *.yaml
-data/cache/
-data/session/
-data/logs/
+Data/Cache/
+Data/Session/
+Data/Logs/
 php.ini
-config/database.ini
-public/web.config
+Config/database.ini
+Public/web.config
