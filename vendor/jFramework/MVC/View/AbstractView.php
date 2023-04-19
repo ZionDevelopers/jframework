@@ -3,7 +3,7 @@
  * jFramework
  *
  * @link https://github.com/ZionDevelopers/jframework/ The jFramework GitHub Project
- * @copyright 2010-2016, Júlio César de Oliveira
+ * @copyright 2010-2023, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
@@ -41,12 +41,13 @@ abstract class AbstractView
     {
         // Get Request
         $request = Registry::get('Request');
+        
         // Get View folder
         $this->file = Registry::get('FOLDER.view');
-        $this->file .= '/' . strtolower($request['controller']);
-        $this->file .= '/' . strtolower($request['action']) . $this->fileExt;
-        $this->viewRequest = '/' . $request['controller'] . '/' . $request['action'] . $this->fileExt;
-        $this->action = $request['controller'] . '/' . $request['action'];
+        $this->file .= '/' . ucfirst($request['controller']);
+        $this->file .= '/' . ucfirst($request['action']) . $this->fileExt;        
+        $this->viewRequest = '/' . ucfirst($request['controller']) . '/' . ucfirst($request['action']) . $this->fileExt;
+        $this->action = ucfirst($request['controller']) . '/' . ucfirst($request['action']);
         $this->requestURL = $request['route'];
     }
     
@@ -168,9 +169,9 @@ abstract class AbstractView
             
             // Get Buff contents
             $result = ob_get_contents();
-            
+                        
             // Stop the buffering and clean
-            ob_end_clean();
+            ob_end_clean();  
         } else {
             // Throw 404 not found view
             throw new \Exception(sprintf('View: %s was not found.', $file), 404);

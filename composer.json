@@ -1,6 +1,6 @@
 {
   "name" : "ziondevelopers/jframework",
-  "version" : "2.2.0",
+  "version" : "2.3.0",
   "require" : {
     "phpmailer/phpmailer" : ">=5.2"
   },

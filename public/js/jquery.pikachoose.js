@@ -1,6 +1,6 @@
 /*
  * jCarousel - Riding carousels with jQuery
- *   http://sorgalla.com/jcarousel/
+ *   http://sorgalla.com/jcarousel/ 
  *
  * Copyright (c) 2006 Jan Sorgalla (http://sorgalla.com)
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)

@@ -6,4 +6,4 @@ $(document).ready(function () {
     $('div#flashMessage').css('cursor', 'pointer');
 
     setTimeout("$('div#flashMessage').fadeOut();", 15000);
-});
+}); 

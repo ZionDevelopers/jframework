@@ -3,7 +3,7 @@
  * jFramework
  *
  * @link https://github.com/ZionDevelopers/jframework/ The jFramework GitHub Project
- * @copyright 2010-2016, Júlio César de Oliveira
+ * @copyright 2010-2023, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
@@ -17,8 +17,8 @@ use jFramework\Core\Registry;
  * Class to manage Captchas
  * 
  * Created: 2013-09-17 01:58 PM
- * Updated: 2014-06-03 09:47 AM 
- * @version 1.2.0 
+ * Updated: 2023-04-19 5:57 PM 
+ * @version 1.2.1 
  * @package jFramework
  * @subpackage Core
  * @copyright Copyright (c) 2010-2018, Júlio César de Oliveira

@@ -3,7 +3,7 @@
  * jFramework
  *
  * @link https://github.com/ZionDevelopers/jframework/ The jFramework GitHub Project
- * @copyright 2010-2016, Júlio César de Oliveira
+ * @copyright 2010-2023, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
@@ -52,7 +52,7 @@ abstract class AbstractActionController extends AbstractController
         $layout = new Layout();
         
         // Set layout
-        $layout->setFile('default');
+        $layout->setFile('Default');
         
         // Set Page title
         $layout->title = Registry::get('APP.title');
@@ -73,7 +73,7 @@ abstract class AbstractActionController extends AbstractController
         $view = new View();
         
         // Get view file
-        $file = Registry::get('FOLDER.error-view') . '/notFound' . $view->fileExt;
+        $file = Registry::get('FOLDER.error-view') . '/NotFound' . $view->fileExt;
         
         // Set view file
         $view->setFile($file);

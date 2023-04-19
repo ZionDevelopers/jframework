@@ -3,7 +3,7 @@
  * jFramework
  *
  * @link https://github.com/ZionDevelopers/jframework/ The jFramework GitHub Project
- * @copyright 2010-2016, Júlio César de Oliveira
+ * @copyright 2010-2023, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
@@ -16,7 +16,7 @@ use jFramework\Core\Registry;
  * Tools to do almost all things
  * 
  * Created: 2010-07-24 10:25 AM
- * Updated: 2014-06-03 10:36 AM
+ * Updated: 2023-04-19 6:10 PM
  * @version 1.2.0 
  * @package jFramework
  * @subpackage Core
@@ -466,32 +466,52 @@ class Tools
     }
     
     /**
-     * Get host by name for ipv6 or ipv4
-     * @param string $host
-     * @param boolean $try_a
-     * @return boolean
+     * Get client IP
+     * @return string
      */
-    public static function gethostbynamev6($host, $try_a = false) {
+    public static function getClientIP()
+    {
+        if (!empty($_SERVER['CF-Connecting-IP'])) {
+            $ip = $_SERVER['CF-Connecting-IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];  
+        } elseif (!empty($_SERVER['REMOTE_ADDR'])) { 
+            $ip = $_SERVER['REMOTE_ADDR']; 
+        } elseif (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP']; 
+        } 
+        
+        return preg_replace('/[^a-z0-9:,.]/', '', $ip);
+    }
+    
+    /**
+     * Get hostname by name v6
+     * @param string $host
+     * @param bool $try_a
+     * @return boolean
+     * @source https://www.php.net/manual/en/function.gethostbyname.php#70936
+     */
+    public static function gethostbynamev6($host, $try_a = false)
+    {
         // get AAAA record for $host
         // if $try_a is true, if AAAA fails, it tries for A
         // the first match found is returned
         // otherwise returns false
 
         $dns = self::gethostbynamel6($host, $try_a);
-        if ($dns == false) {
-            return false; 
-        } else { 
-            return $dns[0];
-        }
+        if ($dns == false) { return false; }
+        else { return $dns[0]; }
     }
 
-    /*
-     * Get host dns ipsv6 and ipv4
+    /**
+     * Get host by name l6
      * @param string $host
-     * @param $try_a boolean
-     * return boolean|mixed
+     * @param bool $try_a
+     * @source https://www.php.net/manual/en/function.gethostbyname.php#70936
+     * @return boolean
      */
-    public static function gethostbynamel6($host, $try_a = false) {
+    public static function gethostbynamel6($host, $try_a = false)
+    {
         // get AAAA records for $host,
         // if $try_a is true, if AAAA fails, it tries for A
         // results are returned in an array of ips found matching type

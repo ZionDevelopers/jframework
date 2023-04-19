@@ -4,7 +4,7 @@
  *
  * @version 2.1.0
  * @link https://github.com/ZionDevelopers/jframework/ The jFramework GitHub Project
- * @copyright 2010-2014, Júlio César de Oliveira
+ * @copyright 2010-2023, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
@@ -118,7 +118,7 @@ class Router
                     $contents = call_user_func_array(
                         array($controller, $method),
                         array($this->core->get(), $this->core->post(), $request ['data'])
-                    );
+                    );                    
                 } else {
                     // Run 404 Error Page
                     $contents = $controller->notFoundAction();

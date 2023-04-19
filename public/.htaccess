@@ -4,7 +4,7 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^([A-Za-z0-9/_\-.]+)$ index.php [QSA,L]
 </IfModule>
-
+ 
 # === NGINX Configuration ===
 #location / {
 #        index index.html index.htm index.php;
