@@ -1,9 +1,9 @@
 <?php
 /**
- * jFramework 
+ * jFramework *
 
  * @link https://github.com/ZionDevelopers/jframework/ The jFramework GitHub Project
- * @copyright 2010-2023, Júlio César de Oliveira
+ * @copyright 2010-2016, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
@@ -12,14 +12,13 @@ namespace jFramework;
 
 use jFramework\Core\Registry;
 use jFramework\MVC\Router;
-use jFramework\Core\Tools;
 
 /**
  * jFramework Core Operations Handler
  *
  * Created: 2014-06-08 04:38 PM (GMT -03:00)
- * Updated: 2014-06-08 07:10 PM (GMT -03:00)
- * @version 0.0.3
+ * Updated: 2023-06-08 08:10 PM (GMT -03:00)
+ * @version 0.0.4
  * @package jFramework
  * @copyright Copyright (c) 2010-2018, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
@@ -39,8 +38,9 @@ class Core
     /**
      * Constructor
      * @param string $rootDir
+     * @param boolean|string $changeBaseDir
      */
-    public function __construct($rootDir, $args)
+    public function __construct($rootDir, $args, $changeBaseDir = false)
     {
         if (PHP_SAPI == 'cli') {
             unset($args[0]);
@@ -48,8 +48,16 @@ class Core
 
         // Define WebRoot
         Registry::set('webroot', $rootDir);
-
-        $this->rootDir = dirname($rootDir);
+        
+        // Check for baseDir change
+        if (empty($changeBaseDir)) {
+            // Set normal rootDir
+            $this->rootDir = dirname($rootDir);
+        } else {
+            // Set custom rootDir
+            $this->rootDir = $changeBaseDir;
+        }
+        
         $this->args = $args;
     }
 
@@ -168,7 +176,7 @@ class Core
     {
         // Define .ini files directory
         Registry::setDir($this->rootDir . '/Config/');
-
+        
         // Define rootDir variable
         Registry::set('rootDir', $this->rootDir);
 
