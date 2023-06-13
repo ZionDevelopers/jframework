@@ -3,7 +3,7 @@ jFramework
 
 This is a Easy to use, lightweight PHP framework, have built-in:
 
-* PHP **5.3+** Compatible **(Compatible with PHP7 and PHP8!)**
+* PHP **5.3+** Compatible **(Compatible with PHP7!)**
 * Open-Source Project
 * Documented using PHPDoc
 * Object-oriented programming.
