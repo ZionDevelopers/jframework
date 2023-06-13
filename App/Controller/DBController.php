@@ -3,6 +3,7 @@
 /**
  * jFramework
  *
+ * @version 2.3
  * @link https://github.com/ZionDevelopers/jframework/ The jFramework GitHub Project
  * @copyright 2010-2023, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
