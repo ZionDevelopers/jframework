@@ -18,8 +18,8 @@ use App\Model\IPBlock;
  * Tools to do almost all things
  * 
  * Created: 2010-07-24 10:25 AM
- * Updated: 2023-06-13 12:10 PM
- * @version 1.2.1 
+ * Updated: 2023-06-13 12:35 PM
+ * @version 1.2.2
  * @package jFramework
  * @subpackage Core
  * @copyright Copyright (c) 2010-2018, Júlio César de Oliveira
@@ -541,6 +541,75 @@ class Tools
             // Save Array to Database
             $IPBlock->set($data);
             $IPBlock->save();
+        }
+    }
+    
+    /**
+     * Get Hostname by name (IPv6)
+     * @link https://www.php.net/manual/en/function.gethostbyname.php#70936 PHP.NET
+     * @param string $host
+     * @param boolean $try_a
+     * @return boolean
+     */
+    public static function gethostbynamev6($host, $try_a = false)
+    {
+        // get AAAA record for $host
+        // if $try_a is true, if AAAA fails, it tries for A
+        // the first match found is returned
+        // otherwise returns false
+
+        $dns = self::gethostbynamel6($host, $try_a);
+        if ($dns == false) { 
+            return false;             
+        } else { 
+            return $dns[0];
+        }
+    }
+
+    /**
+     * Get host by name helper for v6
+     * @link https://www.php.net/manual/en/function.gethostbyname.php#70936 PHP.NET
+     * @param string $host
+     * @param boolean $try_a
+     * @return boolean
+     */
+    public static function gethostbynamel6($host, $try_a = false)
+    {
+        // get AAAA records for $host,
+        // if $try_a is true, if AAAA fails, it tries for A
+        // results are returned in an array of ips found matching type
+        // otherwise returns false
+
+        $dns6 = dns_get_record($host, DNS_AAAA);
+        if ($try_a == true) {
+            $dns4 = dns_get_record($host, DNS_A);
+            $dns = array_merge($dns4, $dns6);
+        } else { 
+            $dns = $dns6;            
+        }
+        $ip6 = array();
+        $ip4 = array();
+        
+        foreach ($dns as $record) {
+            if ($record["type"] == "A") {
+                $ip4[] = $record["ip"];
+            }
+            if ($record["type"] == "AAAA") {
+                $ip6[] = $record["ipv6"];
+            }
+        }
+        if (count($ip6) < 1) {
+            if ($try_a == true) {
+                if (count($ip4) < 1) {
+                    return false;
+                } else {
+                    return $ip4;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return $ip6;
         }
     }
 }
