@@ -2,6 +2,7 @@
 /**
  * jFramework
  *
+ * @version 2.3.0
  * @link https://github.com/ZionDevelopers/jframework/ The jFramework GitHub Project
  * @copyright 2010-2023, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
@@ -11,13 +12,14 @@
 namespace jFramework\Core;
 
 use jFramework\Core\Registry;
+use App\Model\IPBlock;
 
 /**
  * Tools to do almost all things
  * 
  * Created: 2010-07-24 10:25 AM
- * Updated: 2023-04-19 6:10 PM
- * @version 1.2.0 
+ * Updated: 2023-06-13 12:10 PM
+ * @version 1.2.1 
  * @package jFramework
  * @subpackage Core
  * @copyright Copyright (c) 2010-2018, Júlio César de Oliveira
@@ -112,16 +114,22 @@ class Tools
      * To check if this file request has maded by AJAX
      *     
      * @param boolean $quit       	
+     * @param boolean $blockIP
      * @return boolean
      * @static
      */
-    public static function checkAjax($quit = true)
+    public static function checkAjax($quit = true, $blockIP = true)
     {
         $result = false;
 
         if (isset($_SERVER ["HTTP_X_REQUESTED_WITH"])) {
             if ($_SERVER ["HTTP_X_REQUESTED_WITH"] != "XMLHttpRequest") {
                 if ($quit) {
+                    // Block IP enabled?
+                    if ($blockIP) {
+                        // Block IP
+                        self::blockIP();
+                    }
                     exit('Access denied');
                 }
             } else {
@@ -129,6 +137,11 @@ class Tools
             }
         } else {
             if ($quit) {
+                // Block IP enabled?
+                if ($blockIP) {
+                    // Block IP
+                    self::blockIP();
+                }
                 exit('Access denied');
             }
         }
@@ -485,69 +498,49 @@ class Tools
     }
     
     /**
-     * Get hostname by name v6
-     * @param string $host
-     * @param bool $try_a
-     * @return boolean
-     * @source https://www.php.net/manual/en/function.gethostbyname.php#70936
+     * Block IP from server
+     * @param string $ip
      */
-    public static function gethostbynamev6($host, $try_a = false)
+    public static function blockIP($ip = null)
     {
-        // get AAAA record for $host
-        // if $try_a is true, if AAAA fails, it tries for A
-        // the first match found is returned
-        // otherwise returns false
-
-        $dns = self::gethostbynamel6($host, $try_a);
-        if ($dns == false) { return false; }
-        else { return $dns[0]; }
-    }
-
-    /**
-     * Get host by name l6
-     * @param string $host
-     * @param bool $try_a
-     * @source https://www.php.net/manual/en/function.gethostbyname.php#70936
-     * @return boolean
-     */
-    public static function gethostbynamel6($host, $try_a = false)
-    {
-        // get AAAA records for $host,
-        // if $try_a is true, if AAAA fails, it tries for A
-        // results are returned in an array of ips found matching type
-        // otherwise returns false
-
-        $dns6 = dns_get_record($host, DNS_AAAA);
-        if ($try_a == true) {
-            $dns4 = dns_get_record($host, DNS_A);
-            $dns = array_merge($dns4, $dns6);
+        // Check if ip was sent
+        if (empty($ip)) {
+            // Get IP
+            $ip = self::getClientIP();
         }
-        else { $dns = $dns6; }
-        $ip6 = array();
-        $ip4 = array();
-        foreach ($dns as $record) {
-            if ($record["type"] == "A") {
-                $ip4[] = $record["ip"];
-            }
-            if ($record["type"] == "AAAA") {
-                $ip6[] = $record["ipv6"];
-            }
-        }
-        if (count($ip6) < 1) {
-            if ($try_a == true) {
-                if (count($ip4) < 1) {
-                    return false;
-                }
-                else {
-                    return $ip4;
-                }
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            return $ip6;
+        
+        // Get WebRoot folder
+        $folderPath = Registry::get('webroot');
+        // Define file
+        $file = $folderPath . '/.htaccess';
+        // Get .htaccess contents
+        $htaccessContent = file_get_contents($file);
+        
+        // Check if ip is already blocked
+        if (strpos($htaccessContent, $ip) === false) {
+            // Update ip block line
+            $newHtaccessContent = str_replace('#IPBLOCK:END', "\n    #" . date('Y-m-d H:i:s') . "\n    Deny from " . $ip . "\n    #IPBLOCK:END", $htaccessContent);
+
+            // Update .htaccess
+            file_put_contents($file, $newHtaccessContent);
+            
+            // Create IP Block Object
+            $IPBlock = new IPBlock();
+
+            // Setup IP Block Data
+            $data = [];
+            $data['ip'] = $ip;
+            $data['date'] = date('Y-m-d H:i:s');
+            $data['post'] = json_encode($_POST);
+            $data['get'] = json_encode($_GET);
+            $data['server'] = json_encode($_SERVER); 
+            $data['hits'] = 1;
+            $data['url'] = $_SERVER['REQUEST_URI'];
+            $data['enabled'] = 1;
+
+            // Save Array to Database
+            $IPBlock->set($data);
+            $IPBlock->save();
         }
     }
 }

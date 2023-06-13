@@ -2,7 +2,7 @@
 /**
  * jFramework
  *
- * @version 2.1.0
+ * @version 2.3.0
  * @link https://github.com/ZionDevelopers/jframework/ The jFramework GitHub Project
  * @copyright 2010-2023, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
@@ -13,16 +13,18 @@ namespace jFramework\MVC;
 
 use jFramework\Core\Registry;
 use jFramework\MVC\View\XHTML;
+use jFramework\Core\Tools;
+use App\Model\IPBlock;
 
 /**
  * jFramework Router
  *
  * Created: 2014-06-08 08:53 PM (GMT -03:00)
- * Updated: 2015-08-10 10:15 AM (GMT -03:00)
- * @version 0.0.6
+ * Updated: 2023-06-13 12:09 AM (GMT -03:00)
+ * @version 0.0.7
  * @package jFramework
  * @subpackage MVC
- * @copyright Copyright (c) 2010-2014, Júlio César de Oliveira
+ * @copyright Copyright (c) 2010-2023, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
@@ -64,7 +66,8 @@ class Router
 
         // Define Request data
         Registry::set('Request', $request);
-
+        
+       
         // Handle the Request
         $view = $this->handleRequest($request);
 
@@ -80,7 +83,7 @@ class Router
     {
         // Default view contents
         $contents = '';
-        
+                                
         // Controller Class
         $class = ucfirst($request['controller']) . 'Controller';
         // Action Mathod
@@ -110,6 +113,27 @@ class Router
                 // Pass by Reference the db connection to a global variable
                 $GLOBALS['dbUniqueLink'] =& $this->core->db;
                 $controller->db =& $GLOBALS['dbUniqueLink'];
+                
+                // Get client ip
+                $ip = Tools::getClientIP();
+                // Create new Model object of IPBlock
+                $IPBlock = new IPBlock();
+                 // Get list of blocked ips
+                $IPBlocked = $IPBlock->get(['id', 'date', 'hits'], ['ip' => $ip, 'enabled' => 1]);
+               
+                // Check if ip is blocked
+                if (!empty($IPBlocked)) {    
+                    // Set update data
+                    $IPBlock->set(['hits' => $IPBlocked[0]['hits']+1, 'last_access' => date('Y-m-d H:i:s')]);                    
+                    // Set Where
+                    $IPBlock->where(['id' => $IPBlocked[0]['id']]);
+                    // Save update
+                    $IPBlock->save();
+                    
+                    // Kills script and show message
+                    exit('<h1>Access Denied!</h1>You have been blocked by the system on <b>' . $IPBlocked[0]['date'] . '</b>!');
+                }
+                
                 $controller->basepath = $this->basepath;
 
                 // Check if Action exists
@@ -125,7 +149,7 @@ class Router
                 }
             }
         }
-
+        
         // Check if controller was successfully spawned
         if (!isset($controller)) {
             // Spawn new Error Controller
@@ -137,7 +161,7 @@ class Router
             // Run NotFound Action
             $contents = $controller->notFoundAction($request);
         }
-
+                
         // Check if database driver was created
         if (!is_null($this->core->db)) {
             // Close connection
