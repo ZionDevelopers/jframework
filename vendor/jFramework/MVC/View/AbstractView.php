@@ -12,16 +12,17 @@
 namespace jFramework\MVC\View;
 
 use jFramework\Core\Registry;
+use jFramework\Core\Tools;
 
 /**
  * To manage Views
  * 
  * Created: 2010-08-24 12:50 PM (GMT -03:00)
- * Updated: 2014-06-09 14:13 PM (GMT -03:00)
- * @version 2.0.3 
+ * Updated: 2023-06-14 1:43 PM (GMT -03:00)
+ * @version 2.0.4 
  * @package jFramework
  * @subpackage MVC
- * @copyright Copyright (c) 2010-2018, Júlio César de Oliveira
+ * @copyright Copyright (c) 2010-2023, Júlio César de Oliveira
  * @author Júlio César de Oliveira <talk@juliocesar.me>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License
  */
@@ -77,6 +78,9 @@ abstract class AbstractView
         // Set Registry
         $registry = Registry::get('ViewRegistry.'.$key);
         $registry [$name] = $value;
+                
+        // Set variable on object
+        $this->$name = $value;
         
         // Set View Registry
         Registry::set('ViewRegistry.'.$key, $registry);
@@ -95,13 +99,13 @@ abstract class AbstractView
         
         // Get Registry
         $registry = Registry::get('ViewRegistry.' . $key);
-        
+      
         $result = null;
         
         if (isset($this->$name)) {
             $result = $this->$name;
         }
-        
+      
         if (isset($registry[$name])) {
             $result = $registry[$name];     
         }
