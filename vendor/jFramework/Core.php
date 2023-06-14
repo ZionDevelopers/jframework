@@ -169,6 +169,28 @@ class Core
 
         return $result;
     }
+    
+    /**
+     * Get variable from $_SESSION
+     * @param string $var
+     * @param string $newValue
+     * @return mixed
+     */
+    public function session($var = null, $newValue = null)
+    {
+        $result = null;
+
+        if (is_null($var)) {
+            $result = $_SESSION;
+        } elseif (isset($_SESSION[$var]) && empty($newValue)) {
+            $result = $_COOKIE[$var];
+        } elseif (isset($_SESSION[$var]) && !empty($newValue)) {
+            $result = $_SESSION[$var] = $newValue;
+        }
+
+        return $result;
+    }
+
 
     /**
      * Parse jFramework Settings

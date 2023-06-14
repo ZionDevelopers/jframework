@@ -15,8 +15,8 @@ namespace jFramework\MVC\Model;
  * To manage models
  *
  * Created: 2018-03-04 09:10 PM (GMT -03:00)
- * Created: 2018-03-04 09:10 PM (GMT -03:00)
- * @version 2.2.0
+ * Created: 2023-06-14 11:25 AM (GMT -03:00)
+ * @version 2.2.1
  * @package jFramework
  * @subpackage MVC
  * @copyright Copyright (c) 2010-2018, Júlio César de Oliveira
@@ -84,5 +84,14 @@ abstract class AbstractModel
     public function get(array $select = [], array $where = [], array $order = [], array $limit = [], array $group = [], $autoFetch = true)
     {
         return $this->db->find($this->table, $select, $where, $order, $limit, $group, $autoFetch);
+    }
+    
+    /**
+     * Get last inserted id in the database for this session
+     * @return integer
+     */
+    public function getLastID()
+    {
+        return $this->db->getLastID();
     }
 }
