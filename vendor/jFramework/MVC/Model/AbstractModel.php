@@ -15,8 +15,8 @@ namespace jFramework\MVC\Model;
  * To manage models
  *
  * Created: 2018-03-04 09:10 PM (GMT -03:00)
- * Created: 2023-06-14 11:25 AM (GMT -03:00)
- * @version 2.2.1
+ * Created: 2023-06-15 09:56 AM (GMT -03:00)
+ * @version 2.2.2
  * @package jFramework
  * @subpackage MVC
  * @copyright Copyright (c) 2010-2018, Júlio César de Oliveira
@@ -93,5 +93,15 @@ abstract class AbstractModel
     public function getLastID()
     {
         return $this->db->getLastID();
+    }
+    
+    /**
+     * Delete data from table
+     * @param array $where
+     * @return array|boolean|\mysqli_result 
+     */
+    public function delete(array $where = [])
+    {
+        return $this->db->delete($this->table, $where);
     }
 }
