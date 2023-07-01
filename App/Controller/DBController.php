@@ -30,6 +30,7 @@ class DBController extends AbstractActionController
     public function indexAction($get, $post, $data)
     {
         $view = new View();
+        $view->basePath = $this->basepath;
 
         // Check for success or fail query
         if (isset($get['success'])) {

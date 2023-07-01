@@ -12,14 +12,13 @@
 namespace jFramework\MVC\View;
 
 use jFramework\Core\Registry;
-use jFramework\Core\Tools;
 
 /**
  * To manage Views
  * 
  * Created: 2010-08-24 12:50 PM (GMT -03:00)
- * Updated: 2023-06-14 1:43 PM (GMT -03:00)
- * @version 2.0.4 
+ * Updated: 2023-07-01 3:08 PM (GMT -03:00)
+ * @version 2.0.5 
  * @package jFramework
  * @subpackage MVC
  * @copyright Copyright (c) 2010-2023, Júlio César de Oliveira
@@ -71,48 +70,10 @@ abstract class AbstractView
      */
     public function __set($name, $value)
     {                
-        // Set Key
-        $key = str_replace(Registry::get('FOLDER.app') . '/View/', '', $this->file);
-        $key = str_replace($this->fileExt, '', $key);
-        
-        // Set Registry
-        $registry = Registry::get('ViewRegistry.'.$key);
-        $registry [$name] = $value;
-                
         // Set variable on object
         $this->$name = $value;
-        
-        // Set View Registry
-        Registry::set('ViewRegistry.'.$key, $registry);
     }
-    
-    /**
-     * Get a property
-     * @param string $name
-     * @return mixed
-     */
-    public function __get($name)
-    {
-        // Set Key
-        $key = str_replace(Registry::get('FOLDER.app') . '/View/', '', $this->file);
-        $key = str_replace($this->fileExt, '', $key);
         
-        // Get Registry
-        $registry = Registry::get('ViewRegistry.' . $key);
-      
-        $result = null;
-        
-        if (isset($this->$name)) {
-            $result = $this->$name;
-        }
-      
-        if (isset($registry[$name])) {
-            $result = $registry[$name];     
-        }
-        
-        return $result;
-    }  
-    
     /**
      * To Set a Flash Message
      *     
