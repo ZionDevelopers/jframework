@@ -1,6 +1,6 @@
 <?php
 
-namespace \jFramework\Core\EmailTemplateParser;
+namespace jFramework\Core\EmailTemplateParser;
 
 /**
  * Parse HTML templates by replacing vars with it's contents
