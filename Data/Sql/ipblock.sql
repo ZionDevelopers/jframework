@@ -23,16 +23,16 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `ipblock`;
 CREATE TABLE `ipblock`  (
   `id` int(255) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `ip` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   `date` datetime NULL DEFAULT NULL,
-  `post` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-  `get` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-  `server` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-  `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  `post` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+  `get` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+  `server` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+  `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
   `hits` bigint(255) NULL DEFAULT 0,
   `last_access` datetime NULL DEFAULT NULL,
   `enabled` tinyint(1) NULL DEFAULT 1,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

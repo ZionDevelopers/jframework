@@ -1,7 +1,7 @@
 jFramework
 ==========
 
-This is a Easy to use, lightweight PHP framework, have built-in:
+This is an Easy to use, lightweight PHP framework, have built-in:
 
 * PHP **5.3+** Compatible **(Compatible with PHP7!)**
 * Open-Source Project
